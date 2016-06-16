@@ -34,13 +34,13 @@
 	</organization>
 
 	<scm>
-		<connection>scm:git:git@github.com:openmrs/openmrs-module-patient-list.git</connection>
-		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-patient-list.git</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-patient-list</url>
+		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-patient-list.git</connection>
+		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-patient-list.git</developerConnection>
+		<url>scm:git:git@github.com:OpenHMIS/openmrs-module-patient-list.git</url>
 	</scm>
 	
 	<properties>
-		<openMRSVersion>1.9.7</openMRSVersion>
+		<openMRSVersion>1.9.9</openMRSVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<uiframeworkVersion>3.2</uiframeworkVersion>
 		<appframeworkVersion>2.1</appframeworkVersion>
@@ -160,7 +160,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-api</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.2.0</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
@@ -168,7 +168,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-api</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.2.0</version>
 				<type>test-jar</type>
 				<scope>test</scope>
 			</dependency>
@@ -176,7 +176,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-tools</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.2.0</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
@@ -184,7 +184,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-omod</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.2.0</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
@@ -192,7 +192,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>openhmis.commons-omod_2.x</artifactId>
-				<version>3.3.0-SNAPSHOT</version>
+				<version>3.2.0</version>
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>

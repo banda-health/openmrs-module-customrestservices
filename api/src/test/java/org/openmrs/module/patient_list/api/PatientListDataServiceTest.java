@@ -12,15 +12,22 @@ package org.openmrs.module.patient_list.api;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.module.patient_list.api.model.PatientList;
+import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 
-/**
- * Tests {@link PatientListService}.
- */
-public class  PatientListServiceTest extends BaseModuleContextSensitiveTest {
-	
-	@Test
-	public void shouldSetupContext() {
-		assertNotNull(Context.getService(PatientListService.class));
+public class PatientListDataServiceTest extends IMetadataDataServiceTest<PatientListDataService, PatientList> {
+	@Override
+	public PatientList createEntity(boolean b) {
+		return null;
+	}
+
+	@Override
+	protected int getTestEntityCount() {
+		return 0;
+	}
+
+	@Override
+	protected void updateEntityFields(PatientList patientList) {
+
 	}
 }
