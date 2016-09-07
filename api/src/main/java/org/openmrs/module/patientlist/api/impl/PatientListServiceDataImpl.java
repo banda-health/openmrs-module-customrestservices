@@ -17,15 +17,16 @@ import org.openmrs.module.patientlist.api.PatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 
 public class PatientListServiceDataImpl extends BaseMetadataDataServiceImpl<PatientList> implements PatientListDataService {
+	
 	protected final Log LOG = LogFactory.getLog(this.getClass());
-
+	
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
 		return null;
 	}
-
+	
 	@Override
 	protected void validate(PatientList object) {
-
+		
 	}
 }

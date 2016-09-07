@@ -17,16 +17,20 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.logic.op.Operator;
 
 public class PatientListCondition extends BaseOpenmrsObject {
+	
 	private Integer patientListConditionId;
+	
 	private String field;
+	
 	private Operator operator;
+	
 	private String value;
-
+	
 	@Override
 	public Integer getId() {
 		return this.patientListConditionId;
 	}
-
+	
 	@Override
 	public void setId(Integer id) {
 		this.patientListConditionId = id;

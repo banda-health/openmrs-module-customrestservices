@@ -19,5 +19,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface PatientListDataService extends IMetadataDataService<PatientList> {
-
+	
 }

@@ -13,20 +13,23 @@
  */
 package org.openmrs.module.patientlist.api.model;
 
-import org.jfree.util.SortOrder;
 import org.openmrs.BaseOpenmrsObject;
 
 public class PatientListOrder extends BaseOpenmrsObject {
+	
 	private Integer patientListOrderId;
+	
 	private String field;
-	private SortOrder sortOrder;
+	
+	private String sortOrder;
+	
 	private Integer order;
-
+	
 	@Override
 	public Integer getId() {
 		return this.patientListOrderId;
 	}
-
+	
 	@Override
 	public void setId(Integer id) {
 		this.patientListOrderId = id;

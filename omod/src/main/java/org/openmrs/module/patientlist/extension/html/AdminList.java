@@ -17,7 +17,8 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 /**
  * This class defines the links that will appear on the administration page under the
- * "patientlist.title" heading. This extension is enabled by defining (uncommenting) it in the config.xml file.
+ * "patientlist.title" heading. This extension is enabled by defining (uncommenting) it in the
+ * config.xml file.
  */
 public class AdminList extends AdministrationSectionExt {
 	
@@ -44,7 +45,7 @@ public class AdminList extends AdministrationSectionExt {
 		
 		map.put("module/patientlist/patientlist.form", "patientlist.title");
 		map.put("patientlist/patientlist.page", "patientlist.refapp.title");
-
+		
 		return map;
 	}
 	
