@@ -28,6 +28,10 @@
 		<module>omod</module>
 	</modules>
 
+	<properties>
+			<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- Importing versions from refapp distro -->
@@ -96,7 +100,25 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<properties>
-		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
-	</properties>
+	<repositories>
+		<repository>
+			<id>openmrs-repo</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>openhmis-repo</id>
+			<name>OpenHMIS Nexus Repository</name>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<url>http://mavenrepo.openhmisafrica.org/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
 </project>
