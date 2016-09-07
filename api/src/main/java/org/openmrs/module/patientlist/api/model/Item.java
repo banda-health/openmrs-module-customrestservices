@@ -28,52 +28,53 @@ import javax.persistence.Table;
 //@Entity(name = "patientlist.Item")
 //@Table(name = "patientlist_item")
 public class Item extends BaseOpenmrsData {
-	
+	private static final int DESCRIPTION_FIELD_LENGTH = 255;
+
 	@Id
 	@GeneratedValue
 	@Column(name = "patientlist_item_id")
 	private Integer id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "owner")
 	private User owner;
-	
+
 	@Basic
-	@Column(name = "description", length = 255)
+	@Column(name = "description", length = DESCRIPTION_FIELD_LENGTH)
 	private String description;
-	
+
 	@Override
 	public Integer getId() {
 		return id;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	@Override
 	public String getUuid() {
 		return super.getUuid();
 	}
-	
+
 	@Override
 	public void setUuid(String uuid) {
 		super.setUuid(uuid);
 	}
-	
+
 	public User getOwner() {
 		return owner;
 	}
-	
+
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}

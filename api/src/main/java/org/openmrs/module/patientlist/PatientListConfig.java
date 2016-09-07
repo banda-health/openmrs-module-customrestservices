@@ -16,6 +16,5 @@ import org.springframework.stereotype.Component;
  */
 @Component("patientlist.PatientListConfig")
 public class PatientListConfig {
-	
-	public final static String MODULE_PRIVILEGE = "Patient List Privilege";
+	public static final String MODULE_PRIVILEGE = "Patient List Privilege";
 }

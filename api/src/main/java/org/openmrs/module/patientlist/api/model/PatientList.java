@@ -20,27 +20,30 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
 
+/**
+ * Model class that represents a patient list definition.
+ */
 public class PatientList extends BaseOpenmrsMetadata {
-	
+
 	private Integer patientListId;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<PatientListCondition> inclusionConditions;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<PatientListCondition> exclusionConditions;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<PatientListOrder> listOrders;
-	
+
 	@Column(name = "display_template")
 	private String displayTemplate;
-	
+
 	@Override
 	public Integer getId() {
 		return this.patientListId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.patientListId = id;

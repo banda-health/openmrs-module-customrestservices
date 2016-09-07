@@ -16,21 +16,24 @@ package org.openmrs.module.patientlist.api.model;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.logic.op.Operator;
 
+/**
+ * Model class that represents a list condition.
+ */
 public class PatientListCondition extends BaseOpenmrsObject {
-	
+
 	private Integer patientListConditionId;
-	
+
 	private String field;
-	
+
 	private Operator operator;
-	
+
 	private String value;
-	
+
 	@Override
 	public Integer getId() {
 		return this.patientListConditionId;
 	}
-	
+
 	@Override
 	public void setId(Integer id) {
 		this.patientListConditionId = id;
