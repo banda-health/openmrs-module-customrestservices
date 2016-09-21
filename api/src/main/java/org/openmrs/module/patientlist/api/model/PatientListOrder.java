@@ -11,24 +11,30 @@
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
-package org.openmrs.module.patient_list.api.model;
+package org.openmrs.module.patientlist.api.model;
 
 import org.openmrs.BaseOpenmrsObject;
-import org.openmrs.logic.op.Operator;
 
-public class PatientListCondition extends BaseOpenmrsObject {
-	private Integer patientListConditionId;
+/**
+ * Model class that represents the ordering of patients in a list.
+ */
+public class PatientListOrder extends BaseOpenmrsObject {
+
+	private Integer patientListOrderId;
+
 	private String field;
-	private Operator operator;
-	private String value;
+
+	private String sortOrder;
+
+	private Integer order;
 
 	@Override
 	public Integer getId() {
-		return this.patientListConditionId;
+		return this.patientListOrderId;
 	}
 
 	@Override
 	public void setId(Integer id) {
-		this.patientListConditionId = id;
+		this.patientListOrderId = id;
 	}
 }

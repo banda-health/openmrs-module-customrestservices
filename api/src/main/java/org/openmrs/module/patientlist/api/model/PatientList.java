@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
-package org.openmrs.module.patient_list.api.model;
+package org.openmrs.module.patientlist.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
@@ -20,7 +20,11 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
 
+/**
+ * Model class that represents a patient list definition.
+ */
 public class PatientList extends BaseOpenmrsMetadata {
+
 	private Integer patientListId;
 
 	@OneToMany(fetch = FetchType.EAGER)
@@ -45,4 +49,3 @@ public class PatientList extends BaseOpenmrsMetadata {
 		this.patientListId = id;
 	}
 }
-

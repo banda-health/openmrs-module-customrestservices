@@ -1,39 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.openmrs.module</groupId>
+		<artifactId>patientlist</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
-    <parent>
-        <groupId>org.openmrs.module</groupId>
-        <artifactId>patient-list</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>patient-list-omod</artifactId>
-    <packaging>jar</packaging>
-    <name>Patient List OMOD</name>
-    <description>OMOD project for Patient List</description>
+	<artifactId>patientlist-omod</artifactId>
+	<packaging>jar</packaging>
+	<name>Patient List OMOD</name>
+	<description>Omod submodule for Patient List</description>
 
 	<dependencies>
-
-		<!-- 
-		Add other dependencies from parent's pom: 
-		<dependency> 
-			<groupId>org.other.library</groupId> 
-			<artifactId>library-name</artifactId> 
-		</dependency> 
-		-->
-		
 		<!-- Begin OpenMRS modules -->
-		
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>openhmis.commons-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>openhmis.commons-omod</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>${project.parent.artifactId}-api</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-		
-				
+
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-omod</artifactId>
+			<version>${project.parent.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>webservices.rest-omod</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>uiframework-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- End OpenMRS modules -->
-		
 
 		<!-- Begin OpenMRS core -->
 
@@ -48,7 +69,7 @@
 			<artifactId>openmrs-web</artifactId>
 			<type>jar</type>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
@@ -69,15 +90,8 @@
 			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- End OpenMRS core -->
 
-		<dependency>
-			<groupId>rubygems</groupId>
-			<artifactId>compass</artifactId>
-			<version>0.11.7</version>
-			<type>gem</type>
-		</dependency>
+		<!-- End OpenMRS core -->
 
 	</dependencies>
 
@@ -88,28 +102,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-			<resource>
-				<directory>src/main/webapp</directory>
-				<excludes>
-					<exclude>resources</exclude>
-				</excludes>
-				<targetPath>web/module</targetPath>
-			</resource>
-			<resource>
-				<directory>src/main/webapp</directory>
-				<includes>
-					<include>resources</include>
-				</includes>
-				<targetPath>web/module</targetPath>
-			</resource>
 		</resources>
-
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
 
 		<pluginManagement>
 			<plugins>
@@ -119,7 +112,7 @@
 						<includeEmptyDirs>true</includeEmptyDirs>
 					</configuration>
 				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -138,7 +131,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -151,7 +144,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -163,9 +156,33 @@
 
 		<plugins>
 			<plugin>
+				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+				<artifactId>maven-java-formatter-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.openmrs.maven.plugins</groupId>
 				<artifactId>maven-openmrs-plugin</artifactId>
-				<extensions>true</extensions>
+
 				<executions>
 					<execution>
 						<id>init</id>
@@ -183,97 +200,27 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Expand moduleApplicationContext and messages</id>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<includeGroupIds>${project.parent.groupId}</includeGroupIds>
-							<includeArtifactIds>${project.parent.artifactId}-api</includeArtifactIds>
-							<excludeTransitive>true</excludeTransitive>
-							<includes>**/*</includes>
-							<outputDirectory>${project.build.directory}/classes</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Fetch SASS sources from uicommons</id>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.openmrs.module</groupId>
-									<artifactId>uicommons-scss</artifactId>
-									<version>${uicommonsVersion}</version>
-									<type>zip</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>src/main/compass/sass-external</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
-				<groupId>de.saumya.mojo</groupId>
-				<artifactId>gem-maven-plugin</artifactId>
-				<extensions>true</extensions>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.5.1</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>exec</goal>
+							<goal>compress</goal>
 						</goals>
-						<phase>generate-resources</phase>
 					</execution>
 				</executions>
 				<configuration>
-					<jrubyVersion>1.7.10</jrubyVersion>
-					<execArgs>${project.build.directory}/rubygems/bin/compass compile ${basedir}/src/main/compass</execArgs>
+					<!-- <verbose>true</verbose> -->
+					<nosuffix>true</nosuffix>
+					<excludes>
+						<exclude>**/*.min.js</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>watch-sass</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>de.saumya.mojo</groupId>
-						<artifactId>gem-maven-plugin</artifactId>
-						<extensions>true</extensions>
-						<executions>
-							<execution>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<phase>generate-resources</phase>
-							</execution>
-						</executions>
-						<configuration>
-							<jrubyVersion>1.7.10</jrubyVersion>
-							<execArgs>${project.build.directory}/rubygems/bin/compass watch ${basedir}/src/main/compass</execArgs>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 </project>
