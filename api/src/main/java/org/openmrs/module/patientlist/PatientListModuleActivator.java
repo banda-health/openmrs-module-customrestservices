@@ -16,22 +16,29 @@ import org.openmrs.module.BaseModuleActivator;
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
-public class PatientListActivator extends BaseModuleActivator {
+public class PatientListModuleActivator extends BaseModuleActivator {
+	private static final Log LOG = LogFactory.getLog(PatientListModuleActivator.class);
 
-	private Log log = LogFactory.getLog(this.getClass());
+	/**
+	 * @see BaseModuleActivator#contextRefreshed()
+	 */
+	@Override
+	public void contextRefreshed() {
+		LOG.info("Visit Task Module refreshed");
+	}
 
 	/**
 	 * @see #started()
 	 */
 	public void started() {
-		log.info("Started Patient List");
+		LOG.info("Started Patient List");
 	}
 
 	/**
 	 * @see #shutdown()
 	 */
 	public void shutdown() {
-		log.info("Shutdown Patient List");
+		LOG.info("Shutdown Patient List");
 	}
 
 }
