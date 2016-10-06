@@ -17,6 +17,8 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Interface that represents classes which perform data operations for {@link PatientList}s.
  */
