@@ -20,11 +20,8 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-
-	<bean class="org.openmrs.module.patientlist.uiframework.UiConfigurationPatientLists"/>
+	<bean class="org.openmrs.module.patientlist.uiframework.UiConfigurationPatientList"/>
 
 	<context:component-scan base-package="org.openmrs.module.patientlist.web.controller" />
-
 
 </beans>
