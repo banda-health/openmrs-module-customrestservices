@@ -4,36 +4,56 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
- 
-    <!--
-    	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
-    	documentation on this file.
-    
-        See http://www.liquibase.org/manual/home#available_database_refactorings
-        for a list of supported elements and attributes
-    -->
- 
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and PatientListDaoTest -->
- 	<!--
-	<changeSet id="patientlist-2016-08-02-12-21" author="raff">
-		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="patientlist_item"/></not>
-		</preConditions>
-		<comment>
-			Creating the patientlist_item table
-		</comment>
-		<createTable tableName="patientlist_item">
-			<column name="patientlist_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
-		</createTable>
-        <addForeignKeyConstraint constraintName="patientlist_item_owner_fk" baseTableName="patientlist_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
+
+	<changeSet id="openmrs.patientlist-1" author="andrewm">
+        <createTable tableName="patient_list">
+            <column name="patient_list_id" autoIncrement="true" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)" defaultValue="" >
+                <constraints nullable="false"/></column>
+            <column name="description" type="varchar(255)" defaultValue=""/>
+            <column name="display_template" type="varchar(255)" defaultValue=""/>
+            <column name="creator" type="int"><constraints nullable="false"/></column>
+            <column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+            <column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false"/></column>
+            <column name="retired_by" type="int" />
+            <column name="date_retired" type="datetime" />
+            <column name="retire_reason" type="varchar(255)" defaultValue="null"/>
+            <column name="uuid" type="char(38)"><constraints nullable="false" unique="true" /></column>
+        </createTable>
+
+        <createTable tableName="patient_list_condition">
+            <column autoIncrement="true" name="patient_list_condition_id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="patient_list_id" type="int"><constraints nullable="false" /></column>
+            <column name="field" type="varchar(255)"/>
+            <column name="operator" type="varchar(255)"/>
+            <column name="value" type="varchar(255)"/>
+            <column name="condition_order" type="int"/>
+            <column name="uuid" type="char(38)" />
+        </createTable>
+
+        <createTable tableName="patient_list_order">
+            <column autoIncrement="true" name="patient_list_order_id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="patient_list_id" type="int"><constraints nullable="false" /></column>
+            <column name="field" type="varchar(255)"/>
+            <column name="sortOrder" type="varchar(255)"/>
+            <column name="order" type="varchar(255)"/>
+            <column name="uuid" type="char(38)" />
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="patient_list_condition_patient_list_id_fk"
+                                 baseTableName="patient_list_condition" baseColumnNames="patient_list_id"
+                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint constraintName="patient_list_order_patient_list_id_fk"
+                                 baseTableName="patient_list_order" baseColumnNames="patient_list_id"
+                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
+                                 onDelete="CASCADE" onUpdate="CASCADE"/>
+    </changeSet>
  
 </databaseChangeLog>

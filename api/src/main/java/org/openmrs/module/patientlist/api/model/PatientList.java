@@ -15,10 +15,10 @@ package org.openmrs.module.patientlist.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
-import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Model class that represents a patient list definition.
@@ -28,15 +28,11 @@ public class PatientList extends BaseOpenmrsMetadata {
 	private Integer patientListId;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	private List<PatientListCondition> inclusionConditions;
+	private List<PatientListCondition> patientListConditions;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	private List<PatientListCondition> exclusionConditions;
+	private Set<PatientListOrder> patientListOrders;
 
-	@OneToMany(fetch = FetchType.EAGER)
-	private List<PatientListOrder> listOrders;
-
-	@Column(name = "display_template")
 	private String displayTemplate;
 
 	@Override
@@ -47,5 +43,30 @@ public class PatientList extends BaseOpenmrsMetadata {
 	@Override
 	public void setId(Integer id) {
 		this.patientListId = id;
+	}
+
+	public List<PatientListCondition> getPatientListConditions() {
+		return patientListConditions;
+	}
+
+	public void setPatientListConditions(
+	        List<PatientListCondition> patientListConditions) {
+		this.patientListConditions = patientListConditions;
+	}
+
+	public Set<PatientListOrder> getPatientListOrders() {
+		return patientListOrders;
+	}
+
+	public void setPatientListOrders(Set<PatientListOrder> patientListOrders) {
+		this.patientListOrders = patientListOrders;
+	}
+
+	public String getDisplayTemplate() {
+		return displayTemplate;
+	}
+
+	public void setDisplayTemplate(String displayTemplate) {
+		this.displayTemplate = displayTemplate;
 	}
 }

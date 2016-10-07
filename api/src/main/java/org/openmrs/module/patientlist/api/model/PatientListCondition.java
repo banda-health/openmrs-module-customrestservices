@@ -22,12 +22,11 @@ import org.openmrs.logic.op.Operator;
 public class PatientListCondition extends BaseOpenmrsObject {
 
 	private Integer patientListConditionId;
-
+	private PatientList patientList;
 	private String field;
-
 	private Operator operator;
-
 	private String value;
+	private Integer conditionOrder;
 
 	@Override
 	public Integer getId() {
@@ -37,5 +36,45 @@ public class PatientListCondition extends BaseOpenmrsObject {
 	@Override
 	public void setId(Integer id) {
 		this.patientListConditionId = id;
+	}
+
+	public PatientList getPatientList() {
+		return patientList;
+	}
+
+	public void setPatientList(PatientList patientList) {
+		this.patientList = patientList;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public Operator getOperator() {
+		return operator;
+	}
+
+	public void setOperator(Operator operator) {
+		this.operator = operator;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+	public Integer getConditionOrder() {
+		return conditionOrder;
+	}
+
+	public void setConditionOrder(Integer conditionOrder) {
+		this.conditionOrder = conditionOrder;
 	}
 }

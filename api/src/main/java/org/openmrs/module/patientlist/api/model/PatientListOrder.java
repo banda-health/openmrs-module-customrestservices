@@ -21,11 +21,9 @@ import org.openmrs.BaseOpenmrsObject;
 public class PatientListOrder extends BaseOpenmrsObject {
 
 	private Integer patientListOrderId;
-
+	private PatientList patientList;
 	private String field;
-
 	private String sortOrder;
-
 	private Integer order;
 
 	@Override
@@ -36,5 +34,37 @@ public class PatientListOrder extends BaseOpenmrsObject {
 	@Override
 	public void setId(Integer id) {
 		this.patientListOrderId = id;
+	}
+
+	public PatientList getPatientList() {
+		return patientList;
+	}
+
+	public void setPatientList(PatientList patientList) {
+		this.patientList = patientList;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
 	}
 }

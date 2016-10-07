@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.patientlist.api.model">
+    <class name="PatientList" table="patient_list">
+        <cache usage="read-write"/>
+
+        <id name="id" type="int" column="patient_list_id">
+            <generator class="native">
+                <param name="sequence">patient_list_id_seq</param>
+            </generator>
+        </id>
+        <discriminator column="patient_list_id" insert="false" />
+
+        <property name="name" type="java.lang.String" column="name" not-null="true" length="255" />
+        <property name="description" type="java.lang.String" column="description" length="255" />
+        <property name="displayTemplate" type="java.lang.String" column="display_template" length="255" />
+
+        <list name="patientListConditions" lazy="false" inverse="true" cascade="all-delete-orphan">
+            <key column="patient_list_id" />
+            <list-index column="condition_order" />
+            <one-to-many class="PatientListCondition" />
+        </list>
+
+        <set name="patientListOrders" lazy="false" inverse="true" cascade="all-delete-orphan">
+            <key column="patient_list_id" />
+            <one-to-many class="PatientListOrder" />
+        </set>
+
+        <!-- bi-directional many-to-one association to User -->
+        <many-to-one name="creator" class="org.openmrs.User" not-null="true" column="creator" />
+        <property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+
+        <many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+        <property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+
+        <property name="retired" type="java.lang.Boolean" column="voided" length="1" not-null="true" />
+        <many-to-one name="retiredBy" class="org.openmrs.User" column="voided_by" />
+
+        <property name="dateRetired" type="java.util.Date" column="date_voided" length="19" />
+        <property name="retireReason" type="java.lang.String" column="void_reason" length="255" />
+
+        <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+    </class>
+
+    <class name="PatientListCondition" table="patient_list_condition">
+        <cache usage="read-write"/>
+
+        <id name="id" type="int" column="patient_list_condition_id">
+            <generator class="native">
+                <param name="sequence">patient_list_condition_list_id_seq</param>
+            </generator>
+        </id>
+        <discriminator column="patient_list_id" insert="false" />
+
+        <many-to-one name="patientList" class="PatientList" column="patient_list_id" not-null="true" />
+        <property name="field" type="java.lang.String" column="field" length="255" />
+        <property name="operator" type="java.lang.String" column="operator" length="255" />
+        <property name="value" type="java.lang.String" column="value" length="255" />
+        <property name="conditionOrder" type="int" column="condition_order" />
+    </class>
+
+    <class name="PatientListOrder" table="patient_list_order">
+        <cache usage="read-write"/>
+
+        <id name="id" type="int" column="patient_list_order_id">
+            <generator class="native">
+                <param name="sequence">patient_list_list_order_id_seq</param>
+            </generator>
+        </id>
+        <discriminator column="patient_list_order_id" insert="false" />
+
+        <many-to-one name="patientList" class="PatientList" column="patient_list_id" not-null="true" />
+        <property name="field" type="java.lang.String" column="field" length="255" />
+        <property name="sortOrder" type="java.lang.String" column="operator" length="255" />
+        <property name="order" type="java.lang.String" column="value" length="255" />
+    </class>
+
+</hibernate-mapping>
