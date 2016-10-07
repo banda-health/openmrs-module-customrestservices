@@ -1,108 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <module configVersion="1.2">
-	
-	<!-- Base Module Properties -->
+
+	<!-- Module Properties -->
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
-	<package>org.openmrs.module.patientlist</package>
-	<author>ibewes</author>
+	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
+	<author>OpenHMIS</author>
 	<description>
-			${project.parent.description}
+		${project.parent.description}
 	</description>
-
-	<activator>org.openmrs.module.patientlist.PatientListActivator</activator>
-	
-	<!-- <updateURL>https://modules.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL> -->
-	<!-- /Base Module Properties -->
-	
-	<require_version>${openmrsPlatformVersion}</require_version>
-
-	<require_modules>
-		<require_module version="${appframeworkVersion}">
-			org.openmrs.module.appframework
-		</require_module>
-		<require_module version="${uiframeworkVersion}">
-			org.openmrs.module.uiframework
-		</require_module>
-		<require_module version="${uicommonsModuleVersion}">
-			org.openmrs.module.uicommons
-		</require_module>
-		<require_module version="${appuiVersion}">
-			org.openmrs.module.appui
-		</require_module>
-	</require_modules>
-	
-	<!-- Extensions -->
-	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.patientlist.extension.html.AdminList</class>
-	</extension>
+	<updateURL>https://modules.openmrs.org/modules/download/${project.parent.artifactId}/update.rdf</updateURL>
+	<require_version>${openMRSVersion}</require_version>
+	<!-- / Module Properties -->
 
 	<aware_of_modules>
-		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>
+		<aware_of_module version="3.3.1">org.openmrs.module.uiframework</aware_of_module>
+		<aware_of_module version="2.3">org.openmrs.module.appframework</aware_of_module>
+		<aware_of_module version="2.2">org.openmrs.module.providermanagement</aware_of_module>
+		<aware_of_module version="1.7">org.openmrs.module.uicommons</aware_of_module>
 	</aware_of_modules>
-	
-	
-	<!-- AOP
-	<advice>
-		<point>org.openmrs.api.FormService</point>
-		<class>@MODULE_PACKAGE@.advice.DuplicateFormAdvisor</class>
-	</advice>
-	 /AOP -->
-	
-	
-	<!-- Required Privileges 
-	<privilege>
-		<name>Form Entry</name>
-		<description>Allows user to access Form Entry pages/functions</description>
-	</privilege>
-	 /Required Privileges -->
+
+	<require_modules>
+		<require_module version="2.9">org.openmrs.module.webservices.rest</require_module>
+		<require_module version="3.0">org.openmrs.module.openhmis.commons</require_module>
+		<require_module version="1.11.1">org.openmrs.module.emrapi</require_module>
+		<require_module version="2.3">org.openmrs.module.referenceapplication</require_module>
+	</require_modules>
+
+	<!-- Module Activator -->
+	<activator>org.openmrs.module.patientlist.PatientListModuleActivator</activator>
 
 
-	<!-- Required Global Properties 
-	<globalProperty>
-		<property>@MODULE_ID@.someProperty</property>
-		<defaultValue></defaultValue>
-		<description>
-			A description of the global property goes here.  The description
-			should explain enough for administrators to understand the purpose
-			and possible values for the global property.
-		</description>
-	</globalProperty>
-	/Required Global Properties -->
-	
-	<!--
-	<dwr>
-		<allow>
-			<create creator="new" javascript="DWRFormEntryService">
-				<param name="class" value="org.openmrs.module.@MODULE_ID@.web.DWRFormEntryService"/>
-				<include method="enterForm"/>
-			</create>
-		</allow>
+	<!-- Adds link to admin page -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.visittasks.extension.html.AdminList</class>
+	</extension>
 
-		<signatures>
-			<![CDATA[
-			import @MODULE_PACKAGE@.web.DWRFormEntryService;
-			DWRFormEntryService.enterForm(Integer patientId, Integer formId, boolean useEncounter, List<String> fields);
-			]]>
-		</signatures>	
-	</dwr>
-	-->
-	
-	<!-- Servlets -->
-	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> 
-	<servlet>
-		<servlet-name>formDownload</servlet-name>
-		<servlet-class>@MODULE_PACKAGE@.web.FormDownloadServlet</servlet-class>
-	</servlet>
-	-->
-	<!-- /Servlets -->
-	
-	
+	<!-- Maps hibernate file's, if present -->
+	<mappingFiles>
+
+	</mappingFiles>
+
 	<!-- Internationalization -->
-	<!-- All message codes should start with @MODULE_ID@.* -->
+	<!-- All message codes should start with ${project.parent.artifactId}. -->
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>
@@ -116,6 +59,10 @@
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
-	
+
+	<!-- Privileges -->
+	<!-- App privileges for OpenMRS 2.x -->
+
+
 </module>
 
