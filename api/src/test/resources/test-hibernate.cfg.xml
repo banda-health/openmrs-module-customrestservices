@@ -24,10 +24,7 @@
 		<property name="use_sql_comments">true</property>
 		-->
 
-		<mapping resource="InvDepartment.hbm.xml" />
-		<mapping resource="InvItem.hbm.xml" />
-		<mapping resource="InvInstitution.hbm.xml" />
-		<mapping resource="InvStockroom.hbm.xml" />
+		<mapping resource="PatientList.hbm.xml" />
 
 		<!-- Import LazyRole mapping from commons -->
 		<mapping resource="LazyRole.hbm.xml" />

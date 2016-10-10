@@ -23,6 +23,4 @@ import java.util.List;
  * Interface that represents classes which perform data operations for {@link PatientList}s.
  */
 @Transactional
-public interface PatientListDataService extends IMetadataDataService<PatientList> {
-
-}
+public interface IPatientListDataService extends IMetadataDataService<PatientList> {}

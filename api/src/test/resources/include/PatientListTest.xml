@@ -1,0 +1,10 @@
+<dataset>
+
+    <patient_list patient_list_id="0" name="Test Patient List 0" description="Patient List 0 description"
+                  creator="1" date_created="2016-09-06 00:00:00.0"
+                  retired="false" uuid="5628814B399DFD5AA0139958CCF8D0005" />
+    <patient_list_condition patient_list_condition_id="0" patient_list_id="0" field="p.age"
+                            operator=">" value="20" condition_order="0" uuid="4028814B39B565A20139B95FB3440006" />
+    <patient_list_condition patient_list_condition_id="1" patient_list_id="0" field="p.gender"
+                            operator="=" value="M" condition_order="1" uuid="4028814B39B565A20139B95FB3440007" />
+</dataset>

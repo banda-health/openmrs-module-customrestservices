@@ -15,10 +15,8 @@ package org.openmrs.module.patientlist.api.model;
 
 import org.openmrs.BaseOpenmrsMetadata;
 
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Model class that represents a patient list definition.
@@ -26,13 +24,8 @@ import java.util.Set;
 public class PatientList extends BaseOpenmrsMetadata {
 
 	private Integer patientListId;
-
-	@OneToMany(fetch = FetchType.EAGER)
 	private List<PatientListCondition> patientListConditions;
-
-	@OneToMany(fetch = FetchType.EAGER)
-	private Set<PatientListOrder> patientListOrders;
-
+	private List<PatientListOrder> patientListOrders;
 	private String displayTemplate;
 
 	@Override
@@ -54,19 +47,47 @@ public class PatientList extends BaseOpenmrsMetadata {
 		this.patientListConditions = patientListConditions;
 	}
 
-	public Set<PatientListOrder> getPatientListOrders() {
-		return patientListOrders;
-	}
-
-	public void setPatientListOrders(Set<PatientListOrder> patientListOrders) {
-		this.patientListOrders = patientListOrders;
-	}
-
 	public String getDisplayTemplate() {
 		return displayTemplate;
 	}
 
 	public void setDisplayTemplate(String displayTemplate) {
 		this.displayTemplate = displayTemplate;
+	}
+
+	public List<PatientListOrder> getPatientListOrders() {
+		return patientListOrders;
+	}
+
+	public void setPatientListOrders(List<PatientListOrder> patientListOrders) {
+		this.patientListOrders = patientListOrders;
+	}
+
+	public void addSelectionRule(PatientListCondition selectionRule) {
+		if (selectionRule == null) {
+			throw new NullPointerException("The selection rule to add must be defined.");
+		}
+
+		if (this.patientListConditions == null) {
+			this.patientListConditions = new ArrayList<PatientListCondition>();
+		}
+
+		selectionRule.setPatientList(this);
+
+		this.patientListConditions.add(selectionRule);
+	}
+
+	public void addSortOrder(PatientListOrder sortOrder) {
+		if (sortOrder == null) {
+			throw new NullPointerException("The sort order to add must be defined.");
+		}
+
+		if (this.patientListOrders == null) {
+			this.patientListOrders = new ArrayList<PatientListOrder>();
+		}
+
+		sortOrder.setPatientList(this);
+
+		this.patientListOrders.add(sortOrder);
 	}
 }

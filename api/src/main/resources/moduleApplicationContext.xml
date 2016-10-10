@@ -19,12 +19,11 @@
 
 	<!-- Add here beans related to the API context -->
 
-	
 	<!-- Services accessible via Context.getService() -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.patientlist.api.PatientListDataService</value>
+				<value>org.openmrs.module.patientlist.api.IPatientListDataService</value>
 				<ref bean="patientListDataService" />
 			</list>
 		</property>
@@ -34,13 +33,12 @@
 	<bean id="patientListDataService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager" ref="transactionManager" />
 		<property name="target">
-			<bean class="org.openmrs.module.patientlist.api.impl.PatientListServiceDataImpl">
+			<bean class="org.openmrs.module.patientlist.api.impl.PatientListDataServiceImpl">
 				<property name="repository" ref="genericRepository" />
 			</bean>
 		</property>
 		<property name="preInterceptors" ref="serviceInterceptors" />
 		<property name="transactionAttributeSource" ref="transactionAttributeSource" />
 	</bean>
-
 
 </beans>

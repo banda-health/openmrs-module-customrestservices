@@ -14,7 +14,6 @@
 package org.openmrs.module.patientlist.api.model;
 
 import org.openmrs.BaseOpenmrsObject;
-import org.openmrs.logic.op.Operator;
 
 /**
  * Model class that represents a list condition.
@@ -24,7 +23,7 @@ public class PatientListCondition extends BaseOpenmrsObject {
 	private Integer patientListConditionId;
 	private PatientList patientList;
 	private String field;
-	private Operator operator;
+	private String operator;
 	private String value;
 	private Integer conditionOrder;
 
@@ -54,11 +53,11 @@ public class PatientListCondition extends BaseOpenmrsObject {
 		this.field = field;
 	}
 
-	public Operator getOperator() {
+	public String getOperator() {
 		return operator;
 	}
 
-	public void setOperator(Operator operator) {
+	public void setOperator(String operator) {
 		this.operator = operator;
 	}
 

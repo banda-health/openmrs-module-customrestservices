@@ -41,8 +41,8 @@
             </column>
             <column name="patient_list_id" type="int"><constraints nullable="false" /></column>
             <column name="field" type="varchar(255)"/>
-            <column name="sortOrder" type="varchar(255)"/>
-            <column name="order" type="varchar(255)"/>
+            <column name="sort_order" type="varchar(10)"/>
+            <column name="order" type="int"/>
             <column name="uuid" type="char(38)" />
         </createTable>
 
@@ -54,6 +54,14 @@
                                  baseTableName="patient_list_order" baseColumnNames="patient_list_id"
                                  referencedTableName="patient_list" referencedColumnNames="patient_list_id"
                                  onDelete="CASCADE" onUpdate="CASCADE"/>
+        <addForeignKeyConstraint constraintName="patient_list_condition_patient_list_id_fk"
+                                 baseTableName="patient_list_condition" baseColumnNames="patient_list_id"
+                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
+                                 deferrable="false" initiallyDeferred="false" />
+        <addForeignKeyConstraint constraintName="patient_list_order_patient_list_id_fk"
+                                 baseTableName="patient_list_order" baseColumnNames="patient_list_id"
+                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
+                                 deferrable="false" initiallyDeferred="false" />
     </changeSet>
  
 </databaseChangeLog>
