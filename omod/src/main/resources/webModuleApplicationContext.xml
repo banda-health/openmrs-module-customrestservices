@@ -22,6 +22,6 @@
 
 	<bean class="org.openmrs.module.patientlist.uiframework.UiConfigurationPatientList"/>
 
-	<context:component-scan base-package="org.openmrs.module.patientlist.web.controller" />
+	<context:component-scan base-package="org.openmrs.module.patientlist.web" />
 
 </beans>

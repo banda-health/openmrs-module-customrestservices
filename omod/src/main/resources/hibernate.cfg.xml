@@ -12,6 +12,6 @@
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
 
-        <mapping resource="PatientList.hbm.xml" />
+        <mapping file="PatientList.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

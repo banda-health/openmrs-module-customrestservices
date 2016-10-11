@@ -36,12 +36,12 @@
 	<!-- Adds link to admin page -->
 	<extension>
 		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.visittasks.extension.html.AdminList</class>
+		<class>org.openmrs.module.patientlist.extension.html.AdminList</class>
 	</extension>
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-
+		PatientList.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

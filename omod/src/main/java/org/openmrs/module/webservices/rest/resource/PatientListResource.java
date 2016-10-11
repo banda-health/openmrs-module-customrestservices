@@ -28,7 +28,6 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		description.addProperty("patientListConditions");
 		description.addProperty("patientListOrders");
 
-		description.addProperty("creator", Representation.DEFAULT);
 		description.addProperty("dateCreated", Representation.DEFAULT);
 		description.addProperty("retired", Representation.DEFAULT);
 

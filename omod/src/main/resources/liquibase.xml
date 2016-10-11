@@ -16,6 +16,8 @@
             <column name="display_template" type="varchar(255)" defaultValue=""/>
             <column name="creator" type="int"><constraints nullable="false"/></column>
             <column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="DATETIME"/>
             <column name="retired" type="boolean" defaultValueBoolean="false"><constraints nullable="false"/></column>
             <column name="retired_by" type="int" />
             <column name="date_retired" type="datetime" />
@@ -46,14 +48,6 @@
             <column name="uuid" type="char(38)" />
         </createTable>
 
-        <addForeignKeyConstraint constraintName="patient_list_condition_patient_list_id_fk"
-                                 baseTableName="patient_list_condition" baseColumnNames="patient_list_id"
-                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
-                                 onDelete="CASCADE" onUpdate="CASCADE"/>
-        <addForeignKeyConstraint constraintName="patient_list_order_patient_list_id_fk"
-                                 baseTableName="patient_list_order" baseColumnNames="patient_list_id"
-                                 referencedTableName="patient_list" referencedColumnNames="patient_list_id"
-                                 onDelete="CASCADE" onUpdate="CASCADE"/>
         <addForeignKeyConstraint constraintName="patient_list_condition_patient_list_id_fk"
                                  baseTableName="patient_list_condition" baseColumnNames="patient_list_id"
                                  referencedTableName="patient_list" referencedColumnNames="patient_list_id"
