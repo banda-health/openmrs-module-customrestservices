@@ -27,7 +27,7 @@ import java.util.Set;
  * Constants class for module privilege constants.
  */
 public class PrivilegeConstants {
-	public static final String APP_VIEW_PATIENT_LIST_APP = "App: View Patient List Module";
+	public static final String APP_VIEW_PATIENT_LIST_APP = "App: View Patient List App";
 	public static final String TASK_MANAGE_PATIENT_LIST_METADATA = "Task: Manage Patient List Metadata";
 
 	public static final String[] PRIVILEGE_NAMES =

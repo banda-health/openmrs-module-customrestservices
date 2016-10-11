@@ -63,6 +63,13 @@
 	<!-- Privileges -->
 	<!-- App privileges for OpenMRS 2.x -->
 
-
+	<privilege>
+		<name>Task: Manage Patient List Metadata</name>
+		<description>Able to see and manage the patient lists</description>
+	</privilege>
+	<privilege>
+		<name>App: View Patient List App</name>
+		<description>Able to access the patient list module</description>
+	</privilege>
 </module>
 

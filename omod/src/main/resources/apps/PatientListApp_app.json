@@ -1,0 +1,29 @@
+[
+	{
+		"id": "${project.parent.artifactId}",
+		"description": "Provides a list of patient for the Internal medicine department",
+		"order": 25,
+		"extensions": [
+			{
+				"id": "${project.parent.groupId}.${project.parent.artifactId}.patientListLandingPageLink",
+				"extensionPointId": "systemAdministration.apps",
+				"type": "link",
+				"label": "Manage Patient List",
+				"url": "${project.parent.artifactId}/patientListLanding.page",
+				"icon": "icon-list-alt",
+				"requiredPrivilege": "App: View Patient List App",
+				"order": 25
+			},
+			{
+				"id": "${project.parent.groupId}.${project.parent.artifactId}.managePatientListLink",
+				"extensionPointId": "org.openmrs.module.patientlist.landing",
+				"type": "link",
+				"label": "Define Patient List",
+				"url": "${project.parent.artifactId}/managePatientList/entities.page#/",
+				"icon": "icon-list-alt",
+				"requiredPrivilege": "Task: Manage Patient List Metadata",
+				"order": 2
+			}
+		]
+	}
+]
