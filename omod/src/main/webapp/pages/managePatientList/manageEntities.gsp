@@ -7,10 +7,80 @@
 		},
 		{
 			label: "${ ui.message("patientlist.page")}",
-			link: '${ui.pageLink("visittasks", "patientListLanding")}'
+			link: '${ui.pageLink("patientlist", "patientListLanding")}'
 		},
 		{label: "${ ui.message("patientlist.manage.label")}"}
 	];
 	
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
 </script>
+
+<div id="entities-body">
+	<br/>
+	
+	<div id="manage-entities-header">
+		<span class="h1-substitue-left" style="float:left;">
+			${ui.message('patientlist.admin.patientList')}
+		</span>
+		<span style="float:right;">
+			<a class="button confirm" ui-sref="new">
+				<i class="icon-plus"></i>
+				${ui.message('patientlist.define.new.label')}
+			</a>
+		</span>
+	</div>
+	<br/><br/><br/>
+	
+	<div>
+		<div id="entities">
+			<div class="btn-group">
+				<ul class="search-area">
+					<li>
+						${ui.includeFragment("openhmis.commons", "searchFragment", [
+								model        : "searchField",
+								onChangeEvent: "searchCashpointsByName(1)",
+								class        : ["field-display ui-autocomplete-input form-control searchinput"],
+								placeholder  : [ui.message("patientlist.enterSearchPhrase")]
+						])}
+					</li>
+				</ul>
+			</div>
+			
+			<br/><br/>
+			<table style="margin-bottom:5px;" class="manage-patientlist-table" id="manage-patientlist-table">
+				<thead>
+				<tr>
+					<th>${ui.message('general.name')}</th>
+					<th>${ui.message('general.description')}</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr class="clickable-tr" dir-paginate="entity in fetchedEntities | itemsPerPage: limit"
+				    total-items="totalNumOfResults" current-page="currentPage" ui-sref="edit({uuid: entity.uuid})">
+					<td ng-style="strikeThrough(entity.retired)">{{entity.name}}</td>
+					<td ng-style="strikeThrough(entity.retired)">{{entity.description}}</td>
+				</tr>
+				</tbody>
+			</table>
+			
+			<div ng-show="fetchedEntities.length == 0">
+				<span ng-if="searchField !== ''">
+					<br/>
+					${ui.message('openhmis.commons.general.preSearchMessage')} - <b>{{searchField}}</b> - {{postSearchMessage}}
+				</span>
+				<span class="not-found" ng-if="searchField === ''">
+					${ui.message('patientlist.notFound')}
+				</span>
+				<br/><br/>
+				<span>
+					<input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
+					       ng-change="searchCashpoints(currentPage)"/>
+				</span>
+				<span>
+					${ui.message('openhmis.commons.general.includeRetired')}
+				</span>
+			</div>
+			${ui.includeFragment("openhmis.commons", "paginationFragment", [onChange: "searchCashpoints(currentPage)", onPageChange: "searchCashpoints(currentPage)"])}
+		</div>
+	</div>
+</div>

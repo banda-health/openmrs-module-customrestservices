@@ -23,8 +23,7 @@
 	
 	function PatientListRestfulService(EntityRestFactory, PaginationService) {
 		var service;
-		service = {
-		};
+		service = {};
 		
 		return service;
 		
