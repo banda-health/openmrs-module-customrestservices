@@ -13,7 +13,7 @@
  */
 package org.openmrs.module.patientlist.api.model;
 
-import org.openmrs.BaseOpenmrsMetadata;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Model class that represents a patient list definition.
  */
-public class PatientList extends BaseOpenmrsMetadata {
+public class PatientList extends BaseSerializableOpenmrsMetadata {
 
 	private Integer patientListId;
 	private List<PatientListCondition> patientListConditions;
