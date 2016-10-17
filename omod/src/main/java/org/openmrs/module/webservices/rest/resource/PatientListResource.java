@@ -2,11 +2,10 @@ package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.patientlist.api.IPatientListDataService;
+import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
-import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -21,15 +20,8 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addProperty("name", Representation.DEFAULT);
-		description.addProperty("description", Representation.DEFAULT);
 		description.addProperty("displayTemplate", Representation.DEFAULT);
-
-		description.addProperty("patientListConditions");
-		description.addProperty("patientListOrders");
-
 		description.addProperty("dateCreated", Representation.DEFAULT);
-		description.addProperty("retired", Representation.DEFAULT);
 
 		return description;
 	}
@@ -41,11 +33,14 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 
 	@Override
 	public Class<? extends IMetadataDataService<PatientList>> getServiceClass() {
-		return IPatientListDataService.class;
+		return IPatientListService.class;
 	}
 
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
-		return getRepresentationDescription(new DefaultRepresentation());
+		DelegatingResourceDescription description = super.getCreatableProperties();
+		description.addProperty("patientListConditions", Representation.REF);
+
+		return description;
 	}
 }

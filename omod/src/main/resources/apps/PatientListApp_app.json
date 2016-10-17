@@ -23,6 +23,15 @@
 				"icon": "icon-list-alt",
 				"requiredPrivilege": "Task: Manage Patient List Metadata",
 				"order": 2
+			},
+			{
+				"id": "${project.parent.groupId}.${project.parent.artifactId}.PatientListLink",
+				"extensionPointId": "patientDashboard.overallActions",
+				"type": "link",
+				"label": "Patient List",
+				"url": "${project.parent.artifactId}/view/entities.page",
+				"icon": "icon-list",
+				"order": 1
 			}
 		]
 	}

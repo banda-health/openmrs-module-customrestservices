@@ -5,20 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.op.Operator;
-import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
-import org.openmrs.module.patientlist.api.IPatientListDataService;
+import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
-import org.openmrs.module.patientlist.api.TestConstants;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
 
-	private IPatientListDataService patientListDataService;
+	private IPatientListService patientListDataService;
 	private IPatientListDataServiceTest patientListDataServiceTest;
 
 	@Before
@@ -30,8 +25,8 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Override
-	protected IPatientListDataService createService() {
-		return Context.getService(IPatientListDataService.class);
+	protected IPatientListService createService() {
+		return Context.getService(IPatientListService.class);
 	}
 
 	@Test
