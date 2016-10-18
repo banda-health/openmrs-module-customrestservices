@@ -1,6 +1,7 @@
 <%
     ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("patientlist.admin.patientList") ])
 
+   
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
     ui.includeCss("openhmis.commons", "entities2x.css")
@@ -18,7 +19,6 @@
 
     /* load managePatientList modules */
     ui.includeJavascript("patientlist", "managePatientList/models/entity.model.js")
-    ui.includeJavascript("patientlist", "managePatientList/services/entity.restful.services.js")
     ui.includeJavascript("patientlist", "managePatientList/controllers/entity.controller.js")
     ui.includeJavascript("patientlist", "managePatientList/controllers/manage-entity.controller.js")
     ui.includeJavascript("patientlist", "constants.js")

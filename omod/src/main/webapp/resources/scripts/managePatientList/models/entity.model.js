@@ -26,8 +26,8 @@
 		var defaultFields = extended.getModelFields();
 		
 		// @Override
-		extended.getModelFields = function () {
-			return fields.concat(defaultFields);
+		extended.getModelFields = function() {
+			return defaultFields;
 		};
 		
 		return extended;

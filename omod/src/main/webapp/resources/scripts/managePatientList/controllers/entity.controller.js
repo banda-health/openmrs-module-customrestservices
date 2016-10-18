@@ -12,25 +12,23 @@
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  *
  */
-(function () {
+(function() {
 	'use strict';
 	
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
-	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter',
-		'EntityRestFactory', 'PatientListModel', 'PatientListRestfulService'];
+	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel'];
 	
 	var ENTITY_NAME = "list";
 	
-	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory,
-	                          PatientListModel, PatientListRestfulService) {
+	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel) {
 		var self = this;
 		
-		var entity_name_message_key = "patientlist.title";
+		var entity_name_message_key = "patientlist.page";
 		
 		// @Override
-		self.setRequiredInitParameters = self.setRequiredInitParameters || function () {
-				self.bindBaseParameters(PATIENT_LIST_MODULE_NAME, ENTITY_NAME, entity_name_message_key, RELATIVE_CANCEL_PAGE_URL);
+		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
+				self.bindBaseParameters(PATIENT_LIST_MODULE_NAME, ENTITY_NAME, entity_name_message_key, PATIENT_LIST_RELATIVE_CANCEL_PAGE_URL);
 				self.checkPrivileges(TASK_MANAGE_PATIENT_LIST_METADATA);
 			};
 		
@@ -40,17 +38,18 @@
 		 */
 		// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
-			|| function (uuid) {
+			|| function(uuid) {
 				/* bind variables.. */
 				$scope.uuid = uuid;
-			}
+			};
 		
 		/**
 		 * All post-submit validations are done here.
 		 * @return boolean
 		 */
 		// @Override
-		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
+		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function() {
+				console.log("Demo Available")
 				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
 					$scope.submitted = true;
 					return false;
@@ -58,7 +57,7 @@
 				
 				$scope.loading = true;
 				return true;
-			}
+			};
 		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {

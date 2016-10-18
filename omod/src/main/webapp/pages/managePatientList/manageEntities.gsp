@@ -20,12 +20,12 @@
 	
 	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
-			${ui.message('patientlist.admin.patientList')}
+			${ui.message('openhmis.inventory.admin.departments')}
 		</span>
 		<span style="float:right;">
 			<a class="button confirm" ui-sref="new">
 				<i class="icon-plus"></i>
-				${ui.message('patientlist.define.new.label')}
+				{{newEntityLabel}}
 			</a>
 		</span>
 	</div>
@@ -33,24 +33,18 @@
 	
 	<div>
 		<div id="entities">
-			<div class="btn-group">
-				<ul class="search-area">
-					<li>
-						${ui.includeFragment("openhmis.commons", "searchFragment", [
-								model        : "searchField",
-								onChangeEvent: "searchCashpointsByName(1)",
-								class        : ["field-display ui-autocomplete-input form-control searchinput"],
-								placeholder  : [ui.message("patientlist.enterSearchPhrase")]
-						])}
-					</li>
-				</ul>
-			</div>
+			${ ui.includeFragment("openhmis.commons", "searchFragment", [
+					model: "searchField",
+					onChangeEvent: "updateContent()",
+					class: ["field-display ui-autocomplete-input form-control searchinput"],
+					placeholder: [ui.message("openhmis.commons.general.enterSearchPhrase")]
+			])}
 			
 			<br/><br/>
-			<table style="margin-bottom:5px;" class="manage-patientlist-table" id="manage-patientlist-table">
+			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
-					<th>${ui.message('general.name')}</th>
+					<th style="width: 40%">${ui.message('general.name')}</th>
 					<th>${ui.message('general.description')}</th>
 				</tr>
 				</thead>
@@ -64,23 +58,14 @@
 			</table>
 			
 			<div ng-show="fetchedEntities.length == 0">
-				<span ng-if="searchField !== ''">
-					<br/>
-					${ui.message('openhmis.commons.general.preSearchMessage')} - <b>{{searchField}}</b> - {{postSearchMessage}}
-				</span>
-				<span class="not-found" ng-if="searchField === ''">
-					${ui.message('patientlist.notFound')}
-				</span>
+				<br/>
+				${ui.message('openhmis.commons.general.preSearchMessage')} - <b> {{searchField}} </b> - {{postSearchMessage}}
 				<br/><br/>
-				<span>
-					<input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
-					       ng-change="searchCashpoints(currentPage)"/>
-				</span>
-				<span>
-					${ui.message('openhmis.commons.general.includeRetired')}
-				</span>
+				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
+				             ng-change="updateContent()"></span>
+				<span>${ui.message('openhmis.commons.general.includeRetired')}</span>
 			</div>
-			${ui.includeFragment("openhmis.commons", "paginationFragment", [onChange: "searchCashpoints(currentPage)", onPageChange: "searchCashpoints(currentPage)"])}
+			${ui.includeFragment("openhmis.commons", "paginationFragment")}
 		</div>
 	</div>
 </div>

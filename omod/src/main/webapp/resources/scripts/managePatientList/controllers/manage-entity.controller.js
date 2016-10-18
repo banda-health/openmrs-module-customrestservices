@@ -12,35 +12,33 @@
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  *
  */
-
-(function () {
+(function() {
 	'use strict';
 	
 	var base = angular.module('app.genericManageController');
 	base.controller("ManageEntityController", ManageEntityController);
 	ManageEntityController.$inject = ['$injector', '$scope', '$filter', 'EntityRestFactory', 'CssStylesFactory',
-		'PaginationService', 'PatientListModel', 'CookiesService', 'PatientListRestfulService'];
+		'PaginationService', 'PatientListModel', 'CookiesService'];
 	
-	var REST_ENTITY_NAME = "list";
+	var ENTITY_NAME = "list";
 	
 	function ManageEntityController($injector, $scope, $filter, EntityRestFactory, CssStylesFactory, PaginationService,
-	                                PatientListModel, CookiesService, PatientListRestfulService) {
+	                                PatientListModel, CookiesService) {
 		var self = this;
 		
-		var ENTITY_NAME = emr.message("patientlist.title");
+		var entity_name = emr.message("patientlist.page");
 		
 		// @Override
-		self.getModelAndEntityName = self.getModelAndEntityName || function () {
+		self.getModelAndEntityName = self.getModelAndEntityName || function() {
+				self.bindBaseParameters(PATIENT_LIST_MODULE_NAME, ENTITY_NAME, entity_name);
 				self.checkPrivileges(TASK_MANAGE_PATIENT_LIST_METADATA);
-				self.bindBaseParameters(PATIENT_LIST_MODULE_NAME, REST_ENTITY_NAME, ENTITY_NAME);
 			};
 		
 		// @Override
-		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function () {
+		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope || function() {
 				$scope.postSearchMessage = $filter('EmrFormat')(emr.message("openhmis.commons.general.postSearchMessage"),
 					[self.entity_name]);
-				
-			};
+			}
 		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericManageController, self, {
