@@ -52,7 +52,7 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
-			<table>
+			<table style="margin-bottom:5px;" class="manage-entities-table responsive">
 				<thead>
 				<tr>
 					<td>${ui.message("patientlist.condition.feild.label")}</td>
@@ -61,6 +61,37 @@
 					<td>${ui.message("patientlist.condition.consitionorder.label")}</td>
 				</tr>
 				</thead>
+				<tbody>
+				<tr>
+					<td>
+						<select class="form-control">
+							<option value="">--Patient Feilds--</option>
+							<option value="">Patient Name</option>
+						</select>
+					</td>
+					<td>
+						<select class="form-control">
+							<option value="">--Select Operator--</option>
+							<option value="=">Equals</option>
+							<option value=">">Greater than</option>
+							<option value="<">Less than</option>
+							<option value="=>">Equals or Greater than</option>
+							<option value="=<">Equals or Less than</option>
+							<option value="!=">Not Equals</option>
+						</select>
+					</td>
+					<td>
+						<input class="form-control input-sm" type="text" name="conditionValue"/>
+					</td>
+					<td>
+						<select name="orderSelection" class="form-control">
+							<option value="">--Select order--</option>
+							<option value="asc">Ascending</option>
+							<option value="">Descending</option>
+						</select>
+					</td>
+				</tr>
+				</tbody>
 			</table>
 		</div>
 	</div>
