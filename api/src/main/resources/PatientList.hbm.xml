@@ -51,9 +51,15 @@
 
         <many-to-one name="patientList" class="PatientList" column="patient_list_id" not-null="true" />
         <property name="field" type="java.lang.String" column="field" length="255" />
-        <property name="operator" type="java.lang.String" column="operator" />
         <property name="value" type="java.lang.String" column="value" length="255" />
-        <property name="conditionOrder" type="int" column="condition_order" />
+        <property name="conditionOrder" type="int" column="condition_order" not-null="true" />
+
+        <property name="operator" column="operator" length="12">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">org.openmrs.module.patientlist.api.model.PatientListOperator</param>
+                <param name="type">12</param>
+            </type>
+        </property>
 
         <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
     </class>

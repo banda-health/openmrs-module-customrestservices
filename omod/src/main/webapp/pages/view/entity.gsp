@@ -5,7 +5,6 @@
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
-
 </script>
 <span class="h1-substitue-left">
     ${ui.message('patientlist.page')}
@@ -40,12 +39,6 @@
     <div id="entities" class="detail-section-border-top">
         <br/>
         <table class="manage-entities-table">
-            <thead>
-            <tr>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
             <tr class="clickable-tr" pagination-id="__patientListData"
                 dir-paginate="entity in patientListData | itemsPerPage: limit"
                 total-items="totalNumOfResults" current-page="currentPage">
@@ -75,7 +68,6 @@
                     </div>
                 </td>
             </tr>
-            </tbody>
         </table>
         ${ui.includeFragment("openhmis.commons", "paginationFragment", [
                 paginationId      : "__patientListData",

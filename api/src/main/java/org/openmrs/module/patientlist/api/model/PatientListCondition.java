@@ -23,9 +23,9 @@ public class PatientListCondition extends BaseOpenmrsObject {
 	private Integer patientListConditionId;
 	private PatientList patientList;
 	private String field;
-	private String operator;
 	private String value;
 	private Integer conditionOrder;
+	private PatientListOperator operator;
 
 	@Override
 	public Integer getId() {
@@ -53,14 +53,6 @@ public class PatientListCondition extends BaseOpenmrsObject {
 		this.field = field;
 	}
 
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
-
 	public String getValue() {
 		return value;
 	}
@@ -75,5 +67,13 @@ public class PatientListCondition extends BaseOpenmrsObject {
 
 	public void setConditionOrder(Integer conditionOrder) {
 		this.conditionOrder = conditionOrder;
+	}
+
+	public PatientListOperator getOperator() {
+		return operator;
+	}
+
+	public void setOperator(PatientListOperator operator) {
+		this.operator = operator;
 	}
 }

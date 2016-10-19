@@ -3,7 +3,10 @@ package org.openmrs.module.patientlist.api.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.hql.ast.QuerySyntaxException;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.api.VisitService;
@@ -43,56 +46,83 @@ public class PatientListDataServiceImpl extends
 	@Override
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {
 		List<PatientListData> results = new ArrayList<PatientListData>();
-		List<Patient> patients;
+		try {
+			Integer count = 0;
+			List<Patient> patients;
+			// Create the query
+			StringBuilder hql = new StringBuilder("select p from Patient p");
+			if (patientList != null && patientList.getPatientListConditions() != null
+			        && searchVisitField(patientList.getPatientListConditions())) {
+				hql.append(" inner join Visit v ");
+			}
 
-		// Create the query
-		String hql = "select p from Patient p where ";
-		Integer count = 0;
-		int len = patientList.getPatientListConditions().size();
-		for (PatientListCondition condition : patientList.getPatientListConditions()) {
-			++count;
-			if (condition != null) {
-				hql += condition.getField() + " " + condition.getOperator() + " ";
-				if (StringUtils.isNotEmpty(condition.getValue())) {
-					if (condition.getValue() instanceof String) {
-						hql += "'" + condition.getValue() + "'";
-					} else {
-						hql += condition.getValue();
+			hql.append(" where ");
+			int len = patientList.getPatientListConditions().size();
+			for (PatientListCondition condition : patientList.getPatientListConditions()) {
+				++count;
+				if (condition != null) {
+
+					//Criteria criteria = getRepository().createCriteria(getEntityClass());
+					//criteria.add(Restrictions.eq("patient.id", patientId));
+
+					hql.append(condition.getField() + " " + condition.getOperator().toString() + " ");
+					if (StringUtils.isNotEmpty(condition.getValue())) {
+						if (condition.getValue() instanceof String) {
+							hql.append("'" + condition.getValue() + "'");
+						} else {
+							hql.append(condition.getValue());
+						}
+					}
+					if (count < len) {
+						hql.append(" or ");
 					}
 				}
-				if (count < len) {
-					hql += " or ";
-				}
-			}
-		}
-
-		Query query = getRepository().createQuery(hql);
-
-		// set paging params
-		count = query.list().size();
-		pagingInfo.setTotalRecordCount(count.longValue());
-		pagingInfo.setLoadRecordCount(false);
-
-		query = this.createPagingQuery(pagingInfo, query);
-		patients = query.list();
-		count = patients.size();
-		if (count > 0) {
-			if (visitService == null) {
-				visitService = Context.getVisitService();
 			}
 
-			for (Patient patient : patients) {
-				Visit activeVisit = null;
-				List<Visit> activeVisits = visitService.getActiveVisitsByPatient(patient);
-				if (activeVisits.size() > 0) {
-					activeVisit = activeVisits.get(0);
+			Query query = getRepository().createQuery(hql.toString());
+
+			// set paging params
+			count = query.list().size();
+			pagingInfo.setTotalRecordCount(count.longValue());
+			pagingInfo.setLoadRecordCount(false);
+
+			query = this.createPagingQuery(pagingInfo, query);
+			patients = query.list();
+			count = patients.size();
+			if (count > 0) {
+				if (visitService == null) {
+					visitService = Context.getVisitService();
 				}
 
-				PatientListData patientListData = new PatientListData(patient, activeVisit, patientList);
-				results.add(patientListData);
+				for (Patient patient : patients) {
+					Visit activeVisit = null;
+					List<Visit> activeVisits = visitService.getActiveVisitsByPatient(patient);
+					if (activeVisits.size() > 0) {
+						activeVisit = activeVisits.get(0);
+					}
+
+					PatientListData patientListData = new PatientListData(patient, activeVisit, patientList);
+					results.add(patientListData);
+				}
 			}
+		} catch (QuerySyntaxException ex) {
+			LOG.error(ex.getMessage());
 		}
 
 		return results;
+	}
+
+	private boolean searchVisitField(List<PatientListCondition> patientListConditions) {
+		for (PatientListCondition patientListCondition : patientListConditions) {
+			if (patientListCondition == null) {
+				continue;
+			}
+
+			if (StringUtils.contains(patientListCondition.getField(), "v.")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
