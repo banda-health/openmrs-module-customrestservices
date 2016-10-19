@@ -9,6 +9,7 @@ import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
+import org.openmrs.module.patientlist.api.model.PatientListOperator;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
 
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
@@ -35,7 +36,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		PatientListCondition selectionRule = new PatientListCondition();
 		selectionRule.setField("p.age");
-		selectionRule.setOperator(Operator.GT.toString());
+		selectionRule.setOperator(PatientListOperator.GT);
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
@@ -54,7 +55,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		PatientListCondition selectionRule = new PatientListCondition();
 		selectionRule.setField("p.age");
-		selectionRule.setOperator(Operator.GT.toString());
+		selectionRule.setOperator(PatientListOperator.GT);
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
@@ -62,7 +63,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		selectionRule = new PatientListCondition();
 		selectionRule.setField("p.gender");
-		selectionRule.setOperator(Operator.EQUALS.toString());
+		selectionRule.setOperator(PatientListOperator.EQUALS);
 		selectionRule.setValue("M");
 		selectionRule.setConditionOrder(2);
 
@@ -81,7 +82,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		PatientListCondition selectionRule = new PatientListCondition();
 		selectionRule.setField("p.age");
-		selectionRule.setOperator(Operator.GT.toString());
+		selectionRule.setOperator(PatientListOperator.GT);
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
@@ -107,7 +108,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		PatientListCondition selectionRule = new PatientListCondition();
 		selectionRule.setField("p.age");
-		selectionRule.setOperator(Operator.GT.toString());
+		selectionRule.setOperator(PatientListOperator.GT);
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 

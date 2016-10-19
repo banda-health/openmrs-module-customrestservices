@@ -55,6 +55,9 @@
 			}
 
 		self.getPatientListData = self.getPatientListData || function(uuid, currentPage, limit) {
+				$scope.patientListData = [];
+				$scope.totalNumOfResults = 0;
+
 				PatientListRestfulService.getPatientListData(uuid, currentPage, limit, self.onLoadPatientListDataSuccessful);
 			}
 
