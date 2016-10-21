@@ -7,9 +7,9 @@ import org.openmrs.module.patientlist.api.model.PatientListOperator;
  */
 public class ConvertPatientListOperators {
 
-	public static String convertOperator(PatientListOperator operator){
+	public static String convertOperator(PatientListOperator operator) {
 		String literalOperator;
-		switch(operator){
+		switch (operator) {
 			case EQUALS:
 				literalOperator = "=";
 				return literalOperator;
