@@ -18,6 +18,7 @@ import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
+import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,12 @@ public class PatientListDataServiceImpl extends
 			for (PatientListCondition condition : patientList.getPatientListConditions()) {
 				++count;
 				if (condition != null) {
-
 					//Criteria criteria = getRepository().createCriteria(getEntityClass());
 					//criteria.add(Restrictions.eq("patient.id", patientId));
-
-					hql.append(condition.getField() + " " + condition.getOperator().toString() + " ");
+					hql.append(condition.getField());
+					hql.append(" ");
+					hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+					hql.append(" ");
 					if (StringUtils.isNotEmpty(condition.getValue())) {
 						if (condition.getValue() instanceof String) {
 							hql.append("'" + condition.getValue() + "'");
