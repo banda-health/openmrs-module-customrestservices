@@ -7,11 +7,14 @@ import org.openmrs.module.patientlist.api.model.PatientListOperator;
  */
 public class ConvertPatientListOperators {
 
-	public static String convertOperator(PatientListOperator operator){
+	public static String convertOperator(PatientListOperator operator) {
 		String literalOperator;
-		switch(operator){
+		switch (operator) {
 			case EQUALS:
 				literalOperator = "=";
+				return literalOperator;
+			case NOT_EQUALS:
+				literalOperator = "!=";
 				return literalOperator;
 			case GT:
 				literalOperator = ">";
@@ -24,6 +27,18 @@ public class ConvertPatientListOperators {
 				return literalOperator;
 			case LTE:
 				literalOperator = "<=";
+				return literalOperator;
+			case NULL:
+				literalOperator = "IS NULL";
+				return literalOperator;
+			case NOT_NULL:
+				literalOperator = "IS NOT NULL";
+				return literalOperator;
+			case BETWEEN:
+				literalOperator = "BETWEEN";
+				return literalOperator;
+			case LIKE:
+				literalOperator = "LIKE";
 				return literalOperator;
 			default:
 				throw new IllegalArgumentException("Invalid operator " + operator);

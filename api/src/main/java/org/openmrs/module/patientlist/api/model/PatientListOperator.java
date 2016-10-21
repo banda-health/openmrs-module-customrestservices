@@ -7,27 +7,22 @@ import org.openmrs.logic.op.Operator;
  */
 public enum PatientListOperator {
 
-	CONTAINS(Operator.CONTAINS),
+	LIKE(Operator.CONTAINS),
 	EQUALS(Operator.EQUALS),
-	//WITHIN(Operator.WITHIN),
 	GT(Operator.GT),
 	GTE(Operator.GTE),
 	LT(Operator.LT),
 	LTE(Operator.LTE),
-	//BEFORE(Operator.BEFORE),
-	//AFTER(Operator.AFTER),
-	//IN(Operator.IN),
-	ASOF(Operator.ASOF),
-	AND(Operator.AND),
-	NOT(Operator.NOT),
-	LAST(Operator.LAST),
-	FIRST(Operator.FIRST),
-	DISTINCT(Operator.DISTINCT),
-	EXISTS(Operator.EXISTS),
-	COUNT(Operator.COUNT),
-	AVERAGE(Operator.AVERAGE);
+	NOT_EQUALS,
+	BETWEEN,
+	NULL,
+	NOT_NULL,
+	DEFINED,
+	NOT_DEFINED;
 
 	private Operator operator;
+
+	private PatientListOperator() {}
 
 	private PatientListOperator(Operator operator) {
 		this.operator = operator;
