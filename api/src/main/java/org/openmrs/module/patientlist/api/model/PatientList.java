@@ -43,7 +43,7 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 	}
 
 	public void setPatientListConditions(
-	        List<PatientListCondition> patientListConditions) {
+			List<PatientListCondition> patientListConditions) {
 		this.patientListConditions = patientListConditions;
 	}
 

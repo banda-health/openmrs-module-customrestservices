@@ -13,28 +13,28 @@
  *
  */
 
-(function() {
-    'use strict';
-
-    var baseModel = angular.module('app.genericMetadataModel');
-
-    /* Define model fields */
-    function PatientListModel(GenericMetadataModel) {
-
-        var extended = angular.extend(GenericMetadataModel, {});
-
-        var defaultFields = extended.getModelFields();
-
-        // @Override
-        extended.getModelFields = function() {
-            return fields.concat(defaultFields);
-        };
-
-        return extended;
-    }
-
-    baseModel.factory("PatientListModel", PatientListModel);
-
-    PatientListModel.$inject = ['GenericMetadataModel'];
-
+(function () {
+	'use strict';
+	
+	var baseModel = angular.module('app.genericMetadataModel');
+	
+	/* Define model fields */
+	function PatientListModel(GenericMetadataModel) {
+		
+		var extended = angular.extend(GenericMetadataModel, {});
+		
+		var defaultFields = extended.getModelFields();
+		
+		// @Override
+		extended.getModelFields = function() {
+			return defaultFields;
+		};
+		
+		return extended;
+	}
+	
+	baseModel.factory("PatientListModel", PatientListModel);
+	
+	PatientListModel.$inject = ['GenericMetadataModel'];
+	
 })();
