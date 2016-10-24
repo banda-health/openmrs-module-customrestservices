@@ -64,13 +64,13 @@
 				<tbody>
 				<tr>
 					<td>
-						<select class="form-control" ng-model="conditionField">
+						<select class="form-control" ng-model="entity.patientListConditions[0].field">
 							<option value="">--Patient Feilds--</option>
 							<option value="p.age">Patient's Age</option>
 						</select>
 					</td>
 					<td>
-						<select class="form-control" ng-model="conditionOperator">
+						<select class="form-control" ng-model="entity.patientListConditions.operator">
 							<option value="">--Select Operator--</option>
 							<option value="EQUALS">Equals</option>
 							<option value=">">Greater than</option>
@@ -81,10 +81,10 @@
 						</select>
 					</td>
 					<td>
-						<input ng-model="conditionValue" class="form-control input-sm" type="number" name="conditionValue"/>
+						<input name="conditionValue" class="form-control input-sm" type="text" ng-model="entity.patientListConditions[0].value"/>
 					</td>
 					<td>
-						<select name="orderSelection" class="form-control" ng-model="conditionOrder" ng-change="addPatientListCondition()">
+						<select name="orderSelection" class="form-control" ng-model="entity.patientListConditions[0].conditionOrder" >
 							<option value="">--Select order--</option>
 							<option value="1">Ascending</option>
 							<option value="2">Descending</option>

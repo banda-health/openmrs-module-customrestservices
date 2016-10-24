@@ -42,6 +42,7 @@
 				/* bind variables.. */
 				$scope.uuid = uuid;
 				$scope.patienListConditions = [];
+				self.addPatientListCondition();
 			};
 		
 		/**
@@ -50,7 +51,6 @@
 		 */
 		// @Override
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function() {
-				console.log("Demo Available")
 				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
 					$scope.submitted = true;
 					return false;

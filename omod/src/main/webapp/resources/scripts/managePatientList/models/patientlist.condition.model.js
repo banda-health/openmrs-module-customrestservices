@@ -16,7 +16,7 @@
 (function() {
 	'use strict';
 
-	var baseModel = angular.module('app.PatientListConditionModel', []);
+	var baseModel = angular.module('app.patientListConditionModel', []);
 
 	function PatientListConditionModel() {
 
