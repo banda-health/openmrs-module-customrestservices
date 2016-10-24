@@ -22,7 +22,7 @@ public class PatientListDataResource extends BaseRestObjectResource<PatientListD
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("patient", Representation.DEFAULT);
-		description.addProperty("activeVisit", Representation.DEFAULT);
+		description.addProperty("visit", Representation.DEFAULT);
 
 		return description;
 	}

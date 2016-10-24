@@ -63,8 +63,8 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 		this.patientListOrders = patientListOrders;
 	}
 
-	public void addSelectionRule(PatientListCondition selectionRule) {
-		if (selectionRule == null) {
+	public void addCondition(PatientListCondition condition) {
+		if (condition == null) {
 			throw new NullPointerException("The selection rule to add must be defined.");
 		}
 
@@ -72,9 +72,9 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 			this.patientListConditions = new ArrayList<PatientListCondition>();
 		}
 
-		selectionRule.setPatientList(this);
+		condition.setPatientList(this);
 
-		this.patientListConditions.add(selectionRule);
+		this.patientListConditions.add(condition);
 	}
 
 	public void addSortOrder(PatientListOrder sortOrder) {

@@ -52,16 +52,16 @@
                     </div>
 
                     <div class="row" >
-                        <div ng-show="entity.activeVisit !== null" class="col-sm-10" style="padding: 10px;">
-                            Visit: {{entity.activeVisit.display}}
+                        <div ng-show="entity.visit !== null" class="col-sm-10" style="padding: 10px;">
+                            Visit: {{entity.visit.display}}
                         </div>
                     </div>
 
-                    <div class="row" ng-show="entity.activeVisit !== null && entity.activeVisit.attributes !== []">
+                    <div class="row" ng-show="entity.visit !== null && entity.visit.attributes !== []">
                         <div class="col-sm-12">
-                            <span ng-repeat="visitAttribute in entity.activeVisit.attributes">
+                            <span ng-repeat="visitAttribute in entity.visit.attributes">
                                 <span>
-                                    {{visitAttribute.display}}<span ng-if="\$index < entity.activeVisit.attributes.length - 1">, </span>
+                                    {{visitAttribute.display}}<span ng-if="\$index < entity.visit.attributes.length - 1">, </span>
                                 </span>
                             </span>
                         </div>

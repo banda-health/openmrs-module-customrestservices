@@ -40,7 +40,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
-		patientList.addSelectionRule(selectionRule);
+		patientList.addCondition(selectionRule);
 
 		patientListDataService.save(patientList);
 		Context.flushSession();
@@ -59,7 +59,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
-		patientList.addSelectionRule(selectionRule);
+		patientList.addCondition(selectionRule);
 
 		selectionRule = new PatientListCondition();
 		selectionRule.setField("p.gender");
@@ -67,7 +67,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		selectionRule.setValue("M");
 		selectionRule.setConditionOrder(2);
 
-		patientList.addSelectionRule(selectionRule);
+		patientList.addCondition(selectionRule);
 
 		patientListDataService.save(patientList);
 		Context.flushSession();
@@ -86,7 +86,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
-		patientList.addSelectionRule(selectionRule);
+		patientList.addCondition(selectionRule);
 
 		PatientListOrder order = new PatientListOrder();
 		order.setField("p.name");
@@ -112,7 +112,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		selectionRule.setValue("20");
 		selectionRule.setConditionOrder(1);
 
-		patientList.addSelectionRule(selectionRule);
+		patientList.addCondition(selectionRule);
 
 		PatientListOrder order = new PatientListOrder();
 		order.setField("p.name");
