@@ -15,6 +15,7 @@ import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListData;
+import org.openmrs.module.patientlist.api.model.PatientListOrder;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
 import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
 
@@ -50,7 +51,6 @@ public class PatientListDataServiceImpl extends
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {
 		List<PatientListData> patientListDataSet = new ArrayList<PatientListData>();
 		try {
-			Integer count = 0;
 			// Create the query
 			StringBuilder hql = new StringBuilder("select distinct p from Patient p inner join p.attributes as attr");
 			if (patientList != null && patientList.getPatientListConditions() != null
@@ -59,33 +59,12 @@ public class PatientListDataServiceImpl extends
 			}
 
 			hql.append(" where ");
-			int len = patientList.getPatientListConditions().size();
+			//apply conditions
 			List<Object> paramValues = new ArrayList<Object>();
-			for (PatientListCondition condition : patientList.getPatientListConditions()) {
-				++count;
-				if (condition != null) {
-					hql.append(condition.getField());
-					hql.append(" ");
-					hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
-					hql.append(" ");
-					if (StringUtils.isNotEmpty(condition.getValue())) {
-						hql.append("?");
-						if (StringUtils.contains(condition.getField().toLowerCase(), "date")) {
-							try {
-								paramValues.add(sdf.parse(condition.getValue()));
-							} catch (ParseException pex) {
-								paramValues.add(condition.getValue());
-							}
-						} else {
-							paramValues.add(condition.getValue());
-						}
-					}
+			hql.append(applyConditions(patientList.getPatientListConditions(), paramValues));
 
-					if (count < len) {
-						hql.append(" or ");
-					}
-				}
-			}
+			//apply ordering
+			hql.append(applyOrdering(patientList.getOrdering()));
 
 			Query query = getRepository().createQuery(hql.toString());
 			if (paramValues.size() > 0) {
@@ -96,7 +75,7 @@ public class PatientListDataServiceImpl extends
 			}
 
 			// set paging params
-			count = query.list().size();
+			Integer count = query.list().size();
 			pagingInfo.setTotalRecordCount(count.longValue());
 			pagingInfo.setLoadRecordCount(false);
 
@@ -131,6 +110,65 @@ public class PatientListDataServiceImpl extends
 		}
 
 		return patientListDataSet;
+	}
+
+	private String applyConditions(List<PatientListCondition> patientListConditions, List<Object> paramValues) {
+		int count = 0;
+		int len = patientListConditions.size();
+		StringBuilder hql = new StringBuilder();
+		// apply conditions
+		for (PatientListCondition condition : patientListConditions) {
+			++count;
+			if (condition != null) {
+				hql.append(condition.getField());
+				hql.append(" ");
+				hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+				hql.append(" ");
+				if (StringUtils.isNotEmpty(condition.getValue())) {
+					hql.append("?");
+					if (StringUtils.contains(condition.getField().toLowerCase(), "date")) {
+						try {
+							paramValues.add(sdf.parse(condition.getValue()));
+						} catch (ParseException pex) {
+							paramValues.add(condition.getValue());
+						}
+					} else {
+						paramValues.add(condition.getValue());
+					}
+				}
+
+				if (count < len) {
+					hql.append(" or ");
+				}
+			}
+		}
+
+		return hql.toString();
+	}
+
+	private String applyOrdering(List<PatientListOrder> ordering) {
+		//apply ordering
+		int count = 0;
+		StringBuilder hql = new StringBuilder();
+		for (PatientListOrder order : ordering) {
+			if (order != null) {
+				hql.append(" ");
+				if (count++ == 0) {
+					hql.append("order by ");
+				}
+
+				hql.append(order.getField());
+				hql.append(" ");
+				hql.append(order.getSortOrder());
+				//hql.append(",");
+			}
+		}
+
+		//remove trailing coma.
+		//StringUtils.removeEnd(hql.toString(), ",");
+		//LOG.warn(hql.toString());
+
+		return hql.toString();
 	}
 
 	private boolean searchVisitField(List<PatientListCondition> patientListConditions) {
