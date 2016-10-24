@@ -15,6 +15,7 @@ import org.openmrs.module.openhmis.commons.api.entity.impl.BaseMetadataDataServi
 import org.openmrs.module.openhmis.commons.api.entity.security.IMetadataAuthorizationPrivileges;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.PatientList;
+import org.openmrs.module.patientlist.api.security.BasicMetadataAuthorizationPrivileges;
 
 /**
  * Data service implementation class for {@link PatientList}'s.
@@ -25,7 +26,7 @@ public class PatientListServiceImpl extends BaseMetadataDataServiceImpl<PatientL
 
 	@Override
 	protected IMetadataAuthorizationPrivileges getPrivileges() {
-		return null;
+		return new BasicMetadataAuthorizationPrivileges();
 	}
 
 	@Override

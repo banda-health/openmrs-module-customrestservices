@@ -12,14 +12,14 @@ import java.util.List;
 public class PatientListData extends BaseOpenmrsData {
 
 	private Patient patient;
-	private Visit activeVisit;
+	private Visit visit;
 	private PatientList patientList;
 
 	public PatientListData() {}
 
-	public PatientListData(Patient patient, Visit activeVisit, PatientList patientList) {
+	public PatientListData(Patient patient, Visit visit, PatientList patientList) {
 		this.patient = patient;
-		this.activeVisit = activeVisit;
+		this.visit = visit;
 		this.patientList = patientList;
 	}
 
@@ -39,12 +39,12 @@ public class PatientListData extends BaseOpenmrsData {
 		this.patient = patient;
 	}
 
-	public Visit getActiveVisit() {
-		return activeVisit;
+	public Visit getVisit() {
+		return visit;
 	}
 
-	public void setActiveVisit(Visit activeVisit) {
-		this.activeVisit = activeVisit;
+	public void setVisit(Visit visit) {
+		this.visit = visit;
 	}
 
 	public PatientList getPatientList() {

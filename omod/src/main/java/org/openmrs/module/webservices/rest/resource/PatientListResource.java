@@ -9,6 +9,7 @@ import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
+import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -20,17 +21,27 @@ import java.util.List;
  */
 @Resource(name = ModuleRestConstants.PATIENT_LIST_RESOURCE, supportedClass = PatientList.class,
         supportedOpenmrsVersions = { "1.9.*", "1.10.*", "1.11.*", "1.12.*" })
-@Handler(supports = { PatientList.class }, order = 0)
 public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addProperty("displayTemplate", Representation.DEFAULT);
-		description.addProperty("dateCreated", Representation.DEFAULT);
-		//description.addProperty("patientListConditions");
+		description.addProperty("displayTemplate");
+		description.addProperty("dateCreated");
+		description.addProperty("patientListConditions", Representation.DEFAULT);
 
 		return description;
+	}
+
+	@PropertySetter("patientListConditions")
+	public void setPatientListConditions(PatientList instance, List<PatientListCondition> patientListConditions) {
+		if (instance.getPatientListConditions() == null) {
+			instance.setPatientListConditions(new ArrayList<PatientListCondition>(patientListConditions.size()));
+		}
+		BaseRestDataResource.syncCollection(instance.getPatientListConditions(), patientListConditions);
+		for (PatientListCondition patientListCondition : instance.getPatientListConditions()) {
+			patientListCondition.setPatientList(instance);
+		}
 	}
 
 	@Override
@@ -46,16 +57,5 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
 		return getRepresentationDescription(new DefaultRepresentation());
-	}
-
-	@PropertySetter("patientListConditions")
-	public void setPatientListConditions(PatientList instance, List<PatientListCondition> patientListConditionsList) {
-		if (instance.getPatientListConditions() == null) {
-			instance.setPatientListConditions(new ArrayList<PatientListCondition>(patientListConditionsList.size()));
-		}
-		BaseRestDataResource.syncCollection(instance.getPatientListConditions(), patientListConditionsList);
-		for (PatientListCondition patientListCondition : instance.getPatientListConditions()) {
-			patientListCondition.setPatientList(instance);
-		}
 	}
 }
