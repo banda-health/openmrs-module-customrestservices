@@ -1,15 +1,14 @@
 package org.openmrs.module.webservices.rest.resource;
 
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
+import org.openmrs.module.patientlist.api.model.PatientListOrder;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
-import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 
@@ -29,6 +28,7 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		description.addProperty("displayTemplate");
 		description.addProperty("dateCreated");
 		description.addProperty("patientListConditions", Representation.DEFAULT);
+		description.addProperty("ordering", Representation.DEFAULT);
 
 		return description;
 	}
@@ -41,6 +41,17 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		BaseRestDataResource.syncCollection(instance.getPatientListConditions(), patientListConditions);
 		for (PatientListCondition patientListCondition : instance.getPatientListConditions()) {
 			patientListCondition.setPatientList(instance);
+		}
+	}
+
+	@PropertySetter("ordering")
+	public void setOrdering(PatientList instance, List<PatientListOrder> ordering) {
+		if (instance.getOrdering() == null) {
+			instance.setOrdering(new ArrayList<PatientListOrder>(ordering.size()));
+		}
+		BaseRestDataResource.syncCollection(instance.getOrdering(), ordering);
+		for (PatientListOrder order : instance.getOrdering()) {
+			order.setPatientList(instance);
 		}
 	}
 

@@ -91,7 +91,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		PatientListOrder order = new PatientListOrder();
 		order.setField("p.name");
 		order.setSortOrder("asc");
-		order.setOrder(1);
+		order.setConditionOrder(1);
 
 		patientList.addSortOrder(order);
 
@@ -99,7 +99,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Context.flushSession();
 
 		Assert.assertNotNull(patientList);
-		Assert.assertEquals("asc", patientList.getPatientListOrders().get(0).getSortOrder());
+		Assert.assertEquals("asc", patientList.getOrdering().get(0).getSortOrder());
 	}
 
 	@Test
@@ -117,14 +117,14 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		PatientListOrder order = new PatientListOrder();
 		order.setField("p.name");
 		order.setSortOrder("asc");
-		order.setOrder(1);
+		order.setConditionOrder(1);
 
 		patientList.addSortOrder(order);
 
 		order = new PatientListOrder();
 		order.setField("p.id");
 		order.setSortOrder("asc");
-		order.setOrder(2);
+		order.setConditionOrder(2);
 
 		patientList.addSortOrder(order);
 
@@ -132,6 +132,6 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Context.flushSession();
 
 		Assert.assertNotNull(patientList);
-		Assert.assertEquals("p.id", patientList.getPatientListOrders().get(1).getField());
+		Assert.assertEquals("p.id", patientList.getOrdering().get(1).getField());
 	}
 }

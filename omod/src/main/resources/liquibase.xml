@@ -44,8 +44,7 @@
             <column name="patient_list_id" type="int"><constraints nullable="false" /></column>
             <column name="field" type="varchar(255)"/>
             <column name="sort_order" type="varchar(10)"/>
-            <column name="order" type="int"/>
-            <column name="uuid" type="char(38)" />
+            <column name="condition_order" type="int"><constraints nullable="false" /></column>            <column name="uuid" type="char(38)" />
         </createTable>
 
         <createIndex indexName="patient_list_condition_idx" tableName="patient_list_condition" unique="false">

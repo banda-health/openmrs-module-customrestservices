@@ -13,18 +13,18 @@
  */
 package org.openmrs.module.patientlist.api.model;
 
-import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 /**
  * Model class that represents the ordering of patients in a list.
  */
-public class PatientListOrder extends BaseOpenmrsObject {
+public class PatientListOrder extends BaseSerializableOpenmrsMetadata {
 
 	private Integer patientListOrderId;
 	private PatientList patientList;
 	private String field;
 	private String sortOrder;
-	private Integer order;
+	private Integer conditionOrder;
 
 	@Override
 	public Integer getId() {
@@ -60,11 +60,11 @@ public class PatientListOrder extends BaseOpenmrsObject {
 		this.sortOrder = sortOrder;
 	}
 
-	public Integer getOrder() {
-		return order;
+	public Integer getConditionOrder() {
+		return conditionOrder;
 	}
 
-	public void setOrder(Integer order) {
-		this.order = order;
+	public void setConditionOrder(Integer conditionOrder) {
+		this.conditionOrder = conditionOrder;
 	}
 }

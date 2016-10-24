@@ -13,7 +13,6 @@
  */
 package org.openmrs.module.patientlist.api.model;
 
-import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 
 /**

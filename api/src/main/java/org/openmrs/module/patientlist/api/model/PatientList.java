@@ -25,7 +25,7 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 
 	private Integer patientListId;
 	private List<PatientListCondition> patientListConditions;
-	private List<PatientListOrder> patientListOrders;
+	private List<PatientListOrder> ordering;
 	private String displayTemplate;
 
 	@Override
@@ -55,12 +55,12 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 		this.displayTemplate = displayTemplate;
 	}
 
-	public List<PatientListOrder> getPatientListOrders() {
-		return patientListOrders;
+	public List<PatientListOrder> getOrdering() {
+		return ordering;
 	}
 
-	public void setPatientListOrders(List<PatientListOrder> patientListOrders) {
-		this.patientListOrders = patientListOrders;
+	public void setOrdering(List<PatientListOrder> ordering) {
+		this.ordering = ordering;
 	}
 
 	public void addCondition(PatientListCondition condition) {
@@ -82,12 +82,12 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 			throw new NullPointerException("The sort order to add must be defined.");
 		}
 
-		if (this.patientListOrders == null) {
-			this.patientListOrders = new ArrayList<PatientListOrder>();
+		if (this.ordering == null) {
+			this.ordering = new ArrayList<PatientListOrder>();
 		}
 
 		sortOrder.setPatientList(this);
 
-		this.patientListOrders.add(sortOrder);
+		this.ordering.add(sortOrder);
 	}
 }
