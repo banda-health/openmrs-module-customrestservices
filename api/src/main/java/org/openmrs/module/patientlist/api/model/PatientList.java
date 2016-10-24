@@ -13,7 +13,7 @@
  */
 package org.openmrs.module.patientlist.api.model;
 
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
+import org.openmrs.BaseOpenmrsMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Model class that represents a patient list definition.
  */
-public class PatientList extends BaseSerializableOpenmrsMetadata {
+public class PatientList extends BaseOpenmrsMetadata {
 
 	private Integer patientListId;
 	private List<PatientListCondition> patientListConditions;
@@ -42,9 +42,61 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 		return patientListConditions;
 	}
 
-	public void setPatientListConditions(
-	        List<PatientListCondition> patientListConditions) {
+	public void setPatientListConditions(List<PatientListCondition> patientListConditions) {
 		this.patientListConditions = patientListConditions;
+	}
+
+	public PatientListCondition addPatientListConditions(String field, PatientListOperator operator, int conditionOrder) {
+		if (field == null) {
+			throw new NullPointerException("The item to add must be defined.");
+		}
+		if (operator == null) {
+			throw new NullPointerException("The item price must be defined.");
+		}
+
+		return addPatientListConditions(field, operator, conditionOrder);
+	}
+
+	public PatientListCondition addPatientListConditions(String field, PatientListOperator operator, String value,
+	        int conditionOrder) {
+		if (field == null) {
+			throw new IllegalArgumentException("The item to add must be defined.");
+		}
+		if (operator == null) {
+			throw new IllegalArgumentException("The item price must be defined.");
+		}
+
+		PatientListCondition patientListConditions = new PatientListCondition();
+		patientListConditions.setPatientList(this);
+		patientListConditions.setField(field);
+		patientListConditions.setOperator(operator);
+		patientListConditions.setValue(value);
+		patientListConditions.setConditionOrder(conditionOrder);
+
+		addPatientListCondition(patientListConditions);
+
+		return patientListConditions;
+	}
+
+	public void addPatientListCondition(PatientListCondition patientListCondition) {
+		if (patientListCondition == null) {
+			throw new NullPointerException("The list item to add must be defined.");
+		}
+
+		if (this.patientListConditions == null) {
+			this.patientListConditions = new ArrayList<PatientListCondition>();
+		}
+
+		this.patientListConditions.add(patientListCondition);
+		patientListCondition.setPatientList(this);
+	}
+
+	public void removePatientListCondition(PatientListCondition patientListCondition) {
+		if (patientListCondition != null) {
+			if (this.patientListConditions != null) {
+				this.patientListConditions.remove(patientListCondition);
+			}
+		}
 	}
 
 	public String getDisplayTemplate() {

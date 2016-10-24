@@ -17,3 +17,15 @@ ul.table-layout .gray-button{
 ul.table-layout{
   margin: 0px;
 }
+
+table.manage-condition-table{
+  table-layout: fixed;
+}
+
+table.manage-condition-table th:first-child, td:first-child{
+  width: 100%;
+}
+
+table.manage-condition-table th, td{
+  width: 60%;
+}

@@ -4,10 +4,16 @@ import org.openmrs.annotation.Handler;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.PatientList;
+import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
+import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * REST resource representing a {@link PatientList}
@@ -22,6 +28,7 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
 		description.addProperty("displayTemplate", Representation.DEFAULT);
 		description.addProperty("dateCreated", Representation.DEFAULT);
+		//description.addProperty("patientListConditions");
 
 		return description;
 	}
@@ -38,9 +45,17 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 
 	@Override
 	public DelegatingResourceDescription getCreatableProperties() {
-		DelegatingResourceDescription description = super.getCreatableProperties();
-		description.addProperty("patientListConditions", Representation.REF);
+		return getRepresentationDescription(new DefaultRepresentation());
+	}
 
-		return description;
+	@PropertySetter("patientListConditions")
+	public void setPatientListConditions(PatientList instance, List<PatientListCondition> patientListConditionsList) {
+		if (instance.getPatientListConditions() == null) {
+			instance.setPatientListConditions(new ArrayList<PatientListCondition>(patientListConditionsList.size()));
+		}
+		BaseRestDataResource.syncCollection(instance.getPatientListConditions(), patientListConditionsList);
+		for (PatientListCondition patientListCondition : instance.getPatientListConditions()) {
+			patientListCondition.setPatientList(instance);
+		}
 	}
 }

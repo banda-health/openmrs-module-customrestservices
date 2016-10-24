@@ -17,11 +17,11 @@
 	
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
-	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel'];
+	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel','PatientListConditionModel'];
 	
 	var ENTITY_NAME = "list";
 	
-	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel) {
+	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel, PatientListConditionModel) {
 		var self = this;
 		
 		var entity_name_message_key = "patientlist.page";
@@ -41,6 +41,7 @@
 			|| function(uuid) {
 				/* bind variables.. */
 				$scope.uuid = uuid;
+				$scope.patienListConditions = [];
 			};
 		
 		/**
@@ -57,6 +58,23 @@
 				
 				$scope.loading = true;
 				return true;
+			};
+		
+		self.addPatientListCondition = self.addPatientListCondition || function() {
+				if ($scope.conditionField != null || $scope.conditionOperator != null || $scope.conditionValue != null || $scope.conditionOrder != null) {
+					var addPatientListCondition = true;
+					for (var i = 0; i < $scope.patienListConditions.length; i++) {
+						var patientListCondition = $scope.patienListConditions[i];
+						if (!patientListCondition.selected) {
+							addPatientListCondition = false;
+							break;
+						}
+					}
+					if (addPatientListCondition) {
+						var patientListCondition = new PatientListConditionModel('', 1, '');
+						$scope.patienListConditions.push(patientListCondition);
+					}
+				}
 			};
 		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

@@ -52,7 +52,7 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-entities-table responsive">
+			<table style="margin-bottom:5px;" class="manage-condition-table responsive">
 				<thead>
 				<tr>
 					<td>${ui.message("patientlist.condition.feild.label")}</td>
@@ -64,15 +64,15 @@
 				<tbody>
 				<tr>
 					<td>
-						<select class="form-control">
+						<select class="form-control" ng-model="conditionField">
 							<option value="">--Patient Feilds--</option>
-							<option value="">Patient Name</option>
+							<option value="p.age">Patient's Age</option>
 						</select>
 					</td>
 					<td>
-						<select class="form-control">
+						<select class="form-control" ng-model="conditionOperator">
 							<option value="">--Select Operator--</option>
-							<option value="=">Equals</option>
+							<option value="EQUALS">Equals</option>
 							<option value=">">Greater than</option>
 							<option value="<">Less than</option>
 							<option value="=>">Equals or Greater than</option>
@@ -81,13 +81,13 @@
 						</select>
 					</td>
 					<td>
-						<input class="form-control input-sm" type="text" name="conditionValue"/>
+						<input ng-model="conditionValue" class="form-control input-sm" type="number" name="conditionValue"/>
 					</td>
 					<td>
-						<select name="orderSelection" class="form-control">
+						<select name="orderSelection" class="form-control" ng-model="conditionOrder" ng-change="addPatientListCondition()">
 							<option value="">--Select order--</option>
-							<option value="asc">Ascending</option>
-							<option value="">Descending</option>
+							<option value="1">Ascending</option>
+							<option value="2">Descending</option>
 						</select>
 					</td>
 				</tr>
