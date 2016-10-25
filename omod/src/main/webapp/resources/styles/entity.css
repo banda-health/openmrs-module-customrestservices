@@ -23,9 +23,9 @@ table.manage-condition-table{
 }
 
 table.manage-condition-table th:first-child, td:first-child{
-  width: 100%;
+  width: 40%;
 }
 
 table.manage-condition-table th, td{
-  width: 60%;
+  width: 40%;
 }

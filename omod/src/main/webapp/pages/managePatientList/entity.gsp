@@ -7,7 +7,7 @@
 		},
 		{
 			label: "${ ui.message("patientlist.page")}",
-			link: '${ui.pageLink("patientlist", "patientListLanding")}'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page#/'
 		},
 		{label: "${ ui.message("patientlist.define.label")}"}
 	];
@@ -52,22 +52,20 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-condition-table responsive">
+			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
 					<td>${ui.message("patientlist.condition.feild.label")}</td>
 					<td>${ui.message("patientlist.condition.operator.label")}</td>
 					<td>${ui.message("patientlist.condition.value.label")}</td>
-					<td>${ui.message("patientlist.condition.consitionorder.label")}</td>
 				</tr>
 				</thead>
 				<tbody>
 				<tr>
 					<td>
-						<select class="form-control" ng-model="entity.patientListConditions[0].field">
-							<option value="">--Patient Feilds--</option>
-							<option value="p.age">Patient's Age</option>
-						</select>
+						<input class="form-control input-sm" type="text"
+						       ng-model="entity.patientListConditions.field"
+						       placeholder="${ui.message("patientlist.condition.feild.label")}"/>
 					</td>
 					<td>
 						<select class="form-control" ng-model="entity.patientListConditions.operator">
@@ -81,14 +79,44 @@
 						</select>
 					</td>
 					<td>
-						<input name="conditionValue" class="form-control input-sm" type="text" ng-model="entity.patientListConditions[0].value"/>
+						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
+						       class="form-control input-sm" type="text" ng-model="entity.patientListConditions.value"
+						       ng-blur="patientListCondition(entity)"/>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<br/>
+	
+	<div class="row detail-section-border-top">
+		<br/>
+		
+		<div class="col-md-12">
+			<table style="margin-bottom:5px;" class="manage-entities-table ">
+				<thead>
+				<tr>
+					<td>${ui.message("patientlist.sort.order.feild.label")}</td>
+					<td>${ui.message("patientlist.sort.order.sortOrder.label")}</td>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>
+						<input class="form-control input-sm" type="text" ng-model="entity.ordering.field"
+						       placeholder="${ui.message("patientlist.sort.order.feild.label")}"/>
 					</td>
 					<td>
-						<select name="orderSelection" class="form-control" ng-model="entity.patientListConditions[0].conditionOrder" >
-							<option value="">--Select order--</option>
-							<option value="1">Ascending</option>
-							<option value="2">Descending</option>
+						<select class="form-control" ng-model="entity.ordering.sortOrder"
+						        ng-change="patientListSortOrder(entity)">
+							<option value="">--Select Sort Order--</option>
+							<option value="0">Ascending</option>
+							<option value="1">Descending</option>
 						</select>
+					</td>
+					<td class="hidden">
+						<input type="text" ng-model="entity.ordering.uuid"/>
 					</td>
 				</tr>
 				</tbody>
