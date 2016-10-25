@@ -55,13 +55,13 @@
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
-					<td>${ui.message("patientlist.condition.feild.label")}</td>
-					<td>${ui.message("patientlist.condition.operator.label")}</td>
-					<td>${ui.message("patientlist.condition.value.label")}</td>
+					<th>${ui.message("patientlist.condition.feild.label")}</th>
+					<th>${ui.message("patientlist.condition.operator.label")}</th>
+					<th>${ui.message("patientlist.condition.value.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr>
+				<tr ng-repeat="listCondition in listConditions">
 					<td>
 						<input class="form-control input-sm" type="text"
 						       ng-model="entity.patientListConditions.field"
@@ -81,7 +81,7 @@
 					<td>
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-sm" type="text" ng-model="entity.patientListConditions.value"
-						       ng-blur="patientListCondition(entity)"/>
+						       ng-blur="patientListCondition(entity)" ng-enter="addPatientListCondition(entity)"/>
 					</td>
 				</tr>
 				</tbody>
@@ -97,8 +97,8 @@
 			<table style="margin-bottom:5px;" class="manage-entities-table ">
 				<thead>
 				<tr>
-					<td>${ui.message("patientlist.sort.order.feild.label")}</td>
-					<td>${ui.message("patientlist.sort.order.sortOrder.label")}</td>
+					<th>${ui.message("patientlist.sort.order.feild.label")}</th>
+					<th>${ui.message("patientlist.sort.order.sortOrder.label")}</th>
 				</tr>
 				</thead>
 				<tbody>

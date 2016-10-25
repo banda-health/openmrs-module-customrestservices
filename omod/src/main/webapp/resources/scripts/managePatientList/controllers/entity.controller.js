@@ -41,8 +41,11 @@
 			|| function(uuid) {
 				/* bind variables.. */
 				$scope.uuid = uuid;
+				$scope.listConditions = [];
 				$scope.patientListConditionArray = [];
-				self.addPatientListCondition();
+				$scope.addPatientListCondition = function(entity) {
+					self.addPatientListCondition(entity)
+				};
 				$scope.patientListSortOrderArray = [];
 				
 				$scope.patientListSortOrder = function (entity) {
@@ -135,11 +138,11 @@
 				return true;
 			};
 		
-		self.addPatientListCondition = self.addPatientListCondition || function() {
-				if ($scope.conditionField != null || $scope.conditionOperator != null || $scope.conditionValue != null) {
+		self.addPatientListCondition = self.addPatientListCondition || function(entity) {
+				if (entity.patientListConditions.field != null && entity.patientListConditions.operator != null && entity.patientListConditions.value != null) {
 					var addPatientListCondition = true;
-					for (var i = 0; i < $scope.patienListConditions.length; i++) {
-						var patientListCondition = $scope.patienListConditions[i];
+					for (var i = 0; i < $scope.listConditions.length; i++) {
+						var patientListCondition = $scope.listConditions[i];
 						if (!patientListCondition.selected) {
 							addPatientListCondition = false;
 							break;
