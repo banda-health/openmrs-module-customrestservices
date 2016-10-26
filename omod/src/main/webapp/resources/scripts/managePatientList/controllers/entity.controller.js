@@ -48,17 +48,17 @@
 				};
 				$scope.patientListSortOrderArray = [];
 				
-				$scope.patientListSortOrder = function (entity) {
-					if (entity.ordering.field != null && entity.ordering.sortOrder != null) {
-						entity.ordering.id = entity.ordering.field + "_" + entity.ordering.sortOrder;
-						self.getNewPatientListSortOrder(entity.ordering);
+				$scope.patientListSortOrder = function (listOrdering) {
+					if (listOrdering.field != null && listOrdering.sortOrder != null) {
+						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
+						self.getNewPatientListSortOrder(listOrdering);
 					}
 				}
 				
-				$scope.patientListCondition = function (entity) {
-					if (entity.patientListConditions.field != null && entity.patientListConditions.operator != null && entity.patientListConditions.value != null) {
-						entity.patientListConditions.id = entity.patientListConditions.field + "_" + entity.patientListConditions.value;
-						self.getNewPatientListCondition(entity.patientListConditions);
+				$scope.patientListCondition = function (listCondition) {
+					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
+						listCondition.id = listCondition.field + "_" + listCondition.value;
+						self.getNewPatientListCondition(listCondition);
 					}
 				}
 			};
@@ -124,12 +124,8 @@
 				console.log($scope.patientListConditionArray);
 				
 				if ($scope.patientListConditionArray.length != 0) {
-					$scope.entity = {
-						'ordering': sortOrder,
-						"name": $scope.entity.name,
-						"description": $scope.entity.description,
-						"patientListConditions": patientListCondition
-					};
+					$scope.entity.ordering = sortOrder;
+					$scope.entity.patientListConditions = patientListCondition;
 					$scope.loading = true;
 				} else {
 					return false;
@@ -139,7 +135,7 @@
 			};
 		
 		self.addPatientListCondition = self.addPatientListCondition || function(entity) {
-				if (entity.patientListConditions.field != null && entity.patientListConditions.operator != null && entity.patientListConditions.value != null) {
+				if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 					var addPatientListCondition = true;
 					for (var i = 0; i < $scope.listConditions.length; i++) {
 						var patientListCondition = $scope.listConditions[i];

@@ -61,14 +61,14 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="listCondition in listConditions">
+				<tr ng-repeat="listCondition in entity.patientListConditions">
 					<td>
 						<input class="form-control input-sm" type="text"
-						       ng-model="entity.patientListConditions.field"
+						       ng-model="listCondition.field"
 						       placeholder="${ui.message("patientlist.condition.feild.label")}"/>
 					</td>
 					<td>
-						<select class="form-control" ng-model="entity.patientListConditions.operator">
+						<select class="form-control" ng-model="listCondition.operator">
 							<option value="">--Select Operator--</option>
 							<option value="EQUALS">Equals</option>
 							<option value=">">Greater than</option>
@@ -80,8 +80,8 @@
 					</td>
 					<td>
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-sm" type="text" ng-model="entity.patientListConditions.value"
-						       ng-blur="patientListCondition(entity)" ng-enter="addPatientListCondition(entity)"/>
+						       class="form-control input-sm" type="text" ng-model="listCondition.value"
+						       ng-blur="patientListCondition(listCondition)" ng-enter="addPatientListCondition(entity)"/>
 					</td>
 				</tr>
 				</tbody>
@@ -102,21 +102,18 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr>
+				<tr ng-repeat="listOrdering in entity.ordering">
 					<td>
-						<input class="form-control input-sm" type="text" ng-model="entity.ordering.field"
+						<input class="form-control input-sm" type="text" ng-model="listOrdering.field"
 						       placeholder="${ui.message("patientlist.sort.order.feild.label")}"/>
 					</td>
 					<td>
-						<select class="form-control" ng-model="entity.ordering.sortOrder"
-						        ng-change="patientListSortOrder(entity)">
+						<select class="form-control" ng-model="listOrdering.sortOrder"
+						        ng-change="patientListSortOrder(listOrdering)">
 							<option value="">--Select Sort Order--</option>
 							<option value="0">Ascending</option>
 							<option value="1">Descending</option>
 						</select>
-					</td>
-					<td class="hidden">
-						<input type="text" ng-model="entity.ordering.uuid"/>
 					</td>
 				</tr>
 				</tbody>
