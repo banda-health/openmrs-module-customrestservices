@@ -34,6 +34,7 @@
 			'app.pagination',
 			'app.cookies',
 			'app.genericMetadataModel',
+			'app.patientListConditionModel',
 			'app.restfulServices',
 			'app.genericEntityController',
 			'app.genericManageController'
@@ -68,7 +69,7 @@
 				}
 			});
 			
-			$provide.factory('$exceptionHandler', function ($injector) {
+			$provide.factory('$exceptiogfnHandler', function ($injector) {
 				return ohmis.handleException;
 			});
 		});

@@ -19,6 +19,7 @@
 
     /* load managePatientList modules */
     ui.includeJavascript("patientlist", "managePatientList/models/entity.model.js")
+    ui.includeJavascript("patientlist", "managePatientList/models/patientlist.condition.model.js")
     ui.includeJavascript("patientlist", "managePatientList/controllers/entity.controller.js")
     ui.includeJavascript("patientlist", "managePatientList/controllers/manage-entity.controller.js")
     ui.includeJavascript("patientlist", "constants.js")
