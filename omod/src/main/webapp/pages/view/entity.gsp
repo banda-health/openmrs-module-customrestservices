@@ -8,40 +8,26 @@
 </script>
 <span class="h1-substitue-left">
     ${ui.message('patientlist.page')}
+    <br /><br />
 </span>
-
 <div>
-    <div style="font-size:inherit">
-        <br />
-        <div class="row">
-            <div class="col-xs-9">
-                <div class="col-xs-4">
-                    <strong>
-                        ${ui.message('Select Patient List')}:
-                    </strong>
-                </div>
+    <ul id="patient-list" class="left-menu">
+        <li class="menu-item viewPatientListDetails"
+            ng-class="{'selected': patientList.selected}"
+            ng-repeat="patientList in patientLists track by patientList.uuid"
+            ng-click="getPatientListData(patientList, patientList.currentPage, limit, true)">
+            <i ng-show="patientList.showSpinner === true" class="icon-spinner icon-spin icon-2x pull-left"></i>
+            <span class="menu-title capitalize">{{patientList.name}}</span>
+            <span class="arrow-border"></span>
+            <span class="arrow"></span>
+        </li>
+    </ul>
 
-                <div class="col-xs-6">
-                    <select class="form-control" ng-model="entity.patientList"
-                            ng-options='patList.name for patList in patientList track by patList.uuid'
-                            ng-change="getPatientListData(entity.patientList.uuid, currentPage, limit)">
-                    </select>
-                </div>
-
-                <div class="col-xs-2">
-                    <input type="button" value="Search" class="confirm" ng-click="getPatientListData(entity.patientList.uuid, currentPage, limit)">
-                </div>
-            </div>
-        </div>
-        <br/>
-    </div>
-
-    <div id="entities" class="detail-section-border-top">
-        <br/>
+    <div class="main-content">
         <table class="manage-entities-table">
             <tr class="clickable-tr" pagination-id="__patientListData"
                 dir-paginate="entity in patientListData | itemsPerPage: limit"
-                total-items="totalNumOfResults" current-page="currentPage">
+                total-items="totalNumOfResults" current-page="patientList.currentPage">
                 <td>
                     <div class="row" >
                         <div class="col-sm-10" style="width:99%;font-weight:bold; padding: 8px;margin-left:5px; background-color:#dddddd;">
@@ -66,18 +52,45 @@
                             </span>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="status-container">
+                            <span ng-show="entity.visit.stopDatetime === null">
+                                <span class="status active"></span>
+                                ${ ui.message("coreapps.activeVisit") }
+                            </span>
+
+                            <a class="right"
+                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">Patient Details</a>
+                            <span class="right"> | </span>
+
+                            <a class="right" ng-show="entity.visit.stopDatetime === null"
+                               href="/${ ui.contextPath() }/coreapps/patientdashboard/patientDashboard.page?patientId={{entity.patient.uuid}}">
+                                Visit Details</a>
+                            <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
+
+                            <a class="right" ng-show="entity.visit.stopDatetime !== null">Start Visit</a>
+                            <a class="right" ng-show="entity.visit.stopDatetime === null">End Visit</a>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </table>
         ${ui.includeFragment("openhmis.commons", "paginationFragment", [
+                hide              : "totalNumOfResults === 0",
                 paginationId      : "__patientListData",
-                onPageChange      : "getPatientListData(entity.patientList.uuid, currentPage, limit)",
-                onChange          : "getPatientListData(entity.patientList.uuid, currentPage, limit)",
+                onPageChange      : "getPatientListData(patientList, patientList.currentPage, limit)",
+                onChange          : "getPatientListData(patientList, patientList.currentPage, limit)",
                 model             : "limit",
-                pagingFrom        : "pagingFrom(currentPage, limit)",
-                pagingTo          : "pagingTo(currentPage, limit, totalNumOfResults)",
+                pagingFrom        : "pagingFrom(patientList.currentPage || 1, limit)",
+                pagingTo          : "pagingTo(patientList.currentPage || 1, limit, totalNumOfResults)",
                 showRetiredSection: "false"
         ])}
+
+    </div>
+
+    <div id="entities" class="detail-section-border-top">
+        <br/>
     </div>
 </div>
 

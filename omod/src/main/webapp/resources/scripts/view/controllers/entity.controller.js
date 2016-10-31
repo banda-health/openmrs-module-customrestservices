@@ -41,34 +41,57 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function() {
 				$scope.limit = 5;
-				$scope.currentPage = 1;
+
 				$scope.pagingFrom = PaginationService.pagingFrom;
 				$scope.pagingTo = PaginationService.pagingTo;
 				$scope.totalNumOfResults = 0;
 
 				$scope.getPatientListData = self.getPatientListData;
-				self.getPatientList();
+				self.getPatientLists();
+				$scope.loadFirstPatientList = true;
+				$scope.patientList = $scope.patientList || {};
+				$scope.patientList.currentPage = $scope.patientList.currentPage || 1;
 			}
 
-		self.getPatientList = self.getPatientList || function() {
-				PatientListRestfulService.getPatientList(self.onLoadPatientListSuccessful);
+		self.getPatientLists = self.getPatientLists || function() {
+				PatientListRestfulService.getPatientList(self.onLoadPatientListsSuccessful);
 			}
 
-		self.getPatientListData = self.getPatientListData || function(uuid, currentPage, limit) {
+		self.getPatientListData = self.getPatientListData || function(patientList, currentPage, limit, selectElement) {
+				if(selectElement === true) {
+					self.clearSelectedPatientLists();
+					$scope.patientList = patientList;
+					patientList.selected = true;
+				}
+
+				patientList.showSpinner = true;
 				$scope.patientListData = [];
 				$scope.totalNumOfResults = 0;
+				$scope.patientList.currentPage = currentPage;
+				PatientListRestfulService.getPatientListData(patientList.uuid, currentPage, limit,
+					self.onLoadPatientListDataSuccessful);
+			}
 
-				PatientListRestfulService.getPatientListData(uuid, currentPage, limit, self.onLoadPatientListDataSuccessful);
+		self.clearSelectedPatientLists = self.clearSelectedPatientLists || function() {
+				for(var i = 0; i < $scope.patientLists.length; i++) {
+					$scope.patientLists[i].selected = false;
+				}
 			}
 
 		// callbacks
-		self.onLoadPatientListSuccessful = self.onLoadPatientListSuccessful || function(data) {
-				$scope.patientList = data.results;
+		self.onLoadPatientListsSuccessful = self.onLoadPatientListsSuccessful || function(data) {
+				$scope.patientLists = data.results;
+				if($scope.loadFirstPatientList === true && $scope.patientLists.length > 0) {
+					self.getPatientListData($scope.patientLists[0], $scope.currentPage, $scope.limit, true);
+				}
+
+				$scope.loadFirstPatientList = false;
 			}
 
 		self.onLoadPatientListDataSuccessful = self.onLoadPatientListDataSuccessful || function(data) {
 				$scope.patientListData = data.results;
 				$scope.totalNumOfResults = data.length;
+				$scope.patientList.showSpinner = false;
 			}
 
 		// @Override
