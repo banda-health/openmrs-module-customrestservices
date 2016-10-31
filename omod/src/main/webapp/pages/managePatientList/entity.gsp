@@ -71,11 +71,15 @@
 						<select class="form-control" ng-model="listCondition.operator">
 							<option value="">--Select Operator--</option>
 							<option value="EQUALS">Equals</option>
-							<option value=">">Greater than</option>
-							<option value="<">Less than</option>
-							<option value="=>">Equals or Greater than</option>
-							<option value="=<">Equals or Less than</option>
-							<option value="!=">Not Equals</option>
+							<option value="NOT_EQUALS">Not Equals</option>
+							<option value="GT">Greater than</option>
+							<option value="LT">Less than</option>
+							<option value="GTE">Greater than or Equals</option>
+							<option value="LTE">Less than or Equals</option>
+							<option value="LIKE">Like</option>
+							<option value="BETWEEN">Between</option>
+							<option value="NULL">Empty</option>
+							<option value="NOT NULL">Not Empty</option>
 						</select>
 					</td>
 					<td>
