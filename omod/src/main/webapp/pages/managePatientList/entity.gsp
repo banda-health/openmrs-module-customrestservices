@@ -52,20 +52,35 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
+			<h3>Patient List Condition</h3>
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
-					<th>${ui.message("patientlist.condition.feild.label")}</th>
+					<th style="width:80% ">${ui.message("patientlist.condition.feild.label")}</th>
 					<th>${ui.message("patientlist.condition.operator.label")}</th>
 					<th>${ui.message("patientlist.condition.value.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="listCondition in entity.patientListConditions">
-					<td>
-						<input class="form-control input-sm" type="text"
-						       ng-model="listCondition.field"
-						       placeholder="${ui.message("patientlist.condition.feild.label")}"/>
+				<tr >
+					<td style="width:80% ">
+						<select class="form-control" ng-model="listCondition.field">
+							<option value="">--Select Field--</option>
+							<option value="p.given_name" ng-click="textInputs()">Patient Given Name</option>
+							<option value="p.family_name" ng-click="textInputs()">Patient Family Name</option>
+							<option value="p.gender" ng-click="dropdownInputs()">Patient Gender</option>
+							<option value="p.birth_date" ng-click="dateInputs()">Patient Birth Date</option>
+							<option value="p.attr.birthplace" ng-click="textInputs()">Patient Birth Place</option>
+							<option value="p.attr.civil_status" ng-click="dropdownInputs()">Patient Civil Status</option>
+							<option value="v.start_date" ng-click="dateInputs()">Visit Start Date</option>
+							<option value="v.end_date" ng-click="dateInputs()">Visit End Date</option>
+							<option value="v.note.primary_diagnosis" ng-click="textInputs()">Visit Note Primary Diagnosis</option>
+							<option value="v.vitals.weight" ng-click="numberInputs()">Visit Vital Weight</option>
+							<option value="v.attr.new_patient" ng-click="textInputs()">New Patient</option>
+							<option value="v.attr.ward" ng-click="numberInputs()">Patient Ward</option>
+							<option value="p.hasActiveVisit" ng-click="numberInputs()">Patient Active Visit</option>
+							<option value="v.hasDiagnosis" ng-click="numberInputs()">Visit Diagnosis</option>
+						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">
@@ -85,7 +100,7 @@
 					<td>
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-sm" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addPatientListCondition(entity)"/>
+						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
 					</td>
 				</tr>
 				</tbody>
@@ -96,8 +111,8 @@
 	
 	<div class="row detail-section-border-top">
 		<br/>
-		
 		<div class="col-md-12">
+			<h3>Patient List Ordering</h3>
 			<table style="margin-bottom:5px;" class="manage-entities-table ">
 				<thead>
 				<tr>
@@ -106,17 +121,32 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-repeat="listOrdering in entity.ordering">
+				<tr >
 					<td>
-						<input class="form-control input-sm" type="text" ng-model="listOrdering.field"
-						       placeholder="${ui.message("patientlist.sort.order.feild.label")}"/>
+						<select class="form-control" ng-model="listOrdering.field">
+							<option value="">--Select Field--</option>
+							<option value="p.given_name">Patient Given Name</option>
+							<option value="p.family_name">Patient Family Name</option>
+							<option value="p.gender">Patient Gender</option>
+							<option value="p.birth_date">Patient Birth Date</option>
+							<option value="p.attr.birthplace">Patient Birth Place</option>
+							<option value="p.attr.civil_status">Patient Civil Status</option>
+							<option value="v.start_date">Visit Start Date</option>
+							<option value="v.end_date">Visit End Date</option>
+							<option value="v.note.primary_diagnosis">Visit Note Primary Diagnosis</option>
+							<option value="v.vitals.weight">Visit Vital Weight</option>
+							<option value="v.attr.new_patient">New Patient</option>
+							<option value="v.attr.ward">Patient Ward</option>
+							<option value="p.hasActiveVisit">Patient Active Visit</option>
+							<option value="v.hasDiagnosis">Visit Diagnosis</option>
+						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.sortOrder"
-						        ng-change="patientListSortOrder(listOrdering)">
+						        ng-change="patientListSortOrder()">
 							<option value="">--Select Sort Order--</option>
-							<option value="0">Ascending</option>
-							<option value="1">Descending</option>
+							<option value="asc">Ascending</option>
+							<option value="desc">Descending</option>
 						</select>
 					</td>
 				</tr>

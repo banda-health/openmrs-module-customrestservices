@@ -47,21 +47,40 @@
 					self.addPatientListCondition(entity)
 				};
 				$scope.patientListSortOrderArray = [];
+				$scope.textInput = true;
+				$scope.dropdownInput = false;
+				$scope.dateInput = false;
+				$scope.numberInput = false;
 				
-				$scope.patientListSortOrder = function (listOrdering) {
-					if (listOrdering.field != null && listOrdering.sortOrder != null) {
-						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
-						self.getNewPatientListSortOrder(listOrdering);
+				$scope.patientListSortOrder = function () {
+					if ($scope.listOrdering.field != null && $scope.listOrdering.sortOrder != null) {
+						$scope.listOrdering.id = $scope.listOrdering.field + "_" + $scope.listOrdering.sortOrder;
+						self.getNewPatientListSortOrder($scope.listOrdering);
 					}
-				}
+				};
 				
 				$scope.patientListCondition = function (listCondition) {
-					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
-						listCondition.id = listCondition.field + "_" + listCondition.value;
-						self.getNewPatientListCondition(listCondition);
+					if ($scope.listCondition.field != null && $scope.listCondition.operator != null && $scope.listCondition.value != null) {
+						$scope.listCondition.id = $scope.listCondition.field + "_" + $scope.listCondition.value;
+						self.getNewPatientListCondition($scope.listCondition);
 					}
-				}
+				};
+				
+				$scope.textInputs = function () {
+					
+				};
+				$scope.dropdownInputs = function () {
+					
+				};
+				$scope.dateInputs = function () {
+					
+				};
+				$scope.numberInputs = function () {
+					
+				};
 			};
+			
+			
 		
 		
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function (newPatientListSortOrder) {
