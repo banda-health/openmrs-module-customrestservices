@@ -4,6 +4,7 @@
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
     ui.includeCss("openhmis.commons", "entities2x.css")
+    ui.includeCss("patientlist", "entity.css")
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
 
     /* load angular libraries */

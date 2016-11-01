@@ -104,7 +104,6 @@ public class PatientListDataServiceImpl extends
 			}
 
 			if (searchField(patientList.getPatientListConditions(), "p.attr")) {
-				hql.append(", ConceptName cn");
 				hql.append("inner join p.attributes as attr ");
 				hql.append("inner join attr.attributeType as attrType ");
 			}
@@ -197,10 +196,7 @@ public class PatientListDataServiceImpl extends
 
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
 			hql.append("(lower(attrType.name) = ?");
-			//hql.append(" AND ");
-			//hql.append("((CONVERT('cn.conceptNameId' AS CHAR) = attr.value");
 			hql.append(" AND ");
-			//hql.append("LCASE(cn.name) = ?) OR ");
 			hql.append("attr.value ");
 		} else {
 			hql.append("(lower(vattrType.name) = ?");
@@ -212,7 +208,6 @@ public class PatientListDataServiceImpl extends
 		hql.append(" ? ");
 
 		paramValues.add(attributeName);
-		//paramValues.add(condition.getValue().toLowerCase());
 		paramValues.add(condition.getValue());
 		hql.append(") ");
 
@@ -233,15 +228,12 @@ public class PatientListDataServiceImpl extends
 				hql.append(order.getField());
 				hql.append(" ");
 				hql.append(order.getSortOrder());
-				//hql.append(",");
+				hql.append(",");
 			}
 		}
 
 		//remove trailing coma.
-		//StringUtils.removeEnd(hql.toString(), ",");
-		//LOG.warn(hql.toString());
-
-		return hql.toString();
+		return StringUtils.removeEnd(hql.toString(), ",");
 	}
 
 	private boolean searchField(List<PatientListCondition> patientListConditions, String search) {
