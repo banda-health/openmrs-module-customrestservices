@@ -99,7 +99,7 @@
 					</td>
 					<td>
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-sm" type="text" ng-model="listCondition.value"
+						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
 					</td>
 				</tr>
