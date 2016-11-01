@@ -18,4 +18,6 @@ requirejs(['view/configs/entity.module'], function() {
 	angular.bootstrap(document, ['entitiesApp']);
 });
 
-emr.loadMessages([]);
+emr.loadMessages([
+	'general.cancel'
+]);

@@ -26,10 +26,11 @@
 			},
 			{
 				"id": "${project.parent.groupId}.${project.parent.artifactId}.PatientListLink",
-				"extensionPointId": "patientDashboard.overallActions",
+				"extensionPointId": "org.openmrs.referenceapplication.homepageLink",
 				"type": "link",
-				"label": "Patient List",
+				"label": "Internal Medicine Patient List",
 				"url": "${project.parent.artifactId}/view/entities.page",
+				"requiredPrivilege": "Task: View Patient List",
 				"icon": "icon-list",
 				"order": 1
 			}

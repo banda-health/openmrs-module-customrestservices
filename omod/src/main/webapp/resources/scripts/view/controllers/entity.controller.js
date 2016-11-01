@@ -20,11 +20,13 @@
 	base.controller("PatientListController", PatientListController);
 	PatientListController.$inject = ['$injector', '$scope', '$filter',
 		'EntityRestFactory', 'PatientListRestfulService', 'PatientListModel',
-		'$window', 'PaginationService', 'CookiesService'];
+		'$window', 'PaginationService', 'CookiesService', 'CommonsRestfulFunctions',
+		'EntityFunctions', '$timeout'];
 
 	function PatientListController($injector, $scope, $filter, EntityRestFactory,
 	                               PatientListRestfulService, PatientListModel, $window,
-	                               PaginationService, CookiesService) {
+	                               PaginationService, CookiesService, CommonsRestfulFunctions,
+	                               EntityFunctions, $timeout) {
 		var self = this;
 		var entity_name_message_key = emr.message("patientlist.page");
 		var REST_ENTITY_NAME = "list";
@@ -51,6 +53,7 @@
 				$scope.loadFirstPatientList = true;
 				$scope.patientList = $scope.patientList || {};
 				$scope.patientList.currentPage = $scope.patientList.currentPage || 1;
+				$scope.endVisitDialog = self.endVisitDialog;
 			}
 
 		self.getPatientLists = self.getPatientLists || function() {
@@ -78,11 +81,37 @@
 				}
 			}
 
+		self.endVisitDialog = self.endVisitDialog || function(uuid) {
+			var dialog = emr.setupConfirmationDialog({
+				selector: '#end-visit-dialog',
+				actions: {
+					confirm: function() {
+						CommonsRestfulFunctions.endVisit(PATIENT_LIST_MODULE_NAME, uuid, $scope);
+
+						//refresh patient list data to reflect changes
+						$timeout(function() {
+							self.getPatientListData($scope.patientList, $scope.patientList.currentPage, $scope.limit);
+						}, 300);
+
+						dialog.close();
+					},
+					cancel: function() {
+						dialog.close();
+					}
+				}
+			});
+
+			dialog.show();
+			EntityFunctions.disableBackground();
+		}
+
+
 		// callbacks
 		self.onLoadPatientListsSuccessful = self.onLoadPatientListsSuccessful || function(data) {
 				$scope.patientLists = data.results;
 				if($scope.loadFirstPatientList === true && $scope.patientLists.length > 0) {
-					self.getPatientListData($scope.patientLists[0], $scope.currentPage, $scope.limit, true);
+					var patientList = data.results[0];
+					self.getPatientListData(patientList, patientList.currentPage, $scope.limit, true);
 				}
 
 				$scope.loadFirstPatientList = false;
@@ -96,7 +125,7 @@
 
 		// @Override
 		self.cancel = self.cancel || function() {
-				//$window.location = decodeURIComponent($scope.urlArgs['returnUrl']);
+				$window.location = decodeURIComponent('/' + OPENMRS_CONTEXT_PATH);
 			}
 
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
