@@ -5,6 +5,7 @@
     ];
 
     jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+
 </script>
 <span class="h1-substitue-left">
     ${ui.message('patientlist.page')}
@@ -70,7 +71,8 @@
                             <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
 
                             <a class="right" ng-show="entity.visit.stopDatetime !== null">Start Visit</a>
-                            <a class="right" ng-show="entity.visit.stopDatetime === null">End Visit</a>
+                            <a class="right" ng-show="entity.visit.stopDatetime === null"
+                               ng-click="endVisitDialog(entity.visit.uuid)">End Visit</a>
                         </div>
                     </div>
                 </td>
@@ -91,6 +93,27 @@
 
     <div id="entities" class="detail-section-border-top">
         <br/>
+        <input type="button" class="cancel" value="${ui.message('general.back')}" ng-click="cancel()" />
+    </div>
+
+    <div id="end-visit-dialog" class="dialog hide-dialog">
+        <div class="dialog-header">
+            <span>
+                <i class="icon-warning-sign"></i>
+                <h3>${ ui.message("coreapps.task.endVisit.label") }</h3>
+            </span>
+            <i class="icon-remove cancel show-cursor align-right" ng-click="closeThisDialog()"></i>
+        </div>
+        <div class="dialog-content form">
+            <span>${ ui.message("coreapps.task.endVisit.message") }</span>
+            <br /><br />
+            <div class="ngdialog-buttons detail-section-border-top">
+                <br />
+                <input type="button" class="cancel" value="${ui.message('general.no')}" ng-click="closeThisDialog('Cancel')" />
+                <input type="button" class="confirm right" value="${ui.message('general.yes')}"
+                       ng-click="confirm('OK'); getPatientListData(patientList, patientList.currentPage, limit)" />
+            </div>
+        </div>
     </div>
 </div>
 

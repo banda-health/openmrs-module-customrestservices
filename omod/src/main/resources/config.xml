@@ -71,5 +71,9 @@
 		<name>App: View Patient List App</name>
 		<description>Able to access the patient list module</description>
 	</privilege>
+	<privilege>
+		<name>Task: View Patient List</name>
+		<description>Able to view patient lists</description>
+	</privilege>
 </module>
 

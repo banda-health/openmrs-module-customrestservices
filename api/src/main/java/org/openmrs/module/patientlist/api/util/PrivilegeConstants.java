@@ -29,9 +29,10 @@ import java.util.Set;
 public class PrivilegeConstants {
 	public static final String APP_VIEW_PATIENT_LIST_APP = "App: View Patient List App";
 	public static final String TASK_MANAGE_PATIENT_LIST_METADATA = "Task: Manage Patient List Metadata";
+	public static final String TASK_VIEW_PATIENT_LIST = "Task: View Patient List";
 
 	public static final String[] PRIVILEGE_NAMES =
-	        new String[] { APP_VIEW_PATIENT_LIST_APP, TASK_MANAGE_PATIENT_LIST_METADATA };
+	        new String[] { APP_VIEW_PATIENT_LIST_APP, TASK_MANAGE_PATIENT_LIST_METADATA, TASK_VIEW_PATIENT_LIST };
 
 	protected PrivilegeConstants() {}
 
