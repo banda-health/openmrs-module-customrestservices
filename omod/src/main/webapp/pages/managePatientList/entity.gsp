@@ -33,7 +33,7 @@
 				<span>${ui.message("general.name")}</span>
 			</li>
 			<li>
-				<input name="entityName" type="text" ng-model="entity.name" class="maximized"
+				<input name="entityName" type="text" ng-model="entity.name" class="maximized form-control"
 				       placeholder="${ui.message("general.name")}" required/>
 			</li>
 		</ul>
