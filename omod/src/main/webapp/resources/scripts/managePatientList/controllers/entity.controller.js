@@ -66,17 +66,32 @@
 					}
 				};
 				
-				$scope.textInputs = function () {
-					
-				};
-				$scope.dropdownInputs = function () {
-					
-				};
-				$scope.dateInputs = function () {
-					
-				};
-				$scope.numberInputs = function () {
-					
+				$scope.inputsValueChange  = function () {
+					if ($scope.listCondition.field == "p.given_name" || $scope.listCondition.field == "p.family_name"
+						|| $scope.listCondition.field == "v.note.primary_diagnosis" || $scope.listCondition.field == "p.attr.birthplace") {
+						$scope.textInput = true;
+						$scope.dropdownInput = false;
+						$scope.dateInput = false;
+						$scope.numberInput = false;
+					} else if ($scope.listCondition.field == "p.birth_date" || $scope.listCondition.field == "v.start_date"
+						|| $scope.listCondition.field == "v.end_date") {
+						$scope.textInput = false;
+						$scope.dropdownInput = false;
+						$scope.dateInput = true;
+						$scope.numberInput = false;
+					} else if ($scope.listCondition.field == "v.vitals.weight" || $scope.listCondition.field == "v.attr.ward"
+						|| $scope.listCondition.field == "p.hasActiveVisit" || $scope.listCondition.field == "v.hasDiagnosis") {
+						$scope.textInput = false;
+						$scope.dropdownInput = false;
+						$scope.dateInput = false;
+						$scope.numberInput = true;
+					} else {
+						$scope.textInput = false;
+						$scope.dropdownInput = true;
+						$scope.dateInput = false;
+						$scope.numberInput = false;
+						
+					}
 				};
 			};
 			

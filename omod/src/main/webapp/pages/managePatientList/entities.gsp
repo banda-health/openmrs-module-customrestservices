@@ -13,6 +13,7 @@
     ui.includeJavascript("uicommons", "angular-ui/ui-bootstrap-tpls-0.11.2.min.js")
     ui.includeJavascript("uicommons", "angular-common.js")
     ui.includeJavascript("uicommons", "ngDialog/ngDialog.js")
+    ui.includeJavascript("uicommons", "datetimepicker/bootstrap-datetimepicker.min.js")
 
     /* load re-usables/common modules */
     ui.includeFragment("openhmis.commons", "load.reusable.modules")
