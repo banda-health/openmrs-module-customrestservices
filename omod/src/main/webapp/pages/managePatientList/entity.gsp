@@ -177,6 +177,38 @@
 	<br/>
 	<div class="row detail-section-border-top">
 		<br/>
+		<div class="col-md-12">
+			<h3>Patient list Display Template</h3>
+			<br/>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="col-md-4">
+						<span>${ui.message("patientlist.display.template.header.label")}</span>
+					</div>
+					<div class="col-md-7">
+						<input name="entityDisplayTemplateHeader" type="text" ng-model="entity.displayTemplateHeader" class="form-control"
+						       placeholder="${ui.message("patientlist.display.template.header.label")}" required/>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="col-md-4">
+						<span>${ui.message("patientlist.display.template.body.label")}</span>
+					</div>
+					<div class="col-md-7">
+						<textarea ng-model="entity.displayTemplateBody" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
+						          cols="40" class="form-control">
+						</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br/>
+	<div class="row detail-section-border-top">
+		<br/>
 		<div class="col-md-6">
 			<input type="button" class="cancel" value="${ui.message("general.cancel")}" ng-click="cancel()"/>
 		</div>

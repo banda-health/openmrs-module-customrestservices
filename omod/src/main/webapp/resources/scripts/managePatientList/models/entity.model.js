@@ -27,7 +27,7 @@
 		
 		// @Override
 		extended.getModelFields = function() {
-			return ["patientListConditions", "description", "name","uuid","ordering"];
+			return ["patientListConditions", "description", "name","uuid","ordering","displayTemplateHeader","displayTemplateBody"];
 		};
 		
 		return extended;
