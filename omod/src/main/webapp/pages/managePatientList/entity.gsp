@@ -26,7 +26,6 @@
 <form ng-hide="loading" name="entityForm" class="entity-form" ng-class="{'submitted': submitted}" style="font-size:inherit">
 	${ui.includeFragment("openhmis.commons", "editEntityHeaderFragment")}
 	
-	<input type="hidden" ng-model="entity.uuid"/>
 	<div class="row">
 		<ul class="table-layout">
 			<li class="required">
@@ -49,21 +48,24 @@
 		</ul>
 	</div>
 	<br/>
-	<div class="row detail-section-border-top">
-		<br/>
+	<fieldset class="nested legendHeader">
+		<legend>${ui.message("patientlist.condition.list.header")}</legend>
 		<div class="col-md-12">
-			<h3>Patient List Condition</h3>
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
-					<th style="width:80% ">${ui.message("patientlist.condition.feild.label")}</th>
+					<th style="width:12% "></th>
+					<th style="width:60% ">${ui.message("patientlist.condition.field.label")}</th>
 					<th>${ui.message("patientlist.condition.operator.label")}</th>
 					<th>${ui.message("patientlist.condition.value.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr >
-					<td style="width:80% ">
+					<td style="width:12% ">
+						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
+						       title="Remove patient list ordering" class="remove" ng-click=""></td>
+					<td style="width:60% ">
 						<select class="form-control" ng-change="inputsValueChange()" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
 							<option value="p.given_name">Patient Given Name</option>
@@ -103,8 +105,9 @@
 						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
 					</td>
 					<td ng-show="dropdownInput">
-						<select class="form-control">
-							<option>--Select Value--</option>
+						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition()">
+							<option value="">-- Select Value --</option>
+							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
 						</select>
 					</td>
 					<td ng-show="dateInput">
@@ -114,34 +117,49 @@
 								 required     : 'required',
 								 formFieldName: 'patientConditionDatePicker',
 								 useTime      : false,
-								 name         : 'patientConditionDate'
+								 name         : 'patientConditionDate',
 								])}
 					</td>
 					<td ng-show="numberInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-md" type="number" ng-model="listCondition.value"
+						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
+					</td>
+					<td ng-show="radioButtonInput">
+						<label class="radio-inline">
+							<input ng-enter="addPatientListCondition(entity)" ng-click="patientListCondition()"
+							       class="form-control" ng-model="listCondition.value" type="radio"
+							       name="conditionValue" value="true">True
+						</label>
+						<label class="radio-inline">
+							<input ng-enter="addPatientListCondition(entity)" ng-click="patientListCondition()"
+							       class="form-control" ng-model="listCondition.value" type="radio"
+							       name="conditionValue" value="false">False
+						</label>
 					</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</fieldset>
 	<br/>
-	
-	<div class="row detail-section-border-top">
-		<br/>
+	<br/>
+	<fieldset class="nested">
+		<legend>${ui.message("patientlist.sort.order.header")}</legend>
 		<div class="col-md-12">
-			<h3>Patient List Ordering</h3>
 			<table style="margin-bottom:5px;" class="manage-entities-table ">
 				<thead>
 				<tr>
-					<th>${ui.message("patientlist.sort.order.feild.label")}</th>
+					<th style="width:10% "></th>
+					<th>${ui.message("patientlist.sort.order.field.label")}</th>
 					<th>${ui.message("patientlist.sort.order.sortOrder.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr >
+					<td class="item-actions" style="width:10% ">
+						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
+						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
@@ -173,12 +191,12 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</fieldset>
 	<br/>
-	<div class="row detail-section-border-top">
-		<br/>
+	<br/>
+	<fieldset class="nested">
+		<legend class="legendHeader">${ui.message("patientlist.display.template.header")}</legend>
 		<div class="col-md-12">
-			<h3>Patient list Display Template</h3>
 			<br/>
 			<div class="row">
 				<div class="col-md-12">
@@ -205,9 +223,9 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</fieldset>
 	<br/>
-	<div class="row detail-section-border-top">
+	<div >
 		<br/>
 		<div class="col-md-6">
 			<input type="button" class="cancel" value="${ui.message("general.cancel")}" ng-click="cancel()"/>

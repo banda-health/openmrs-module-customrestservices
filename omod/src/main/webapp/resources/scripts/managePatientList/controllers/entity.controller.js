@@ -17,11 +17,11 @@
 	
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
-	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel', 'PatientListConditionModel', 'EntityFunctions'];
+	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel', 'PatientListConditionModel', 'EntityFunctions', 'PatientListRestfulService'];
 	
 	var ENTITY_NAME = "list";
 	
-	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel, PatientListConditionModel, EntityFunctions) {
+	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel, PatientListConditionModel, EntityFunctions, PatientListRestfulService) {
 		var self = this;
 		
 		var entity_name_message_key = "patientlist.page";
@@ -40,6 +40,8 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function(uuid) {
 				/* bind variables.. */
+				var civilStatusUuid = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+				var conceptAnswersLimit = null;
 				$scope.uuid = uuid;
 				$scope.listConditions = [];
 				$scope.patientListConditionArray = [];
@@ -51,6 +53,8 @@
 				$scope.dropdownInput = false;
 				$scope.dateInput = false;
 				$scope.numberInput = false;
+				$scope.radioButtonInput = false;
+				$scope.conceptAnswers = [];
 				
 				$scope.patientListSortOrder = function () {
 					if ($scope.listOrdering.field != null && $scope.listOrdering.sortOrder != null) {
@@ -59,10 +63,11 @@
 					}
 				};
 				
-				$scope.patientListCondition = function (listCondition) {
+				$scope.patientListCondition = function () {
 					if ($scope.listCondition.field != null && $scope.listCondition.operator != null && $scope.listCondition.value != null) {
 						$scope.listCondition.id = $scope.listCondition.field + "_" + $scope.listCondition.value;
 						self.getNewPatientListCondition($scope.listCondition);
+						console.log("Inside")
 					}
 				};
 				
@@ -73,24 +78,38 @@
 						$scope.dropdownInput = false;
 						$scope.dateInput = false;
 						$scope.numberInput = false;
+						$scope.radioButtonInput = false;
 					} else if ($scope.listCondition.field == "p.birth_date" || $scope.listCondition.field == "v.start_date"
 						|| $scope.listCondition.field == "v.end_date") {
 						$scope.textInput = false;
 						$scope.dropdownInput = false;
 						$scope.dateInput = true;
 						$scope.numberInput = false;
-					} else if ($scope.listCondition.field == "v.vitals.weight" || $scope.listCondition.field == "v.attr.ward"
-						|| $scope.listCondition.field == "p.hasActiveVisit" || $scope.listCondition.field == "v.hasDiagnosis") {
+						$scope.numberInput = false;
+					} else if ($scope.listCondition.field == "v.vitals.weight" || $scope.listCondition.field == "v.attr.ward") {
 						$scope.textInput = false;
 						$scope.dropdownInput = false;
 						$scope.dateInput = false;
 						$scope.numberInput = true;
-					} else {
+						$scope.numberInput = true;
+					} else if ($scope.listCondition.field == "p.attr.civil_status" || $scope.listCondition.field == "p.gender") {
 						$scope.textInput = false;
 						$scope.dropdownInput = true;
 						$scope.dateInput = false;
 						$scope.numberInput = false;
+						$scope.numberInput = false;
 						
+						if ($scope.listCondition.field == "p.attr.civil_status") {
+							PatientListRestfulService.loadConceptAnswers(PATIENT_LIST_MODULE_NAME, conceptAnswersLimit, civilStatusUuid, self.onConceptAnswersSuccessful);
+						} else  if ($scope.listCondition.field == "p.gender") {
+							$scope.conceptAnswers = [{display: 'Female', uuid: "F" },{ display: 'Male', uuid: "M" }];
+						}
+					} else {
+						$scope.textInput = false;
+						$scope.dropdownInput = false;
+						$scope.dateInput = false;
+						$scope.numberInput = false;
+						$scope.radioButtonInput = true;
 					}
 				};
 			};
@@ -131,6 +150,12 @@
 					$scope.patientListConditionArray[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.patientListConditionArray, $scope.patientListConditionArray[i].id);
 				}
 			};
+		
+		// call-back functions.
+		self.onConceptAnswersSuccessful = self.onConceptAnswersSuccessful || function (data) {
+				$scope.conceptAnswers = data.answers;
+				console.log(data.answers);
+			};
 			
 		/**
 		 * All post-submit validations are done here.
@@ -154,8 +179,6 @@
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
 				}
-				
-				console.log($scope.patientListConditionArray);
 				
 				if ($scope.patientListConditionArray.length != 0) {
 					$scope.entity.ordering = sortOrder;
