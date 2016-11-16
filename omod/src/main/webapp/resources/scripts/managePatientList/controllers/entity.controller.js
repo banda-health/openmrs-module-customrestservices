@@ -17,11 +17,13 @@
 	
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
-	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel', 'PatientListConditionModel', 'EntityFunctions', 'PatientListRestfulService'];
+	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel',
+		'PatientListConditionModel', 'EntityFunctions', 'PatientListRestfulService'];
 	
 	var ENTITY_NAME = "list";
 	
-	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel, PatientListConditionModel, EntityFunctions, PatientListRestfulService) {
+	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel,
+	                          PatientListConditionModel, EntityFunctions, PatientListRestfulService) {
 		var self = this;
 		
 		var entity_name_message_key = "patientlist.page";
@@ -55,53 +57,55 @@
 				$scope.numberInput = false;
 				$scope.radioButtonInput = false;
 				$scope.conceptAnswers = [];
+				$scope.selectListCondition = self.selectListCondition;
+				$scope.addListCondition = self.addListCondition;
 				
-				$scope.patientListSortOrder = function () {
-					if ($scope.listOrdering.field != null && $scope.listOrdering.sortOrder != null) {
-						$scope.listOrdering.id = $scope.listOrdering.field + "_" + $scope.listOrdering.sortOrder;
-						self.getNewPatientListSortOrder($scope.listOrdering);
+				$scope.patientListSortOrder = function (listOrdering) {
+					if (listOrdering.field != null && listOrdering.sortOrder != null) {
+						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
+						self.getNewPatientListSortOrder(listOrdering);
 					}
 				};
 				
-				$scope.patientListCondition = function () {
-					if ($scope.listCondition.field != null && $scope.listCondition.operator != null && $scope.listCondition.value != null) {
-						$scope.listCondition.id = $scope.listCondition.field + "_" + $scope.listCondition.value;
-						self.getNewPatientListCondition($scope.listCondition);
+				$scope.patientListCondition = function (listCondition) {
+					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
+						listCondition.id = listCondition.field + "_" + listCondition.value;
+						self.getNewPatientListCondition(listCondition);
 						console.log("Inside")
 					}
 				};
 				
-				$scope.inputsValueChange  = function () {
-					if ($scope.listCondition.field == "p.given_name" || $scope.listCondition.field == "p.family_name"
-						|| $scope.listCondition.field == "v.note.primary_diagnosis" || $scope.listCondition.field == "p.attr.birthplace") {
+				$scope.inputsValueChange  = function (listCondition) {
+					if (listCondition.field == "p.given_name" || listCondition.field == "p.family_name"
+						|| listCondition.field == "v.note.primary_diagnosis" || listCondition.field == "p.attr.birthplace") {
 						$scope.textInput = true;
 						$scope.dropdownInput = false;
 						$scope.dateInput = false;
 						$scope.numberInput = false;
 						$scope.radioButtonInput = false;
-					} else if ($scope.listCondition.field == "p.birth_date" || $scope.listCondition.field == "v.start_date"
-						|| $scope.listCondition.field == "v.end_date") {
+					} else if (listCondition.field == "p.birth_date" || listCondition.field == "v.start_date"
+						|| listCondition.field == "v.end_date") {
 						$scope.textInput = false;
 						$scope.dropdownInput = false;
 						$scope.dateInput = true;
 						$scope.numberInput = false;
 						$scope.numberInput = false;
-					} else if ($scope.listCondition.field == "v.vitals.weight" || $scope.listCondition.field == "v.attr.ward") {
+					} else if (listCondition.field == "v.vitals.weight" || listCondition.field == "v.attr.ward") {
 						$scope.textInput = false;
 						$scope.dropdownInput = false;
 						$scope.dateInput = false;
 						$scope.numberInput = true;
 						$scope.numberInput = true;
-					} else if ($scope.listCondition.field == "p.attr.civil_status" || $scope.listCondition.field == "p.gender") {
+					} else if (listCondition.field == "p.attr.civil_status" || listCondition.field == "p.gender") {
 						$scope.textInput = false;
 						$scope.dropdownInput = true;
 						$scope.dateInput = false;
 						$scope.numberInput = false;
 						$scope.numberInput = false;
 						
-						if ($scope.listCondition.field == "p.attr.civil_status") {
+						if (listCondition.field == "p.attr.civil_status") {
 							PatientListRestfulService.loadConceptAnswers(PATIENT_LIST_MODULE_NAME, conceptAnswersLimit, civilStatusUuid, self.onConceptAnswersSuccessful);
-						} else  if ($scope.listCondition.field == "p.gender") {
+						} else  if (listCondition.field == "p.gender") {
 							$scope.conceptAnswers = [{display: 'Female', uuid: "F" },{ display: 'Male', uuid: "M" }];
 						}
 					} else {
@@ -148,6 +152,50 @@
 				 * */
 				for (var i = 0; i < $scope.patientListConditionArray.length; i++) {
 					$scope.patientListConditionArray[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.patientListConditionArray, $scope.patientListConditionArray[i].id);
+				}
+			};
+		
+		self.addListCondition = self.addListCondition || function() {
+				var addListCondition = true;
+				for (var i = 0; i < $scope.listConditions.length; i++) {
+					var listCondition = $scope.listConditions[i];
+					if (!listCondition.selected) {
+						addListCondition = false;
+						break;
+					}
+				}
+				if (addListCondition) {
+					var listCondition = new PatientListConditionModel('', 1, '');
+					$scope.listConditions.push(listCondition);
+				}
+			};
+		
+		self.removeListCondition = self.removeListCondition || function(listCondition) {
+				//only remove selected line items..
+				if (listCondition.selected) {
+					var index = $scope.listConditions.indexOf(listCondition);
+					if (index !== -1) {
+						$scope.listConditions.splice(index, 1);
+					}
+					
+					if ($scope.listConditions.length == 0) {
+						self.addListCondition();
+					}
+				}
+			};
+		
+		self.selectListCondition = self.selectListCondition || function(selectedListCondition, listCondition, index) {
+				$scope.listCondition = {};
+				if (selectedListCondition !== undefined) {
+					listCondition.setFeild(selectedListCondition);
+					listCondition.setOperator(selectedListCondition);
+					listCondition.setValue(selectedListCondition);
+					listCondition.setSelected(true);
+					$scope.listCondition = listCondition;
+					// load item details
+					//self.loadItemDetails(selectedListCondition.uuid, $scope.listCondition);
+					// load next line list condition
+					self.addListCondition();
 				}
 			};
 		

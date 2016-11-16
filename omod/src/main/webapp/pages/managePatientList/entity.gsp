@@ -61,12 +61,12 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr >
+				<tr ng-repeat="listCondition in entity.patientListConditions">
 					<td style="width:12% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
 						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td style="width:60% ">
-						<select class="form-control" ng-change="inputsValueChange()" ng-model="listCondition.field">
+						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
 							<option value="p.given_name">Patient Given Name</option>
 							<option value="p.family_name" >Patient Family Name</option>
@@ -102,10 +102,10 @@
 					<td ng-show="textInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
+						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
 					</td>
 					<td ng-show="dropdownInput">
-						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition()">
+						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)" ng-enter="addListCondition()">
 							<option value="">-- Select Value --</option>
 							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
 						</select>
@@ -118,21 +118,22 @@
 								 formFieldName: 'patientConditionDatePicker',
 								 useTime      : false,
 								 name         : 'patientConditionDate',
+								 ngEnterEvent: "addListCondition()",
 								])}
 					</td>
 					<td ng-show="numberInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition()" ng-enter="addPatientListCondition(entity)"/>
+						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
 					</td>
 					<td ng-show="radioButtonInput">
 						<label class="radio-inline">
-							<input ng-enter="addPatientListCondition(entity)" ng-click="patientListCondition()"
+							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
 							       class="form-control" ng-model="listCondition.value" type="radio"
 							       name="conditionValue" value="true">True
 						</label>
 						<label class="radio-inline">
-							<input ng-enter="addPatientListCondition(entity)" ng-click="patientListCondition()"
+							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
 							       class="form-control" ng-model="listCondition.value" type="radio"
 							       name="conditionValue" value="false">False
 						</label>
@@ -147,7 +148,7 @@
 	<fieldset class="nested">
 		<legend>${ui.message("patientlist.sort.order.header")}</legend>
 		<div class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-entities-table ">
+			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
 					<th style="width:10% "></th>
@@ -156,7 +157,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr >
+				<tr ng-repeat="listOrdering in entity.ordering">
 					<td class="item-actions" style="width:10% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
 						       title="Remove patient list ordering" class="remove" ng-click=""></td>
@@ -181,7 +182,7 @@
 					</td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.sortOrder"
-						        ng-change="patientListSortOrder()">
+						        ng-change="patientListSortOrder(listOrdering)">
 							<option value="">--Select Sort Order--</option>
 							<option value="asc">Ascending</option>
 							<option value="desc">Descending</option>
