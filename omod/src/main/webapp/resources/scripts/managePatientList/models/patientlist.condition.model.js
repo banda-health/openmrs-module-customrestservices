@@ -20,8 +20,8 @@
 
 	function PatientListConditionModel() {
 
-		function PatientListConditionModel(feild, operator, value) {
-			this.feild = feild;
+		function PatientListConditionModel(field, operator, value) {
+			this.field = field;
 			this.operator = operator;
 			this.value = value;
 			this.selected = false
@@ -29,12 +29,12 @@
 
 		PatientListConditionModel.prototype = {
 
-			getFeild: function() {
-				return this.feild;
+			getField: function() {
+				return this.field;
 			},
 
-			setFeild: function(feild) {
-				this.feild = feild;
+			setField: function(feild) {
+				this.field = feild;
 			},
 
 			getOperator: function() {

@@ -66,21 +66,23 @@
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
 						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td style="width:90% ">
-						<div class="input-group">
-							<input type="text"
-							       autocomplete="off"
-							       id="searchBox"
-							       class="form-control"
-							       ng-model="listCondition.field" />
-							<div class="input-group-btn">
-								<button type="button" class="btn btn-default dropdown-toggle btn-align" data-toggle="dropdown">
-									<span class="caret" ></span>
-								</button>
-								<ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right dropdown-width dropdown-margin overflow overflow-height">
-									<li class="input-lg no-height">Demo</li>
-								</ul>
-							</div>
-						</div>
+						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
+							<option value="">--Select Field--</option>
+							<option value="p.given_name">Patient Given Name</option>
+							<option value="p.family_name" >Patient Family Name</option>
+							<option value="p.gender" >Patient Gender</option>
+							<option value="p.birth_date" >Patient Birth Date</option>
+							<option value="p.attr.birthplace" >Patient Birth Place</option>
+							<option value="p.attr.civil_status" >Patient Civil Status</option>
+							<option value="v.start_date" >Visit Start Date</option>
+							<option value="v.end_date" >Visit End Date</option>
+							<option value="v.note.primary_diagnosis" >Visit Note Primary Diagnosis</option>
+							<option value="v.vitals.weight" >Visit Vital Weight</option>
+							<option value="v.attr.new_patient" >New Patient</option>
+							<option value="v.attr.ward" >Patient Ward</option>
+							<option value="p.hasActiveVisit" >Patient Active Visit</option>
+							<option value="v.hasDiagnosis" >Visit Diagnosis</option>
+						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">
@@ -100,7 +102,7 @@
 					<td ng-show="textInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
+						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition(entity)"/>
 					</td>
 					<td ng-show="dropdownInput">
 						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)" ng-enter="addListCondition()">
@@ -142,21 +144,23 @@
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
 						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td style="width:90% ">
-						<div class="input-group">
-							<input type="text"
-							       autocomplete="off"
-							       id="searchBox"
-							       class="form-control"
-							       ng-model="listCondition.field" />
-							<div class="input-group-btn">
-								<button type="button" class="btn btn-default dropdown-toggle btn-align" data-toggle="dropdown">
-									<span class="caret" ></span>
-								</button>
-								<ul id="color-dropdown-menu" class="dropdown-menu dropdown-menu-right dropdown-width dropdown-margin overflow overflow-height">
-									<li class="input-lg no-height">Demo</li>
-								</ul>
-							</div>
-						</div>
+						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
+							<option value="">--Select Field--</option>
+							<option value="p.given_name">Patient Given Name</option>
+							<option value="p.family_name" >Patient Family Name</option>
+							<option value="p.gender" >Patient Gender</option>
+							<option value="p.birth_date" >Patient Birth Date</option>
+							<option value="p.attr.birthplace" >Patient Birth Place</option>
+							<option value="p.attr.civil_status" >Patient Civil Status</option>
+							<option value="v.start_date" >Visit Start Date</option>
+							<option value="v.end_date" >Visit End Date</option>
+							<option value="v.note.primary_diagnosis" >Visit Note Primary Diagnosis</option>
+							<option value="v.vitals.weight" >Visit Vital Weight</option>
+							<option value="v.attr.new_patient" >New Patient</option>
+							<option value="v.attr.ward" >Patient Ward</option>
+							<option value="p.hasActiveVisit" >Patient Active Visit</option>
+							<option value="v.hasDiagnosis" >Visit Diagnosis</option>
+						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">

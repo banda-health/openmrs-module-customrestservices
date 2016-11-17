@@ -18,12 +18,12 @@
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
 	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel',
-		'PatientListConditionModel', 'EntityFunctions', 'PatientListRestfulService'];
+		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService'];
 	
 	var ENTITY_NAME = "list";
 	
 	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel,
-	                          PatientListConditionModel, EntityFunctions, PatientListRestfulService) {
+	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService) {
 		var self = this;
 		
 		var entity_name_message_key = "patientlist.page";
@@ -40,7 +40,7 @@
 		 */
 		// @Override
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
-			|| function(uuid) {
+			|| function (uuid) {
 				/* bind variables.. */
 				var civilStatusUuid = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 				var conceptAnswersLimit = null;
@@ -60,6 +60,12 @@
 				$scope.selectListCondition = self.selectListCondition;
 				$scope.addListCondition = self.addListCondition;
 				
+				if ($scope.entity !== undefined) {
+					self.addExistingListConditions();
+				} else {
+					
+				}
+				
 				$scope.patientListSortOrder = function (listOrdering) {
 					if (listOrdering.field != null && listOrdering.sortOrder != null) {
 						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
@@ -71,7 +77,6 @@
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						self.getNewPatientListCondition(listCondition);
-						console.log("Inside")
 					}
 				};
 				
@@ -155,10 +160,14 @@
 				}
 			};
 		
-		self.addListCondition = self.addListCondition || function() {
+		self.addExistingListConditions = self.addExistingListConditions || function () {
+				PatientListFunctions.populateExistingPatientListCondition($scope.entity.patientListConditions, $scope.listConditions, $scope);
+			};
+		
+		self.addListCondition = self.addListCondition || function (entity) {
 				var addListCondition = true;
-				for (var i = 0; i < $scope.listConditions.length; i++) {
-					var listCondition = $scope.listConditions[i];
+				for (var i = 0; i < entity.patientListConditions.length; i++) {
+					var listCondition = entity.patientListConditions[i];
 					if (!listCondition.selected) {
 						addListCondition = false;
 						break;
@@ -166,7 +175,7 @@
 				}
 				if (addListCondition) {
 					var listCondition = new PatientListConditionModel('', 1, '');
-					$scope.listConditions.push(listCondition);
+					entity.patientListConditions.push(listCondition);
 				}
 			};
 		
@@ -187,7 +196,7 @@
 		self.selectListCondition = self.selectListCondition || function(selectedListCondition, listCondition, index) {
 				$scope.listCondition = {};
 				if (selectedListCondition !== undefined) {
-					listCondition.setFeild(selectedListCondition);
+					listCondition.setField(selectedListCondition);
 					listCondition.setOperator(selectedListCondition);
 					listCondition.setValue(selectedListCondition);
 					listCondition.setSelected(true);
@@ -240,7 +249,7 @@
 			};
 		
 		self.addPatientListCondition = self.addPatientListCondition || function(entity) {
-				if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
+				if (entity.field != null && entity.operator != null && entity.value != null) {
 					var addPatientListCondition = true;
 					for (var i = 0; i < $scope.listConditions.length; i++) {
 						var patientListCondition = $scope.listConditions[i];

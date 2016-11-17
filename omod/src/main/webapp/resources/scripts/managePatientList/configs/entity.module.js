@@ -36,6 +36,7 @@
 			'app.genericMetadataModel',
 			'app.patientListConditionModel',
 			'app.restfulServices',
+			'app.patientListFunctionsFactory',
 			'app.genericEntityController',
 			'app.genericManageController'
 		]);
