@@ -7,8 +7,6 @@ import org.hibernate.Query;
 import org.hibernate.hql.ast.QuerySyntaxException;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
-import org.openmrs.api.VisitService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
@@ -36,8 +34,6 @@ public class PatientListDataServiceImpl extends
 
 	protected final Log LOG = LogFactory.getLog(this.getClass());
 
-	private VisitService visitService;
-
 	@Override
 	protected BasicObjectAuthorizationPrivileges getPrivileges() {
 		return new BasicObjectAuthorizationPrivileges();
@@ -54,8 +50,8 @@ public class PatientListDataServiceImpl extends
 		try {
 			List<Object> paramValues = new ArrayList<Object>();
 			// Create query
-			String mainQuery = constructQuery(patientList, paramValues);
-			Query query = getRepository().createQuery(mainQuery);
+			Query query = getRepository().createQuery(constructHqlQuery(patientList, paramValues));
+			// set parameters with actual values
 			if (paramValues.size() > 0) {
 				int index = 0;
 				for (Object value : paramValues) {
@@ -69,21 +65,21 @@ public class PatientListDataServiceImpl extends
 			pagingInfo.setLoadRecordCount(false);
 
 			query = this.createPagingQuery(pagingInfo, query);
-			List<Patient> results = query.list();
+			List results = query.list();
 			count = results.size();
 			if (count > 0) {
-				if (visitService == null) {
-					visitService = Context.getVisitService();
-				}
-
-				for (Patient patient : results) {
+				for (Object result : results) {
+					Patient patient;
 					Visit visit = null;
-					List<Visit> activeVisits = visitService.getActiveVisitsByPatient(patient);
-					if (activeVisits.size() > 0) {
-						visit = activeVisits.get(0);
+					if (result instanceof Patient) {
+						patient = (Patient)result;
+					} else {
+						visit = (Visit)result;
+						patient = visit.getPatient();
 					}
 
 					PatientListData patientListData = new PatientListData(patient, visit, patientList);
+					//applyTemplates(patientListData);
 					patientListDataSet.add(patientListData);
 				}
 			}
@@ -94,49 +90,59 @@ public class PatientListDataServiceImpl extends
 		return patientListDataSet;
 	}
 
-	private String constructQuery(PatientList patientList, List<Object> paramValues) {
-		StringBuilder hql = new StringBuilder("select distinct p from Patient p ");
+	/**
+	 * Constructs a patient list with given conditions (and ordering)
+	 * @param patientList
+	 * @param paramValues
+	 * @return
+	 */
+	private String constructHqlQuery(PatientList patientList, List<Object> paramValues) {
+		StringBuilder hql = new StringBuilder();
 		if (patientList != null && patientList.getPatientListConditions() != null) {
-			// add visit table
-			boolean hasVisit = searchField(patientList.getPatientListConditions(), "v.");
-			if (hasVisit) {
-				hql.append(", Visit v ");
+			if (searchField(patientList.getPatientListConditions(), "v.")) {
+				// join visit and patient tables
+				hql.append("select distinct v from Visit v inner join v.patient as p ");
+			} else {
+				// use only the patient table
+				hql.append("select distinct p from Patient p ");
 			}
 
+			// only join person attributes and attribute types if required to
 			if (searchField(patientList.getPatientListConditions(), "p.attr")) {
 				hql.append("inner join p.attributes as attr ");
 				hql.append("inner join attr.attributeType as attrType ");
 			}
 
+			// only join visit attributes and attribute types if required to
 			if (searchField(patientList.getPatientListConditions(), "v.attr")) {
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
 			}
-
-			// join visit table
-			if (hasVisit) {
-				hql.append("where v.patient = p ");
-			}
 		}
 
-		if (!StringUtils.contains(hql.toString(), "where")) {
-			hql.append(" where ");
-		} else {
-			hql.append(" and ");
-		}
+		// add where clause
+		hql.append(" where ");
 
-		//apply conditions
+		// apply patient list conditions
 		hql.append("(");
-		hql.append(applyConditions(patientList.getPatientListConditions(), paramValues));
+		hql.append(applyPatientListConditions(patientList.getPatientListConditions(), paramValues));
 		hql.append(")");
 
-		//apply ordering
-		hql.append(applyOrdering(patientList.getOrdering()));
+		//apply ordering if any
+		hql.append(applyPatientListOrdering(patientList.getOrdering()));
 
 		return hql.toString();
 	}
 
-	private String applyConditions(List<PatientListCondition> patientListConditions, List<Object> paramValues) {
+	/**
+	 * Parse patient list conditions and add create sub queries to be added on the main HQL query. Parameter search values
+	 * will be stored separately and later set when running query.
+	 * @param patientListConditions
+	 * @param paramValues
+	 * @return
+	 */
+	private String applyPatientListConditions(List<PatientListCondition> patientListConditions,
+	        List<Object> paramValues) {
 		int count = 0;
 		int len = patientListConditions.size();
 		StringBuilder hql = new StringBuilder();
@@ -146,9 +152,10 @@ public class PatientListDataServiceImpl extends
 			if (condition != null) {
 				String field = condition.getField();
 				if (StringUtils.contains(field, "p.attr.") || StringUtils.contains(field, "v.attr.")) {
-					hql.append(handleAttributes(condition, paramValues));
+					hql.append(createAttributeSubQueries(condition, paramValues));
 				} else {
 					String fieldName;
+					// constructs a valid entity field name
 					if (StringUtils.contains(field, "p.")) {
 						fieldName = ConvertPatientListFields.convert(Patient.class, condition.getField());
 					} else if (StringUtils.contains(field, "v.")) {
@@ -189,7 +196,13 @@ public class PatientListDataServiceImpl extends
 		return hql.toString();
 	}
 
-	private String handleAttributes(PatientListCondition condition, List<Object> paramValues) {
+	/**
+	 * Creates hql sub-queries for patient and visit attributes.
+	 * @param condition
+	 * @param paramValues
+	 * @return
+	 */
+	private String createAttributeSubQueries(PatientListCondition condition, List<Object> paramValues) {
 		StringBuilder hql = new StringBuilder();
 		String attributeName = condition.getField().split("\\.")[2];
 		attributeName = attributeName.replaceAll("_", " ").toLowerCase();
@@ -198,7 +211,7 @@ public class PatientListDataServiceImpl extends
 			hql.append("(lower(attrType.name) = ?");
 			hql.append(" AND ");
 			hql.append("attr.value ");
-		} else {
+		} else if (StringUtils.contains(condition.getField(), "v.attr.")) {
 			hql.append("(lower(vattrType.name) = ?");
 			hql.append(" AND ");
 			hql.append("vattr.valueReference ");
@@ -214,8 +227,12 @@ public class PatientListDataServiceImpl extends
 		return hql.toString();
 	}
 
-	private String applyOrdering(List<PatientListOrder> ordering) {
-		//apply ordering
+	/**
+	 * Order hql query by given fields
+	 * @param ordering
+	 * @return
+	 */
+	private String applyPatientListOrdering(List<PatientListOrder> ordering) {
 		int count = 0;
 		StringBuilder hql = new StringBuilder();
 		for (PatientListOrder order : ordering) {
@@ -236,6 +253,12 @@ public class PatientListDataServiceImpl extends
 		return StringUtils.removeEnd(hql.toString(), ",");
 	}
 
+	/**
+	 * Searches for a given field in the patient list conditions.
+	 * @param patientListConditions
+	 * @param search
+	 * @return
+	 */
 	private boolean searchField(List<PatientListCondition> patientListConditions, String search) {
 		for (PatientListCondition patientListCondition : patientListConditions) {
 			if (patientListCondition == null) {
@@ -248,5 +271,39 @@ public class PatientListDataServiceImpl extends
 		}
 
 		return false;
+	}
+
+	/**
+	 * Apply header and body templates on patient list data
+	 * @param patientListData
+	 */
+	private void applyTemplates(PatientListData patientListData) {
+		// apply header template.
+		patientListData.setHeaderContent(
+		        applyTemplates(patientListData.getPatientList().getHeaderTemplate(), patientListData));
+
+		// apply body template
+		patientListData.setBodyContent(
+		        applyTemplates(patientListData.getPatientList().getBodyTemplate(), patientListData));
+	}
+
+	private String applyTemplates(String template, PatientListData patientListData) {
+		String[] fields = StringUtils.substringsBetween(template, "[[", "]]");
+		for (String field : fields) {
+			Object value = new Object();
+			if (StringUtils.contains(field, "p.")) {
+				value = ConvertPatientListFields.getFieldValue(
+				    Patient.class, field, patientListData.getPatient().getPerson());
+			} else if (StringUtils.contains(field, "v.")) {
+				value = ConvertPatientListFields.getFieldValue(
+				    Visit.class, field, patientListData.getVisit());
+			}
+
+			if (value != null) {
+				template = StringUtils.replace(template, "[[" + field + "]]", value.toString());
+			}
+		}
+
+		return template;
 	}
 }

@@ -35,3 +35,11 @@ table.manage-condition-table th, td{
 .capitalize {
   text-transform: capitalize;
 }
+
+.header_template{
+  width:99%;
+  font-weight:bold;
+  padding: 8px;
+  margin-left:5px;
+  background-color:#dddddd;
+}

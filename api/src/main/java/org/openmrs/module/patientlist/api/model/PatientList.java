@@ -26,7 +26,8 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 	private Integer patientListId;
 	private List<PatientListCondition> patientListConditions;
 	private List<PatientListOrder> ordering;
-	private String displayTemplate;
+	private String headerTemplate;
+	private String bodyTemplate;
 
 	@Override
 	public Integer getId() {
@@ -45,14 +46,6 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 	public void setPatientListConditions(
 	        List<PatientListCondition> patientListConditions) {
 		this.patientListConditions = patientListConditions;
-	}
-
-	public String getDisplayTemplate() {
-		return displayTemplate;
-	}
-
-	public void setDisplayTemplate(String displayTemplate) {
-		this.displayTemplate = displayTemplate;
 	}
 
 	public List<PatientListOrder> getOrdering() {
@@ -89,5 +82,21 @@ public class PatientList extends BaseSerializableOpenmrsMetadata {
 		sortOrder.setPatientList(this);
 
 		this.ordering.add(sortOrder);
+	}
+
+	public String getHeaderTemplate() {
+		return headerTemplate;
+	}
+
+	public void setHeaderTemplate(String headerTemplate) {
+		this.headerTemplate = headerTemplate;
+	}
+
+	public String getBodyTemplate() {
+		return bodyTemplate;
+	}
+
+	public void setBodyTemplate(String bodyTemplate) {
+		this.bodyTemplate = bodyTemplate;
 	}
 }
