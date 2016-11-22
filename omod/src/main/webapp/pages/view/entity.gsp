@@ -29,29 +29,14 @@
             <tr class="clickable-tr" pagination-id="__patientListData"
                 dir-paginate="entity in patientListData | itemsPerPage: limit"
                 total-items="totalNumOfResults" current-page="patientList.currentPage">
+
                 <td>
                     <div class="row" >
-                        <div class="col-sm-10" style="width:99%;font-weight:bold; padding: 8px;margin-left:5px; background-color:#dddddd;">
-                            {{entity.patient.display}} (<span ng-show="entity.patient.person.gender === 'M'">Male</span>
-                            <span ng-show="entity.patient.person.gender === 'F'">Female</span>
-                            - Age {{entity.patient.person.age}})
-                        </div>
+                        <span ng-bind-html="renderTemplate(entity.headerContent)"></span>
                     </div>
 
                     <div class="row" >
-                        <div ng-show="entity.visit !== null" class="col-sm-10" style="padding: 10px;">
-                            Visit: {{entity.visit.display}}
-                        </div>
-                    </div>
-
-                    <div class="row" ng-show="entity.visit !== null && entity.visit.attributes !== []">
-                        <div class="col-sm-12">
-                            <span ng-repeat="visitAttribute in entity.visit.attributes">
-                                <span>
-                                    {{visitAttribute.display}}<span ng-if="\$index < entity.visit.attributes.length - 1">, </span>
-                                </span>
-                            </span>
-                        </div>
+                        <span ng-bind-html="renderTemplate(entity.bodyContent)"></span>
                     </div>
 
                     <div class="row">
@@ -62,17 +47,18 @@
                             </span>
 
                             <a class="right"
-                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">Patient Details</a>
+                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">
+                                ${ui.message('patientlist.view.patientDetails')}</a>
                             <span class="right"> | </span>
 
                             <a class="right" ng-show="entity.visit.stopDatetime === null"
                                href="/${ ui.contextPath() }/coreapps/patientdashboard/patientDashboard.page?patientId={{entity.patient.uuid}}">
-                                Visit Details</a>
+                                ${ui.message('coreapps.patientDashBoard.visitDetails')}</a>
                             <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
 
-                            <a class="right" ng-show="entity.visit.stopDatetime !== null">Start Visit</a>
+                            <a class="right" ng-show="entity.visit.stopDatetime !== null">${ ui.message("coreapps.task.startVisit.label") }</a>
                             <a class="right" ng-show="entity.visit.stopDatetime === null"
-                               ng-click="endVisitDialog(entity.visit.uuid)">End Visit</a>
+                               ng-click="endVisitDialog(entity.visit.uuid)">${ ui.message("coreapps.task.endVisit.label") }</a>
                         </div>
                     </div>
                 </td>

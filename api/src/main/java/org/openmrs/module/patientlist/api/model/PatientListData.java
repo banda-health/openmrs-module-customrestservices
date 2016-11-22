@@ -14,6 +14,8 @@ public class PatientListData extends BaseOpenmrsData {
 	private Patient patient;
 	private Visit visit;
 	private PatientList patientList;
+	private String headerContent;
+	private String bodyContent;
 
 	public PatientListData() {}
 
@@ -53,5 +55,21 @@ public class PatientListData extends BaseOpenmrsData {
 
 	public void setPatientList(PatientList patientList) {
 		this.patientList = patientList;
+	}
+
+	public String getHeaderContent() {
+		return headerContent;
+	}
+
+	public void setHeaderContent(String headerContent) {
+		this.headerContent = headerContent;
+	}
+
+	public String getBodyContent() {
+		return bodyContent;
+	}
+
+	public void setBodyContent(String bodyContent) {
+		this.bodyContent = bodyContent;
 	}
 }

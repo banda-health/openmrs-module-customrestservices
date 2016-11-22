@@ -25,8 +25,8 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 	@Override
 	public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
 		DelegatingResourceDescription description = super.getRepresentationDescription(rep);
-		description.addProperty("displayTemplateHeader");
-		description.addProperty("displayTemplateBody");
+		description.addProperty("headerTemplate");
+		description.addProperty("bodyTemplate");
 		description.addProperty("dateCreated");
 		description.addProperty("patientListConditions", Representation.DEFAULT);
 		description.addProperty("ordering", Representation.DEFAULT);

@@ -81,5 +81,15 @@ li.no-height{
     border: 1px solid #51a351;
     color: #51a351;
     padding: 1px 2px;
-    border-radius: 4px;
+    border-radius: 4px;}
+
+.header_template{
+  width:99%;
+  font-weight:bold;
+  padding: 8px;
+  margin-left:5px;
+  background-color:#dddddd;
+}
+.body_template{
+  padding: 10px;
 }

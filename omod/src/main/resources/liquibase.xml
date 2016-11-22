@@ -13,8 +13,10 @@
             <column name="name" type="varchar(255)" defaultValue="" >
                 <constraints nullable="false"/></column>
             <column name="description" type="varchar(255)" defaultValue=""/>
-            <column name="display_template_header" type="varchar(255)" defaultValue=""/>
-            <column name="display_template_body" type="varchar(255)" defaultValue=""/>
+            <column name="header_template" type="varchar(255)"
+                    defaultValue="&lt;div class='col-sm-10 header_template'&gt;#{p.identifier} {p.fullName} (Gender: {p.gender} - Age {p.age})&lt;/div&gt;"/>
+            <column name="body_template" type="varchar(255)"
+                    defaultValue="&lt;div class='body_template'&gt;Visit: {v.startDate} - {v.visitType}&lt;/div&gt;"/>
             <column name="creator" type="int"><constraints nullable="false"/></column>
             <column name="date_created" type="DATETIME"><constraints nullable="false"/></column>
             <column name="changed_by" type="int"/>

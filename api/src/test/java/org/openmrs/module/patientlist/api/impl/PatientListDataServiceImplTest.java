@@ -163,20 +163,20 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	public void patientList_shouldCreateListWithMultipleVisitAttributes() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithMultipleConditions() throws Exception {
+	public void patientList_shouldCreatePatientListWithMultipleConditions() throws Exception {}
+
+	@Test
+	public void patientList_shouldRetrievePatientListWithMultipleConditions() throws Exception {
 		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
 
 		Assert.assertEquals(3, conditions.size());
 
-		//PatientListCondition patientAttributeCondition = conditions.get(2);
-
 		PagingInfo pagingInfo = new PagingInfo();
 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
-		//Assert.assertEquals(1, patientListDataSet.size());
 		Assert.assertNotNull(patientListDataSet);
 
 	}

@@ -21,12 +21,12 @@
 	PatientListController.$inject = ['$injector', '$scope', '$filter',
 		'EntityRestFactory', 'PatientListRestfulService', 'PatientListModel',
 		'$window', 'PaginationService', 'CookiesService', 'CommonsRestfulFunctions',
-		'EntityFunctions', '$timeout'];
+		'EntityFunctions', '$timeout', '$sce'];
 
 	function PatientListController($injector, $scope, $filter, EntityRestFactory,
 	                               PatientListRestfulService, PatientListModel, $window,
 	                               PaginationService, CookiesService, CommonsRestfulFunctions,
-	                               EntityFunctions, $timeout) {
+	                               EntityFunctions, $timeout, $sce) {
 		var self = this;
 		var entity_name_message_key = emr.message("patientlist.page");
 		var REST_ENTITY_NAME = "list";
@@ -54,6 +54,12 @@
 				$scope.patientList = $scope.patientList || {};
 				$scope.patientList.currentPage = $scope.patientList.currentPage || 1;
 				$scope.endVisitDialog = self.endVisitDialog;
+
+				$scope.renderTemplate = self.renderTemplate;
+			}
+
+		self.renderTemplate = self.renderTemplate || function(template) {
+			return $sce.trustAsHtml(template);
 			}
 
 		self.getPatientLists = self.getPatientLists || function() {
@@ -82,28 +88,28 @@
 			}
 
 		self.endVisitDialog = self.endVisitDialog || function(uuid) {
-			var dialog = emr.setupConfirmationDialog({
-				selector: '#end-visit-dialog',
-				actions: {
-					confirm: function() {
-						CommonsRestfulFunctions.endVisit(PATIENT_LIST_MODULE_NAME, uuid, $scope);
+				var dialog = emr.setupConfirmationDialog({
+					selector: '#end-visit-dialog',
+					actions: {
+						confirm: function() {
+							CommonsRestfulFunctions.endVisit(PATIENT_LIST_MODULE_NAME, uuid, $scope);
 
-						//refresh patient list data to reflect changes
-						$timeout(function() {
-							self.getPatientListData($scope.patientList, $scope.patientList.currentPage, $scope.limit);
-						}, 300);
+							//refresh patient list data to reflect changes
+							$timeout(function() {
+								self.getPatientListData($scope.patientList, $scope.patientList.currentPage, $scope.limit);
+							}, 300);
 
-						dialog.close();
-					},
-					cancel: function() {
-						dialog.close();
+							dialog.close();
+						},
+						cancel: function() {
+							dialog.close();
+						}
 					}
-				}
-			});
+				});
 
-			dialog.show();
-			EntityFunctions.disableBackground();
-		}
+				dialog.show();
+				EntityFunctions.disableBackground();
+			}
 
 
 		// callbacks
