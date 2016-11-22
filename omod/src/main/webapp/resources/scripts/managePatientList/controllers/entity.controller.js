@@ -47,9 +47,6 @@
 				$scope.uuid = uuid;
 				$scope.listConditions = [];
 				$scope.patientListConditionArray = [];
-				$scope.addPatientListCondition = function(entity) {
-					self.addPatientListCondition(entity)
-				};
 				$scope.patientListSortOrderArray = [];
 				$scope.textInput = true;
 				$scope.dropdownInput = false;
@@ -58,12 +55,12 @@
 				$scope.radioButtonInput = false;
 				$scope.conceptAnswers = [];
 				$scope.selectListCondition = self.selectListCondition;
-				$scope.addListCondition = self.addListCondition;
+				$scope.removeListCondition = self.removeListCondition;
 				
 				if ($scope.entity !== undefined) {
 					self.addExistingListConditions();
 				} else {
-					
+					self.addListCondition();
 				}
 				
 				$scope.patientListSortOrder = function (listOrdering) {
@@ -77,6 +74,7 @@
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						self.getNewPatientListCondition(listCondition);
+						self.addListCondition();
 					}
 				};
 				
@@ -144,19 +142,20 @@
 			};
 		
 		self.getNewPatientListCondition = self.getNewPatientListCondition || function (newPatientListCondition) {
-				var index = EntityFunctions.findIndexByKeyValue($scope.patientListConditionArray, newPatientListCondition.id);
+				console.log("Demo Demo Dmeo Dmeo Dmeo Dmoe ")
+				var index = EntityFunctions.findIndexByKeyValue($scope.listConditions, newPatientListCondition.id);
 				if (index < 0) {
-					$scope.patientListConditionArray.push(newPatientListCondition);
+					$scope.listConditions.push(newPatientListCondition);
 				} else {
-					$scope.patientListConditionArray[index] = newPatientListCondition;
+					$scope.listConditions[index] = newPatientListCondition;
 				}
 				
 				/*
 				 * This loop is to remove any stock that had the actualQuantity updated and before saving changed again to either a value
 				 * equal to null or a value equal to the quantity
 				 * */
-				for (var i = 0; i < $scope.patientListConditionArray.length; i++) {
-					$scope.patientListConditionArray[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.patientListConditionArray, $scope.patientListConditionArray[i].id);
+				for (var i = 0; i < $scope.listConditions.length; i++) {
+					$scope.listConditions[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.listConditions, $scope.listConditions[i].id);
 				}
 			};
 		
@@ -164,10 +163,11 @@
 				PatientListFunctions.populateExistingPatientListCondition($scope.entity.patientListConditions, $scope.listConditions, $scope);
 			};
 		
-		self.addListCondition = self.addListCondition || function (entity) {
+		self.addListCondition = self.addListCondition || function () {
+				console.log("Inside the method ");
 				var addListCondition = true;
-				for (var i = 0; i < entity.patientListConditions.length; i++) {
-					var listCondition = entity.patientListConditions[i];
+				for (var i = 0; i < $scope.listConditions.length; i++) {
+					var listCondition = $scope.listConditions[i];
 					if (!listCondition.selected) {
 						addListCondition = false;
 						break;
@@ -175,7 +175,7 @@
 				}
 				if (addListCondition) {
 					var listCondition = new PatientListConditionModel('', 1, '');
-					entity.patientListConditions.push(listCondition);
+					$scope.listConditions.push(listCondition);
 				}
 			};
 		
@@ -201,9 +201,7 @@
 					listCondition.setValue(selectedListCondition);
 					listCondition.setSelected(true);
 					$scope.listCondition = listCondition;
-					// load item details
-					//self.loadItemDetails(selectedListCondition.uuid, $scope.listCondition);
-					// load next line list condition
+					
 					self.addListCondition();
 				}
 			};
@@ -231,13 +229,14 @@
 					delete sortOrder[i]['id'];
 				}
 				
-				var patientListCondition = $scope.patientListConditionArray;
+				var patientListCondition = $scope.$scope.listConditions;
 				for (var r = 0; r < patientListCondition.length; r++) {
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
+					delete patientListCondition[r]['selected'];
 				}
 				
-				if ($scope.patientListConditionArray.length != 0) {
+				if ($scope.$scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;
 					$scope.entity.patientListConditions = patientListCondition;
 					$scope.loading = true;
@@ -246,23 +245,6 @@
 				}
 				
 				return true;
-			};
-		
-		self.addPatientListCondition = self.addPatientListCondition || function(entity) {
-				if (entity.field != null && entity.operator != null && entity.value != null) {
-					var addPatientListCondition = true;
-					for (var i = 0; i < $scope.listConditions.length; i++) {
-						var patientListCondition = $scope.listConditions[i];
-						if (!patientListCondition.selected) {
-							addPatientListCondition = false;
-							break;
-						}
-					}
-					if (addPatientListCondition) {
-						var patientListCondition = new PatientListConditionModel('', 1, '');
-						$scope.patienListConditions.push(patientListCondition);
-					}
-				}
 			};
 		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */

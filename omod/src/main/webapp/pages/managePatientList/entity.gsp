@@ -61,10 +61,11 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-show="entity.patientListConditions.length > 0" ng-repeat="listCondition in entity.patientListConditions">
+				<tr ng-show="entity.patientListConditions.length > 0" ng-repeat="listCondition in listConditions">
 					<td style="width:12% ">
-						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
-						       title="Remove patient list ordering" class="remove" ng-click=""></td>
+						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
+						       title="${ui.message('openhmis.cashier.item.removeTitle')}"
+						       class="remove" ng-click="removeListCondition(listCondition)"></td>
 					<td style="width:90% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
@@ -102,10 +103,10 @@
 					<td ng-show="textInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition(entity)"/>
+						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="dropdownInput">
-						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)" ng-enter="addListCondition()">
+						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)">
 							<option value="">-- Select Value --</option>
 							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
 						</select>
@@ -117,18 +118,17 @@
 								 required     : 'required',
 								 formFieldName: 'patientConditionDatePicker',
 								 useTime      : false,
-								 name         : 'patientConditionDate',
-								 ngEnterEvent: "addListCondition()",
+								 name         : 'patientConditionDate'
 								])}
 					</td>
 					<td ng-show="numberInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
+						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="radioButtonInput">
 						<label class="radio-inline">
-							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
+							<input ng-click="patientListCondition(listCondition)"
 							       class="form-control" ng-model="listCondition.value" type="radio"
 							       name="conditionValue" value="true">True
 						</label>
@@ -139,84 +139,7 @@
 						</label>
 					</td>
 				</tr>
-				<tr ng-show="entity.patientListConditions.length <= 0">
-					<td style="width:12% ">
-						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
-						       title="Remove patient list ordering" class="remove" ng-click=""></td>
-					<td style="width:90% ">
-						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
-							<option value="">--Select Field--</option>
-							<option value="p.given_name">Patient Given Name</option>
-							<option value="p.family_name" >Patient Family Name</option>
-							<option value="p.gender" >Patient Gender</option>
-							<option value="p.birth_date" >Patient Birth Date</option>
-							<option value="p.attr.birthplace" >Patient Birth Place</option>
-							<option value="p.attr.civil_status" >Patient Civil Status</option>
-							<option value="v.start_date" >Visit Start Date</option>
-							<option value="v.end_date" >Visit End Date</option>
-							<option value="v.note.primary_diagnosis" >Visit Note Primary Diagnosis</option>
-							<option value="v.vitals.weight" >Visit Vital Weight</option>
-							<option value="v.attr.new_patient" >New Patient</option>
-							<option value="v.attr.ward" >Patient Ward</option>
-							<option value="p.hasActiveVisit" >Patient Active Visit</option>
-							<option value="v.hasDiagnosis" >Visit Diagnosis</option>
-						</select>
-					</td>
-					<td>
-						<select class="form-control" ng-model="listCondition.operator">
-							<option value="">--Select Operator--</option>
-							<option value="EQUALS">Equals</option>
-							<option value="NOT_EQUALS">Not Equals</option>
-							<option value="GT">Greater than</option>
-							<option value="LT">Less than</option>
-							<option value="GTE">Greater than or Equals</option>
-							<option value="LTE">Less than or Equals</option>
-							<option value="LIKE">Like</option>
-							<option value="BETWEEN">Between</option>
-							<option value="NULL">Empty</option>
-							<option value="NOT NULL">Not Empty</option>
-						</select>
-					</td>
-					<td ng-show="textInput">
-						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
-					</td>
-					<td ng-show="dropdownInput">
-						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)" ng-enter="addListCondition()">
-							<option value="">-- Select Value --</option>
-							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
-						</select>
-					</td>
-					<td ng-show="dateInput">
-						${ui.includeFragment("uicommons", "field/datetimepicker",
-								[id           : 'patientConditionDate',
-								 label        : '',
-								 required     : 'required',
-								 formFieldName: 'patientConditionDatePicker',
-								 useTime      : false,
-								 name         : 'patientConditionDate',
-								 ngEnterEvent: "addListCondition()",
-								])}
-					</td>
-					<td ng-show="numberInput">
-						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="addListCondition()"/>
-					</td>
-					<td ng-show="radioButtonInput">
-						<label class="radio-inline">
-							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
-							       class="form-control" ng-model="listCondition.value" type="radio"
-							       name="conditionValue" value="true">True
-						</label>
-						<label class="radio-inline">
-							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
-							       class="form-control" ng-model="listCondition.value" type="radio"
-							       name="conditionValue" value="false">False
-						</label>
-					</td>
-				</tr>
+				
 				</tbody>
 			</table>
 		</div>
