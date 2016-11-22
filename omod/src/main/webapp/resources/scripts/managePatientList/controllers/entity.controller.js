@@ -56,6 +56,7 @@
 				$scope.conceptAnswers = [];
 				$scope.selectListCondition = self.selectListCondition;
 				$scope.removeListCondition = self.removeListCondition;
+				PatientListRestfulService.loadFields(self.onLoadFieldsSuccessful);
 				
 				if ($scope.entity !== undefined) {
 					self.addExistingListConditions();
@@ -211,6 +212,12 @@
 				$scope.conceptAnswers = data.answers;
 				console.log(data.answers);
 			};
+		
+		// call-back functions.
+		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function (data) {
+				$scope.fields = data;
+				console.log(data);
+			};
 			
 		/**
 		 * All post-submit validations are done here.
@@ -229,14 +236,14 @@
 					delete sortOrder[i]['id'];
 				}
 				
-				var patientListCondition = $scope.$scope.listConditions;
+				var patientListCondition = $scope.listConditions;
 				for (var r = 0; r < patientListCondition.length; r++) {
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
 					delete patientListCondition[r]['selected'];
 				}
 				
-				if ($scope.$scope.listConditions.length != 0) {
+				if ($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;
 					$scope.entity.patientListConditions = patientListCondition;
 					$scope.loading = true;

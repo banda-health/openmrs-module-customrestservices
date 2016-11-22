@@ -24,13 +24,13 @@
 	function PatientListRestfulService(EntityRestFactory, PaginationService) {
 		var service;
 		service = {
-			loadConceptAnswers : loadConceptAnswers
+			loadConceptAnswers : loadConceptAnswers,
+			loadFields: loadFields
 		};
 		
 		return service;
 		
 		/**
-		 * Temporary Function: It will ONLY be used until the Operation Types module is done.
 		 * @param limit
 		 * @param onConceptAnswersSuccessful
 		 * @param module_name
@@ -45,6 +45,18 @@
 				onConceptAnswersSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
+		}
+		
+		/**
+		 * @param onLoadFieldsSuccessful
+		 */
+		function loadFields(onLoadFieldsSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'fields';
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadFieldsSuccessful,
+				errorCallback
+			);
 		}
 		
 		function errorCallback(error) {
