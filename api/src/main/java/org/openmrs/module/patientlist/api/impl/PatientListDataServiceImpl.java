@@ -46,7 +46,7 @@ public class PatientListDataServiceImpl extends
 		return;
 	}
 
-	private PatientInformation patientInformation = null;
+	private PatientInformation patientInformation;
 
 	@Override
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {

@@ -39,14 +39,16 @@ public class PatientInformation {
 
 	private ConceptService conceptService;
 
+	private static PatientInformation INSTANCE;
+
 	private PatientInformation() {}
 
-	private static class Holder {
-		private static final PatientInformation INSTANCE = new PatientInformation().refresh();
-	}
-
 	public static PatientInformation getInstance() {
-		return Holder.INSTANCE;
+		if (INSTANCE == null) {
+			INSTANCE = new PatientInformation().refresh();
+		}
+
+		return INSTANCE;
 	}
 
 	public PatientInformation refresh() {
