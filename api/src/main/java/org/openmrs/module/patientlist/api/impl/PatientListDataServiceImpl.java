@@ -10,17 +10,19 @@ import org.openmrs.Visit;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
+import org.openmrs.module.patientlist.api.model.PatientInformationField;
+import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
-import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
-import org.openmrs.module.patientlist.api.util.ConvertPatientListFields;
 import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
+import org.openmrs.module.patientlist.api.util.PatientInformation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,9 +46,15 @@ public class PatientListDataServiceImpl extends
 		return;
 	}
 
+	private PatientInformation patientInformation = null;
+
 	@Override
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {
 		List<PatientListData> patientListDataSet = new ArrayList<PatientListData>();
+		if (patientInformation == null) {
+			patientInformation = PatientInformation.getInstance();
+		}
+
 		try {
 			List<Object> paramValues = new ArrayList<Object>();
 			// Create query
@@ -79,7 +87,7 @@ public class PatientListDataServiceImpl extends
 					}
 
 					PatientListData patientListData = new PatientListData(patient, visit, patientList);
-					//applyTemplates(patientListData);
+					applyTemplates(patientListData);
 					patientListDataSet.add(patientListData);
 				}
 			}
@@ -149,33 +157,26 @@ public class PatientListDataServiceImpl extends
 		// apply conditions
 		for (PatientListCondition condition : patientListConditions) {
 			++count;
-			if (condition != null) {
-				String field = condition.getField();
+			if (condition != null && patientInformation.getField(condition.getField()) != null) {
+				PatientInformationField patientInformationField = patientInformation.getField(condition.getField());
+				String field = patientInformationField.getName();
 				if (StringUtils.contains(field, "p.attr.") || StringUtils.contains(field, "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
 				} else {
-					String fieldName;
-					// constructs a valid entity field name
-					if (StringUtils.contains(field, "p.")) {
-						fieldName = ConvertPatientListFields.convert(Patient.class, condition.getField());
-					} else if (StringUtils.contains(field, "v.")) {
-						fieldName = ConvertPatientListFields.convert(Visit.class, condition.getField());
-					} else {
+					String mappingFieldName = patientInformationField.getMappingFieldName();
+
+					if (mappingFieldName == null) {
+						LOG.error("Unknown mapping for field name: " + condition.getField());
 						continue;
 					}
 
-					if (fieldName == null) {
-						LOG.error("Unknown field name: " + condition.getField());
-						continue;
-					}
-
-					hql.append(fieldName);
+					hql.append(mappingFieldName);
 					hql.append(" ");
 					hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
 					hql.append(" ");
 					if (StringUtils.isNotEmpty(condition.getValue())) {
 						hql.append("?");
-						if (StringUtils.contains(condition.getField().toLowerCase(), "date")) {
+						if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
 							try {
 								paramValues.add(sdf.parse(condition.getValue()));
 							} catch (ParseException pex) {
@@ -188,7 +189,7 @@ public class PatientListDataServiceImpl extends
 				}
 
 				if (count < len) {
-					hql.append(" or ");
+					hql.append(" and ");
 				}
 			}
 		}
@@ -242,7 +243,13 @@ public class PatientListDataServiceImpl extends
 					hql.append("order by ");
 				}
 
-				hql.append(order.getField());
+				String mappingFieldName = patientInformation.getField(order.getField()).getMappingFieldName();
+				if (mappingFieldName == null) {
+					LOG.error("Unknown mapping for field name: " + order.getField());
+					continue;
+				}
+
+				hql.append(mappingFieldName);
 				hql.append(" ");
 				hql.append(order.getSortOrder());
 				hql.append(",");
@@ -288,19 +295,23 @@ public class PatientListDataServiceImpl extends
 	}
 
 	private String applyTemplates(String template, PatientListData patientListData) {
-		String[] fields = StringUtils.substringsBetween(template, "[[", "]]");
+		String[] fields = StringUtils.substringsBetween(template, "{", "}");
 		for (String field : fields) {
-			Object value = new Object();
-			if (StringUtils.contains(field, "p.")) {
-				value = ConvertPatientListFields.getFieldValue(
-				    Patient.class, field, patientListData.getPatient().getPerson());
-			} else if (StringUtils.contains(field, "v.")) {
-				value = ConvertPatientListFields.getFieldValue(
-				    Visit.class, field, patientListData.getVisit());
+			Object value = null;
+			PatientInformationField patientInformationField = patientInformation.getField(field);
+			if (patientInformationField != null) {
+				if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
+					value = patientInformationField.getValue(patientListData.getPatient());
+
+				} else if (patientListData.getVisit() != null && StringUtils.contains(field, "v.")) {
+					value = patientInformationField.getValue(patientListData.getVisit());
+				}
 			}
 
 			if (value != null) {
-				template = StringUtils.replace(template, "[[" + field + "]]", value.toString());
+				template = StringUtils.replace(template, "{" + field + "}", value.toString());
+			} else {
+				template = StringUtils.replace(template, "{" + field + "}", "");
 			}
 		}
 

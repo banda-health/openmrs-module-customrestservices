@@ -55,7 +55,11 @@
 				$scope.patientList.currentPage = $scope.patientList.currentPage || 1;
 				$scope.endVisitDialog = self.endVisitDialog;
 
-				$scope.patientListTemplate;
+				$scope.renderTemplate = self.renderTemplate;
+			}
+
+		self.renderTemplate = self.renderTemplate || function(template) {
+			return $sce.trustAsHtml(template);
 			}
 
 		self.getPatientLists = self.getPatientLists || function() {

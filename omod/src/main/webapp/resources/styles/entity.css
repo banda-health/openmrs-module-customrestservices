@@ -43,3 +43,6 @@ table.manage-condition-table th, td{
   margin-left:5px;
   background-color:#dddddd;
 }
+.body_template{
+  padding: 10px;
+}
