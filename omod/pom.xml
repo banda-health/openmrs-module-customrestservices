@@ -26,6 +26,11 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>openhmis.commons-omod_2.x</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>${project.parent.groupId}</groupId>
 			<artifactId>${project.parent.artifactId}-api</artifactId>
 			<version>${project.parent.version}</version>

@@ -20,21 +20,21 @@
 
 	function PatientListConditionModel() {
 
-		function PatientListConditionModel(feild, operator, value, order) {
-			this.feild = feild;
+		function PatientListConditionModel(field, operator, value) {
+			this.field = field;
 			this.operator = operator;
 			this.value = value;
-			this.order = order;
+			this.selected = false
 		}
 
 		PatientListConditionModel.prototype = {
 
-			getFeild: function() {
-				return this.feild;
+			getField: function() {
+				return this.field;
 			},
 
-			setFeild: function(feild) {
-				this.feild = feild;
+			setField: function(feild) {
+				this.field = feild;
 			},
 
 			getOperator: function() {
@@ -53,12 +53,12 @@
 				this.value = value;
 			},
 			
-			getOrder: function() {
-				return this.Order;
+			setSelected: function(selected) {
+				this.selected = selected;
 			},
-
-			setOrder: function(Order) {
-				this.Order = Order;
+			
+			isSelected: function() {
+				return this.selected;
 			}
 			
 		};

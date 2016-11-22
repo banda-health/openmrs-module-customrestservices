@@ -23,9 +23,29 @@
 	
 	function PatientListRestfulService(EntityRestFactory, PaginationService) {
 		var service;
-		service = {};
+		service = {
+			loadConceptAnswers : loadConceptAnswers
+		};
 		
 		return service;
+		
+		/**
+		 * Temporary Function: It will ONLY be used until the Operation Types module is done.
+		 * @param limit
+		 * @param onConceptAnswersSuccessful
+		 * @param module_name
+		 * @param uuid
+		 */
+		function loadConceptAnswers(module_name, limit, uuid, onConceptAnswersSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = '';
+			requestParams['limit'] = limit;
+			EntityRestFactory.setBaseUrl('concept/' + uuid, 'v1');
+			EntityRestFactory.loadEntities(requestParams,
+				onConceptAnswersSuccessful, errorCallback);
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
 		
 		function errorCallback(error) {
 			emr.errorAlert(error);

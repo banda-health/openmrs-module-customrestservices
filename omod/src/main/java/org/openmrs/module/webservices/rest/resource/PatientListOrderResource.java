@@ -1,7 +1,6 @@
 package org.openmrs.module.webservices.rest.resource;
 
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
-import org.openmrs.module.patientlist.api.IPatientListOrderService;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
@@ -37,11 +36,7 @@ public class PatientListOrderResource extends BaseRestMetadataResource<PatientLi
 
 	@Override
 	public Class<? extends IMetadataDataService<PatientListOrder>> getServiceClass() {
-		return IPatientListOrderService.class;
+		return null;
 	}
 
-	@Override
-	public DelegatingResourceDescription getCreatableProperties() {
-		return getRepresentationDescription(new DefaultRepresentation());
-	}
 }
