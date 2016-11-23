@@ -26,6 +26,7 @@
 			this.value = value;
 			this.selected = false;
 			this.conditionOrder = conditionOrder;
+			this.id = field+"_"+value;
 		}
 
 		PatientListConditionModel.prototype = {
@@ -36,6 +37,14 @@
 
 			setField: function(feild) {
 				this.field = feild;
+			},
+			
+			getId: function() {
+				return this.id;
+			},
+			
+			setId: function(id) {
+				this.id = id;
 			},
 
 			getOperator: function() {

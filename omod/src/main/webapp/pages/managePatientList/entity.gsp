@@ -86,9 +86,11 @@
 							<option value="BETWEEN">Between</option>
 							<option value="NULL">Empty</option>
 							<option value="NOT NULL">Not Empty</option>
+							<option value="DEFINED">Defined</option>
+							<option value="NOT DEFINED">Not Defined</option>
 						</select>
 					</td>
-					<td ng-show="textInput">
+					<td ng-show="textInput ">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
@@ -114,17 +116,9 @@
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="radioButtonInput">
-						<label class="radio-inline">
-							<input ng-click="patientListCondition(listCondition)"
-							       class="form-control" ng-model="listCondition.value" type="radio"
-							       name="conditionValue" value="true">True
-						</label>
-						<label class="radio-inline">
-							<input ng-enter="addListCondition()" ng-click="patientListCondition(listCondition)"
-							       class="form-control" ng-model="listCondition.value" type="radio"
-							       name="conditionValue" value="false">False
-						</label>
+					<td ng-show="checkBoxInput">
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)"/> Select</label>
 					</td>
 				</tr>
 				
@@ -150,7 +144,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.desc.name}}</option>
 						</select>
 					</td>
 					<td>
@@ -167,7 +161,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.desc.name}}</option>
 						</select>
 					</td>
 					<td>

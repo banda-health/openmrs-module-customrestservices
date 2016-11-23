@@ -52,7 +52,7 @@
 				$scope.dropdownInput = false;
 				$scope.dateInput = false;
 				$scope.numberInput = false;
-				$scope.radioButtonInput = false;
+				$scope.checkBoxInput = false;
 				$scope.conceptAnswers = [];
 				$scope.selectListCondition = self.selectListCondition;
 				$scope.removeListCondition = self.removeListCondition;
@@ -72,6 +72,7 @@
 				};
 				
 				$scope.patientListCondition = function (listCondition) {
+					console.log(listCondition.value + "I was clicked");
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
@@ -81,44 +82,57 @@
 				};
 				
 				$scope.inputsValueChange  = function (listCondition) {
-					if (listCondition.field == "p.given_name" || listCondition.field == "p.family_name"
-						|| listCondition.field == "v.note.primary_diagnosis" || listCondition.field == "p.attr.birthplace") {
-						$scope.textInput = true;
-						$scope.dropdownInput = false;
-						$scope.dateInput = false;
-						$scope.numberInput = false;
-						$scope.radioButtonInput = false;
-					} else if (listCondition.field == "p.birth_date" || listCondition.field == "v.start_date"
-						|| listCondition.field == "v.end_date") {
-						$scope.textInput = false;
-						$scope.dropdownInput = false;
-						$scope.dateInput = true;
-						$scope.numberInput = false;
-						$scope.numberInput = false;
-					} else if (listCondition.field == "v.vitals.weight" || listCondition.field == "v.attr.ward") {
-						$scope.textInput = false;
-						$scope.dropdownInput = false;
-						$scope.dateInput = false;
-						$scope.numberInput = true;
-						$scope.numberInput = true;
-					} else if (listCondition.field == "p.attr.civil_status" || listCondition.field == "p.gender") {
-						$scope.textInput = false;
-						$scope.dropdownInput = true;
-						$scope.dateInput = false;
-						$scope.numberInput = false;
-						$scope.numberInput = false;
-						
-						if (listCondition.field == "p.attr.civil_status") {
-							PatientListRestfulService.loadConceptAnswers(PATIENT_LIST_MODULE_NAME, conceptAnswersLimit, civilStatusUuid, self.onConceptAnswersSuccessful);
-						} else  if (listCondition.field == "p.gender") {
-							$scope.conceptAnswers = [{display: 'Female', uuid: "F" },{ display: 'Male', uuid: "M" }];
+					$scope.listConditionId = listCondition.id;
+					for (var i = 0; i < $scope.fields.length; i++) {
+						var datatype = null;
+						if ($scope.fields[i].field == listCondition.field) {
+							datatype = $scope.fields[i].desc.dataType;
+							
+							
+							if (datatype == "java.lang.String") {
+								$scope.textInput = true;
+								$scope.dropdownInput = false;
+								$scope.dateInput = false;
+								$scope.numberInput = false;
+								$scope.checkBoxInput = false;
+							} else if (datatype == "java.util.Date") {
+								$scope.textInput = false;
+								$scope.dropdownInput = false;
+								$scope.dateInput = true;
+								$scope.numberInput = false;
+								$scope.numberInput = false;
+							} else if (datatype == "java.lang.Integer") {
+								$scope.textInput = false;
+								$scope.dropdownInput = false;
+								$scope.dateInput = false;
+								$scope.numberInput = true;
+								$scope.numberInput = true;
+							} else if (listCondition.field == "p.attr.civil_status" || listCondition.field == "p.gender") {
+								$scope.textInput = false;
+								$scope.dropdownInput = true;
+								$scope.dateInput = false;
+								$scope.numberInput = false;
+								$scope.numberInput = false;
+								
+								if (listCondition.field == "p.attr.civil_status") {
+									PatientListRestfulService.loadConceptAnswers(PATIENT_LIST_MODULE_NAME, conceptAnswersLimit, civilStatusUuid, self.onConceptAnswersSuccessful);
+								} else if (listCondition.field == "p.gender") {
+									$scope.conceptAnswers = [{display: 'Female', uuid: "F"}, {display: 'Male', uuid: "M"}];
+								}
+							} else if (datatype == "java.lang.Boolean") {
+								$scope.textInput = false;
+								$scope.dropdownInput = false;
+								$scope.dateInput = false;
+								$scope.numberInput = false;
+								$scope.checkBoxInput = true;
+							} else {
+								$scope.textInput = true;
+								$scope.dropdownInput = false;
+								$scope.dateInput = false;
+								$scope.numberInput = false;
+								$scope.checkBoxInput = false;
+							}
 						}
-					} else {
-						$scope.textInput = false;
-						$scope.dropdownInput = false;
-						$scope.dateInput = false;
-						$scope.numberInput = false;
-						$scope.radioButtonInput = true;
 					}
 				};
 			};
@@ -174,7 +188,6 @@
 					}
 				}
 				if (addListCondition) {
-					
 					var listCondition = new PatientListConditionModel('', 1, '');
 					$scope.listConditions.push(listCondition);
 				}
@@ -202,6 +215,7 @@
 					listCondition.setValue(selectedListCondition);
 					listCondition.setSelected(true);
 					listCondition.setConditionOrder(selectedListCondition);
+					listCondition.setId(selectedListCondition);
 					$scope.listCondition = listCondition;
 					
 					self.addListCondition();
@@ -256,7 +270,7 @@
 						
 					}
 				}
-				console.log(patientListCondition);
+				console.log(sortOrder);
 				
 				if ($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;
