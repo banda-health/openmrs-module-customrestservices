@@ -35,6 +35,7 @@
 			'app.cookies',
 			'app.genericMetadataModel',
 			'app.patientListConditionModel',
+			'app.patientListOrderingModel',
 			'app.restfulServices',
 			'app.patientListFunctionsFactory',
 			'app.genericEntityController',

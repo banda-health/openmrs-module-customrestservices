@@ -18,12 +18,12 @@
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
 	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel',
-		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService'];
+		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService', 'PatientListOrderingModel'];
 	
 	var ENTITY_NAME = "list";
 	
 	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel,
-	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService) {
+	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService, PatientListOrderingModel) {
 		var self = this;
 		
 		var entity_name_message_key = "patientlist.page";
@@ -42,37 +42,30 @@
 		self.bindExtraVariablesToScope = self.bindExtraVariablesToScope
 			|| function (uuid) {
 				/* bind variables.. */
-				var civilStatusUuid = "1054AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-				var conceptAnswersLimit = null;
 				$scope.uuid = uuid;
 				$scope.listConditions = [];
-				$scope.patientListConditionArray = [];
-				$scope.patientListSortOrderArray = [];
-				$scope.textInput = true;
-				$scope.dropdownInput = false;
-				$scope.dateInput = false;
-				$scope.numberInput = false;
-				$scope.checkBoxInput = false;
+				$scope.listOrderings = [];
 				$scope.conceptAnswers = [];
-				$scope.selectListCondition = self.selectListCondition;
 				$scope.removeListCondition = self.removeListCondition;
 				PatientListRestfulService.loadFields(self.onLoadFieldsSuccessful);
 				
 				if ($scope.entity !== undefined) {
 					self.addExistingListConditions();
+					self.addExistingListOrdering();
 				} else {
 					self.addListCondition();
+					self.addListOrdering();
 				}
 				
 				$scope.patientListSortOrder = function (listOrdering) {
 					if (listOrdering.field != null && listOrdering.sortOrder != null) {
 						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
 						self.getNewPatientListSortOrder(listOrdering);
+						self.addListOrdering();
 					}
 				};
 				
 				$scope.patientListCondition = function (listCondition) {
-					console.log(listCondition.value + "I was clicked");
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
@@ -82,78 +75,43 @@
 				};
 				
 				$scope.inputsValueChange  = function (listCondition) {
-					$scope.listConditionId = listCondition.id;
 					for (var i = 0; i < $scope.fields.length; i++) {
 						var datatype = null;
 						if ($scope.fields[i].field == listCondition.field) {
 							datatype = $scope.fields[i].desc.dataType;
-							
-							
-							if (datatype == "java.lang.String") {
-								$scope.textInput = true;
-								$scope.dropdownInput = false;
-								$scope.dateInput = false;
-								$scope.numberInput = false;
-								$scope.checkBoxInput = false;
-							} else if (datatype == "java.util.Date") {
-								$scope.textInput = false;
-								$scope.dropdownInput = false;
-								$scope.dateInput = true;
-								$scope.numberInput = false;
-								$scope.numberInput = false;
-							} else if (datatype == "java.lang.Integer") {
-								$scope.textInput = false;
-								$scope.dropdownInput = false;
-								$scope.dateInput = false;
-								$scope.numberInput = true;
-								$scope.numberInput = true;
-							} else if (listCondition.field == "p.attr.civil_status" || listCondition.field == "p.gender") {
-								$scope.textInput = false;
-								$scope.dropdownInput = true;
-								$scope.dateInput = false;
-								$scope.numberInput = false;
-								$scope.numberInput = false;
-								
-								if (listCondition.field == "p.attr.civil_status") {
-									PatientListRestfulService.loadConceptAnswers(PATIENT_LIST_MODULE_NAME, conceptAnswersLimit, civilStatusUuid, self.onConceptAnswersSuccessful);
-								} else if (listCondition.field == "p.gender") {
-									$scope.conceptAnswers = [{display: 'Female', uuid: "F"}, {display: 'Male', uuid: "M"}];
-								}
-							} else if (datatype == "java.lang.Boolean") {
-								$scope.textInput = false;
-								$scope.dropdownInput = false;
-								$scope.dateInput = false;
-								$scope.numberInput = false;
-								$scope.checkBoxInput = true;
-							} else {
-								$scope.textInput = true;
-								$scope.dropdownInput = false;
-								$scope.dateInput = false;
-								$scope.numberInput = false;
-								$scope.checkBoxInput = false;
-							}
+							$scope.valueInputConditions(datatype, listCondition);
 						}
 					}
 				};
+				
+				$scope.valueInputConditions = function (datatype, listCondition) {
+					if (datatype == "java.lang.String") {
+						listCondition.inputType = "textInput";
+					} else if (datatype == "java.util.Date") {
+						listCondition.inputType = "dateInput";
+					} else {
+						listCondition.inputType = "textInput";
+					}
+				}
 			};
 			
 			
 		
 		
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function (newPatientListSortOrder) {
-				var index = EntityFunctions.findIndexByKeyValue($scope.patientListSortOrderArray, newPatientListSortOrder.id);
+				var index = EntityFunctions.findIndexByKeyValue($scope.listOrderings, newPatientListSortOrder.id);
 				if (index < 0) {
-					$scope.patientListSortOrderArray.push(newPatientListSortOrder);
+					$scope.listOrderings.push(newPatientListSortOrder);
 				} else {
-					$scope.patientListSortOrderArray[index] = newPatientListSortOrder;
+					$scope.listOrderings[index] = newPatientListSortOrder;
 				}
 				
 				/*
 				 * This loop is to remove any stock that had the actualQuantity updated and before saving changed again to either a value
 				 * equal to null or a value equal to the quantity
 				 * */
-				for (var i = 0; i < $scope.patientListSortOrderArray.length; i++) {
-					$scope.patientListSortOrderArray[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.patientListSortOrderArray, $scope.patientListSortOrderArray[i].id);
+				for (var i = 0; i < $scope.listOrderings.length; i++) {
+					$scope.listOrderings[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.listOrderings, $scope.listOrderings[i].id);
 				}
 			};
 		
@@ -188,7 +146,7 @@
 					}
 				}
 				if (addListCondition) {
-					var listCondition = new PatientListConditionModel('', 1, '');
+					var listCondition = new PatientListConditionModel('', '', '', 'textInput');
 					$scope.listConditions.push(listCondition);
 				}
 			};
@@ -207,25 +165,43 @@
 				}
 			};
 		
-		self.selectListCondition = self.selectListCondition || function(selectedListCondition, listCondition, index) {
-				$scope.listCondition = {};
-				if (selectedListCondition !== undefined) {
-					listCondition.setField(selectedListCondition);
-					listCondition.setOperator(selectedListCondition);
-					listCondition.setValue(selectedListCondition);
-					listCondition.setSelected(true);
-					listCondition.setConditionOrder(selectedListCondition);
-					listCondition.setId(selectedListCondition);
-					$scope.listCondition = listCondition;
-					
-					self.addListCondition();
+		self.addExistingListOrdering = self.addExistingListOrdering || function () {
+				PatientListFunctions.populateExistingPatientListOrdering($scope.entity.ordering, $scope.listOrderings, $scope);
+			};
+		
+		self.addListOrdering = self.addListOrdering || function () {
+				var addListOrdering = true;
+				for (var i = 0; i < $scope.listOrderings.length; i++) {
+					var listOrdering = $scope.listOrderings[i];
+					if (!listOrdering.selected) {
+						addListOrdering = false;
+						break;
+					}
+				}
+				if (addListOrdering) {
+					var listOrdering = new PatientListOrderingModel('', '');
+					$scope.listOrderings.push(listOrdering);
 				}
 			};
+		
+		self.removeListOrdering = self.removeListOrdering || function (listOrdering) {
+				//only remove selected line items..
+				if (listOrdering.selected) {
+					var index = $scope.listOrderings.indexOf(listOrdering);
+					if (index !== -1) {
+						$scope.listOrderings.splice(index, 1);
+					}
+					
+					if ($scope.listOrderings.length == 0) {
+						self.addListOrdering();
+					}
+				}
+			};
+		
 		
 		// call-back functions.
 		self.onConceptAnswersSuccessful = self.onConceptAnswersSuccessful || function (data) {
 				$scope.conceptAnswers = data.answers;
-				console.log(data.answers);
 			};
 		
 		// call-back functions.
@@ -244,24 +220,36 @@
 					return false;
 				}
 				
-				if ($scope.entity.headerTemplate === "" || angular.isDefined($scope.entity.headerTemplate || $scope.entity.headerTemplate == null)) {
+				if ($scope.entity.headerTemplate === "" || !angular.isDefined($scope.entity.headerTemplate) || $scope.entity.headerTemplate == null) {
 					$scope.entity.headerTemplate = null;
 				}
-
-				if ($scope.entity.bodyTemplate === "" || angular.isDefined($scope.entity.bodyTemplate || $scope.entity.bodyTemplate == null)) {
+				
+				if ($scope.entity.bodyTemplate === "" || !angular.isDefined($scope.entity.bodyTemplate) || $scope.entity.bodyTemplate == null) {
 					$scope.entity.bodyTemplate = null;
 				}
-
-				var sortOrder = $scope.patientListSortOrderArray;
+				
+				var sortOrder = $scope.listOrderings;
 				for (var i = 0; i < sortOrder.length; i++) {
 					delete sortOrder[i]['$$hashKey'];
 					delete sortOrder[i]['id'];
+					if (sortOrder[i].selected == false) {
+						sortOrder.splice(i, 1);
+					} else {
+						delete sortOrder[i]['selected'];
+						sortOrder[i]['conditionOrder'] = i;
+					}
 				}
 				
 				var patientListCondition = $scope.listConditions;
 				for (var r = 0; r < patientListCondition.length; r++) {
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
+					delete patientListCondition[r]['checkBoxInput'];
+					delete patientListCondition[r]['textInput'];
+					delete patientListCondition[r]['dropdownInput'];
+					delete patientListCondition[r]['numberInput'];
+					delete patientListCondition[r]['dateInput'];
+					delete patientListCondition[r]['inputType'];
 					if (patientListCondition[r].selected == false) {
 						patientListCondition.splice(r, 1);
 					} else {
@@ -270,7 +258,6 @@
 						
 					}
 				}
-				console.log(sortOrder);
 				
 				if ($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;

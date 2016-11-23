@@ -64,7 +64,7 @@
 				<tr ng-repeat="listCondition in listConditions">
 					<td style="width:12% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
-						       title="${ui.message('openhmis.cashier.item.removeTitle')}"
+						       title="${ui.message('patientlist.list.condition.removeTitle')}"
 						       class="remove" ng-click="removeListCondition(listCondition)"></td>
 					<td style="width:90% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
@@ -88,20 +88,21 @@
 							<option value="NOT NULL">Not Empty</option>
 							<option value="DEFINED">Defined</option>
 							<option value="NOT DEFINED">Not Defined</option>
+							<option value="NOT DEFINED">{{listConditon.inputType}}</option>
 						</select>
 					</td>
-					<td ng-show="textInput ">
+					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="dropdownInput">
+					<td ng-show="listCondition.dropdownInput">
 						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)">
 							<option value="">-- Select Value --</option>
 							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
 						</select>
 					</td>
-					<td ng-show="dateInput">
+					<td ng-show="listCondition.inputType =='dateInput'">
 						${ui.includeFragment("uicommons", "field/datetimepicker",
 								[id           : 'patientConditionDate',
 								 label        : '',
@@ -111,12 +112,12 @@
 								 name         : 'patientConditionDate'
 								])}
 					</td>
-					<td ng-show="numberInput">
+					<td ng-show="listCondition.numberInput">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="checkBoxInput">
+					<td ng-show="listCondition.checkBoxInput">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)"/> Select</label>
 					</td>
@@ -134,29 +135,17 @@
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
+					<th style="width:10% "></th>
 					<th>${ui.message("patientlist.sort.order.field.label")}</th>
 					<th>${ui.message("patientlist.sort.order.sortOrder.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-show="entity.ordering.length > 0" ng-repeat="listOrdering in entity.ordering">
-					<td>
-						<select class="form-control" ng-model="listOrdering.field">
-							<option value="">--Select Field--</option>
-							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listOrdering.field">{{field.desc.name}}</option>
-						</select>
-					</td>
-					<td>
-						<select class="form-control" ng-model="listOrdering.sortOrder"
-						        ng-change="patientListSortOrder(listOrdering)">
-							<option value="">--Select Sort Order--</option>
-							<option value="asc">Ascending</option>
-							<option value="desc">Descending</option>
-						</select>
-					</td>
-				</tr>
-				<tr ng-show="entity.ordering.length <= 0">
+				<tr  ng-repeat="listOrdering in listOrderings">
+					<td class="item-actions" style="width:10% ">
+						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listOrdering.selected"
+						       title="${ui.message('patientlist.list.ordering.removeTitle')}"
+						       class="remove" ng-click="removeListOrdering(listOrdering)"></td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
