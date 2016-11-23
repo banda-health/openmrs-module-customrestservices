@@ -286,12 +286,16 @@ public class PatientListDataServiceImpl extends
 	 */
 	private void applyTemplates(PatientListData patientListData) {
 		// apply header template.
-		patientListData.setHeaderContent(
-		        applyTemplates(patientListData.getPatientList().getHeaderTemplate(), patientListData));
+		if (patientListData.getPatientList().getHeaderTemplate() != null) {
+			patientListData.setHeaderContent(
+			        applyTemplates(patientListData.getPatientList().getHeaderTemplate(), patientListData));
+		}
 
 		// apply body template
-		patientListData.setBodyContent(
-		        applyTemplates(patientListData.getPatientList().getBodyTemplate(), patientListData));
+		if (patientListData.getPatientList().getBodyTemplate() != null) {
+			patientListData.setBodyContent(
+			        applyTemplates(patientListData.getPatientList().getBodyTemplate(), patientListData));
+		}
 	}
 
 	private String applyTemplates(String template, PatientListData patientListData) {

@@ -231,13 +231,13 @@
 				}
 				
 				if ($scope.entity.headerTemplate === "" || angular.isDefined($scope.entity.headerTemplate || $scope.entity.headerTemplate == null)) {
-					delete $scope.entity.headerTemplate;
+					$scope.entity.headerTemplate = null;
 				}
-				
+
 				if ($scope.entity.bodyTemplate === "" || angular.isDefined($scope.entity.bodyTemplate || $scope.entity.bodyTemplate == null)) {
-					delete $scope.entity.bodyTemplate;
+					$scope.entity.bodyTemplate = null;
 				}
-				
+
 				var sortOrder = $scope.patientListSortOrderArray;
 				for (var i = 0; i < sortOrder.length; i++) {
 					delete sortOrder[i]['$$hashKey'];
