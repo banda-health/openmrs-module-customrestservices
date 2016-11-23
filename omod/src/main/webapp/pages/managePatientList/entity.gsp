@@ -61,7 +61,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr ng-show="entity.patientListConditions.length > 0" ng-repeat="listCondition in listConditions">
+				<tr ng-repeat="listCondition in listConditions">
 					<td style="width:12% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
 						       title="${ui.message('openhmis.cashier.item.removeTitle')}"
@@ -69,20 +69,8 @@
 					<td style="width:90% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
-							<option value="p.given_name">Patient Given Name</option>
-							<option value="p.family_name" >Patient Family Name</option>
-							<option value="p.gender" >Patient Gender</option>
-							<option value="p.birth_date" >Patient Birth Date</option>
-							<option value="p.attr.birthplace" >Patient Birth Place</option>
-							<option value="p.attr.civil_status" >Patient Civil Status</option>
-							<option value="v.start_date" >Visit Start Date</option>
-							<option value="v.end_date" >Visit End Date</option>
-							<option value="v.note.primary_diagnosis" >Visit Note Primary Diagnosis</option>
-							<option value="v.vitals.weight" >Visit Vital Weight</option>
-							<option value="v.attr.new_patient" >New Patient</option>
-							<option value="v.attr.ward" >Patient Ward</option>
-							<option value="p.hasActiveVisit" >Patient Active Visit</option>
-							<option value="v.hasDiagnosis" >Visit Diagnosis</option>
+							<option ng-repeat="field in fields" value="{{field.field}}"
+							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
 						</select>
 					</td>
 					<td>
@@ -152,33 +140,17 @@
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
-					<th style="width:10% "></th>
 					<th>${ui.message("patientlist.sort.order.field.label")}</th>
 					<th>${ui.message("patientlist.sort.order.sortOrder.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr ng-show="entity.ordering.length > 0" ng-repeat="listOrdering in entity.ordering">
-					<td class="item-actions" style="width:10% ">
-						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
-						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
-							<option value="p.given_name">Patient Given Name</option>
-							<option value="p.family_name">Patient Family Name</option>
-							<option value="p.gender">Patient Gender</option>
-							<option value="p.birth_date">Patient Birth Date</option>
-							<option value="p.attr.birthplace">Patient Birth Place</option>
-							<option value="p.attr.civil_status">Patient Civil Status</option>
-							<option value="v.start_date">Visit Start Date</option>
-							<option value="v.end_date">Visit End Date</option>
-							<option value="v.note.primary_diagnosis">Visit Note Primary Diagnosis</option>
-							<option value="v.vitals.weight">Visit Vital Weight</option>
-							<option value="v.attr.new_patient">New Patient</option>
-							<option value="v.attr.ward">Patient Ward</option>
-							<option value="p.hasActiveVisit">Patient Active Visit</option>
-							<option value="v.hasDiagnosis">Visit Diagnosis</option>
+							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
+							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
 						</select>
 					</td>
 					<td>
@@ -191,26 +163,11 @@
 					</td>
 				</tr>
 				<tr ng-show="entity.ordering.length <= 0">
-					<td class="item-actions" style="width:10% ">
-						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1"
-						       title="Remove patient list ordering" class="remove" ng-click=""></td>
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
-							<option value="p.given_name">Patient Given Name</option>
-							<option value="p.family_name">Patient Family Name</option>
-							<option value="p.gender">Patient Gender</option>
-							<option value="p.birth_date">Patient Birth Date</option>
-							<option value="p.attr.birthplace">Patient Birth Place</option>
-							<option value="p.attr.civil_status">Patient Civil Status</option>
-							<option value="v.start_date">Visit Start Date</option>
-							<option value="v.end_date">Visit End Date</option>
-							<option value="v.note.primary_diagnosis">Visit Note Primary Diagnosis</option>
-							<option value="v.vitals.weight">Visit Vital Weight</option>
-							<option value="v.attr.new_patient">New Patient</option>
-							<option value="v.attr.ward">Patient Ward</option>
-							<option value="p.hasActiveVisit">Patient Active Visit</option>
-							<option value="v.hasDiagnosis">Visit Diagnosis</option>
+							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
+							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
 						</select>
 					</td>
 					<td>
@@ -238,8 +195,8 @@
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<input name="entityDisplayTemplateHeader" type="text" ng-model="entity.displayTemplateHeader" class="form-control"
-						       placeholder="${ui.message("patientlist.display.template.header.label")}" required/>
+						<input name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate" class="form-control"
+						       placeholder="${ui.message("patientlist.display.template.header.label")}" />
 					</div>
 				</div>
 			</div>
@@ -250,7 +207,7 @@
 						<span>${ui.message("patientlist.display.template.body.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<textarea ng-model="entity.displayTemplateBody" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
+						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
 						          cols="40" class="form-control">
 						</textarea>
 					</div>

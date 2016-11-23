@@ -25,7 +25,8 @@
 		var service;
 		
 		service = {
-			populateExistingPatientListCondition: populateExistingPatientListCondition
+			populateExistingPatientListCondition: populateExistingPatientListCondition,
+			validateListConditions: validateListConditions
 		};
 		
 		return service;
@@ -38,10 +39,46 @@
 				populatedListConditions.push(listConditionModel);
 				
 				$scope.listConditon= listConditionModel;
-				
-				// load item details
-				//$scope.loadItemDetails(listCondition.item.uuid, listConditionModel);
 			}
+		}
+		
+		function validateListConditions(listConditions, validatedListConditions) {
+			// validate list condition
+			//var count = 0;
+			var failed = false;
+			for (var i = 0; i < listConditions.length; i++) {
+				var listCondition = listConditions[i];
+				if (listCondition.selected) {
+					if (listCondition.field === undefined) {
+						var errorMessage =
+							emr.message("patientlist.list.condition.error.invalidCondition") + " - " + listCondition.field();
+						emr.errorAlert(errorMessage);
+						listCondition.invalidEntry = true;
+						failed = true;
+						continue;
+					}
+					var requestListCondition = {
+						field: listCondition.field,
+						operator: listCondition.operator,
+						value: listCondition.value
+					};
+					validatedListConditions.push(requestListCondition);
+				} else if (listCondition.field !== "") {
+					var errorMessage =
+						emr.message("patientlist.list.condition.error.invalidCondition") + " - " + listCondition.field();
+					emr.errorAlert(errorMessage);
+					listCondition.invalidEntry = true;
+					failed = true;
+				}
+			}
+			
+			if (validatedListConditions.length == 0 && !failed) {
+				emr.errorAlert("patientlist.condition.chooseConditionErrorMessage");
+			} else if (validatedListConditions.length > 0 && !failed) {
+				return true;
+			}
+			
+			return false;
 		}
 	}
 })();

@@ -49,5 +49,8 @@ emr.loadMessages([
 	"openhmis.commons.general.error.uuid",
 	"openhmis.commons.general.error.retired",
 	"openhmis.commons.general.error.retireReason",
-	"patientlist.page"
+	"patientlist.page",
+	"patientlist.condition.chooseConditionErrorMessage",
+	"patientlist.list.condition.error.invalidCondition"
+	
 ]);
