@@ -20,7 +20,7 @@
 	
 	<div id="manage-entities-header">
 		<span class="h1-substitue-left" style="float:left;">
-			${ui.message('openhmis.inventory.admin.departments')}
+			${ui.message('patientlist.manage.label')}
 		</span>
 		<span style="float:right;">
 			<a class="button confirm" ui-sref="new">

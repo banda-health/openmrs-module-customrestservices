@@ -27,7 +27,7 @@
 		
 		// @Override
 		extended.getModelFields = function() {
-			var fields =  ["patientListConditions","ordering","displayTemplateHeader","displayTemplateBody"];
+			var fields =  ["patientListConditions","ordering","bodyTemplate","headerTemplate"];
 			return fields.concat(defaultFields);
 		};
 		
