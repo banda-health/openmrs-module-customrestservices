@@ -17,6 +17,7 @@ import org.openmrs.attribute.AttributeType;
 import org.openmrs.customdatatype.Customizable;
 import org.openmrs.module.openhmis.commons.api.f.Func1;
 import org.openmrs.module.patientlist.api.model.PatientInformationField;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import java.util.Map;
 /**
  * Patient information loader class.
  */
+@Component
 public class PatientInformation {
 	public static final String PATIENT_PREFIX = "p";
 	public static final String VISIT_PREFIX = "v";
@@ -39,16 +41,14 @@ public class PatientInformation {
 
 	private ConceptService conceptService;
 
-	private static PatientInformation INSTANCE;
-
 	private PatientInformation() {}
 
-	public static PatientInformation getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new PatientInformation().refresh();
-		}
+	private static class Holder {
+		private static final PatientInformation INSTANCE = new PatientInformation();
+	}
 
-		return INSTANCE;
+	public static PatientInformation getInstance() {
+		return Holder.INSTANCE.refresh();
 	}
 
 	public PatientInformation refresh() {
