@@ -44,11 +44,11 @@ public class PatientInformation {
 	private PatientInformation() {}
 
 	private static class Holder {
-		private static final PatientInformation INSTANCE = new PatientInformation();
+		private static final PatientInformation INSTANCE = new PatientInformation().refresh();
 	}
 
 	public static PatientInformation getInstance() {
-		return Holder.INSTANCE.refresh();
+		return Holder.INSTANCE;
 	}
 
 	public PatientInformation refresh() {
