@@ -20,11 +20,12 @@
 
 	function PatientListConditionModel() {
 
-		function PatientListConditionModel(field, operator, value) {
+		function PatientListConditionModel(field, operator, value, conditionOrder) {
 			this.field = field;
 			this.operator = operator;
 			this.value = value;
-			this.selected = false
+			this.selected = false;
+			this.conditionOrder = conditionOrder;
 		}
 
 		PatientListConditionModel.prototype = {
@@ -51,6 +52,14 @@
 
 			setValue: function(value) {
 				this.value = value;
+			},
+			
+			getConditionOrder: function() {
+				return this.conditionOrder;
+			},
+			
+			setConditionOrder: function(conditionOrder) {
+				this.conditionOrder = conditionOrder;
 			},
 			
 			setSelected: function(selected) {

@@ -74,6 +74,7 @@
 				$scope.patientListCondition = function (listCondition) {
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
+						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					}
@@ -143,7 +144,6 @@
 			};
 		
 		self.getNewPatientListCondition = self.getNewPatientListCondition || function (newPatientListCondition) {
-				console.log("Demo Demo Dmeo Dmeo Dmeo Dmoe ")
 				var index = EntityFunctions.findIndexByKeyValue($scope.listConditions, newPatientListCondition.id);
 				if (index < 0) {
 					$scope.listConditions.push(newPatientListCondition);
@@ -165,7 +165,6 @@
 			};
 		
 		self.addListCondition = self.addListCondition || function () {
-				console.log("Inside the method ");
 				var addListCondition = true;
 				for (var i = 0; i < $scope.listConditions.length; i++) {
 					var listCondition = $scope.listConditions[i];
@@ -175,6 +174,7 @@
 					}
 				}
 				if (addListCondition) {
+					
 					var listCondition = new PatientListConditionModel('', 1, '');
 					$scope.listConditions.push(listCondition);
 				}
@@ -201,6 +201,7 @@
 					listCondition.setOperator(selectedListCondition);
 					listCondition.setValue(selectedListCondition);
 					listCondition.setSelected(true);
+					listCondition.setConditionOrder(selectedListCondition);
 					$scope.listCondition = listCondition;
 					
 					self.addListCondition();
@@ -215,8 +216,7 @@
 		
 		// call-back functions.
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function (data) {
-				$scope.fields = data;
-				console.log(data);
+				$scope.fields = data.results;
 			};
 			
 		/**
@@ -230,6 +230,14 @@
 					return false;
 				}
 				
+				if ($scope.entity.headerTemplate === "" || angular.isDefined($scope.entity.headerTemplate || $scope.entity.headerTemplate == null)) {
+					delete $scope.entity.headerTemplate;
+				}
+				
+				if ($scope.entity.bodyTemplate === "" || angular.isDefined($scope.entity.bodyTemplate || $scope.entity.bodyTemplate == null)) {
+					delete $scope.entity.bodyTemplate;
+				}
+				
 				var sortOrder = $scope.patientListSortOrderArray;
 				for (var i = 0; i < sortOrder.length; i++) {
 					delete sortOrder[i]['$$hashKey'];
@@ -240,8 +248,15 @@
 				for (var r = 0; r < patientListCondition.length; r++) {
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
-					delete patientListCondition[r]['selected'];
+					if (patientListCondition[r].selected == false) {
+						patientListCondition.splice(r, 1);
+					} else {
+						delete patientListCondition[r]['selected'];
+						patientListCondition[r]['conditionOrder'] = r;
+						
+					}
 				}
+				console.log(patientListCondition);
 				
 				if ($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;
