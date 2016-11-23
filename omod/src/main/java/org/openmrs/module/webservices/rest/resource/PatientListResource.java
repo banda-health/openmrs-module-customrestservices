@@ -1,11 +1,15 @@
 package org.openmrs.module.webservices.rest.resource;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataService;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
+import org.openmrs.module.patientlist.api.util.PatientListTemplate;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
@@ -54,6 +58,46 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		for (PatientListOrder order : instance.getOrdering()) {
 			order.setPatientList(instance);
 		}
+	}
+
+	@PropertySetter(value = "headerTemplate")
+	public void setHeaderTemplate(PatientList instance, String headerTemplate) {
+		if (StringUtils.isEmpty(instance.getHeaderTemplate())) {
+			instance.setHeaderTemplate(PatientListTemplate.getInstance().
+			        getDefaultHeaderTemplate());
+		} else {
+			instance.setHeaderTemplate(StringEscapeUtils.escapeHtml(headerTemplate));
+		}
+	}
+
+	@PropertyGetter(value = "headerTemplate")
+	public String getHeaderTemplate(PatientList instance) {
+		String template = "";
+		if (instance.getHeaderTemplate() != null) {
+			template = StringEscapeUtils.unescapeHtml(instance.getHeaderTemplate());
+		}
+
+		return template;
+	}
+
+	@PropertySetter(value = "bodyTemplate")
+	public void setBodyTemplate(PatientList instance, String bodyTemplate) {
+		if (StringUtils.isEmpty(instance.getBodyTemplate())) {
+			instance.setBodyTemplate(PatientListTemplate.getInstance().
+			        getDefaultBodyTemplate());
+		} else {
+			instance.setBodyTemplate(StringEscapeUtils.escapeHtml(bodyTemplate));
+		}
+	}
+
+	@PropertyGetter(value = "bodyTemplate")
+	public String getBodyTemplate(PatientList instance) {
+		String template = "";
+		if (instance.getBodyTemplate() != null) {
+			template = StringEscapeUtils.unescapeHtml(instance.getBodyTemplate());
+		}
+
+		return template;
 	}
 
 	@Override

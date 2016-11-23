@@ -1,48 +1,58 @@
 package org.openmrs.module.patientlist.api.util;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
-import org.apache.velocity.runtime.resource.util.StringResourceRepository;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
- * Created by andrew on 11/4/16.
+ * Store default templates.
  */
 public class PatientListTemplate {
 
-	public static void main(String[] args) throws Exception {
-		System.out.println("test templating");
-		test();
+	private static final String HEADER_TEMPLATE_FILE = "defaultHeaderTemplate.html";
+	private static final String BODY_TEMPLATE_FILE = "defaultBodyTemplate.html";
+
+	private final Log LOG = LogFactory.getLog(this.getClass());
+
+	private PatientListTemplate() {}
+
+	private static class Holder {
+		private static final PatientListTemplate INSTANCE = new PatientListTemplate();
 	}
 
-	public static void test() throws Exception {
+	public static PatientListTemplate getInstance() {
+		return Holder.INSTANCE;
+	}
 
-		String temp = "<span class='tmp_header'><b>[[p.first_name]]</b> - <i>[[p.gender]]</i></span>";
-		temp += "<span class='tmp_body'><p>[[v.display]]</p><p>[[v.attr.bed]] - [[v.attr.ward]]</p></span>";
+	public String getDefaultHeaderTemplate() {
+		return getTemplateFile(HEADER_TEMPLATE_FILE);
+	}
 
-		// Set parameters for my template.
-		VelocityContext context = new VelocityContext();
-		StringWriter sw = new StringWriter();
-		StringReader sr = new StringReader(temp);
-		context.put("$p.first_name", "andrew");
-		Velocity.evaluate(context, sw, PatientListTemplate.class.getName(), sr);
+	public String getDefaultBodyTemplate() {
+		return getTemplateFile(BODY_TEMPLATE_FILE);
+	}
 
-		System.out.println("anything?? " + sw.toString());
+	private String getTemplateFile(String filename) {
+		StringBuilder sb = new StringBuilder();
+		try {
+			InputStream resource = this.getClass().getClassLoader().getResourceAsStream(filename);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+			String line;
+			while ((line = reader.readLine()) != null)
+				sb.append(line);
 
-		String[] subs = StringUtils.substringsBetween(temp, "[[", "]]");
-
-		for (String s : subs) {
-			System.out.println(s);
+			reader.close();
+		} catch (IOException io) {
+			LOG.error("error reading file " + filename + ", " + io);
 		}
 
-		// Show the result.
-		//System.out.println(writer.toString());
+		String output = sb.toString();
+		output = StringEscapeUtils.escapeHtml(output);
+		return output;
 	}
 }
