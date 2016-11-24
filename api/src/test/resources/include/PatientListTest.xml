@@ -4,7 +4,11 @@
                   header_template="&lt;div class='col-sm-10 header_template'&gt;#{p.identifier} {p.fullName} (Gender: {p.gender} - Age {p.age})&lt;/div&gt;"
                   body_template="&lt;div class='body_template'&gt;Visit: {v.startDate} - {v.visitType}&lt;/div&gt;"
                   retired="false" uuid="5628814B399DFD5AA0139958CCF8D0005" />
-    <patient_list_condition patient_list_condition_id="0" patient_list_id="0" field="v.startDate"
-                            operator="GTE" value="2016-10-01" condition_order="0" uuid="4028814B39B565A20139B95FB3440008" />
+    <patient_list_condition patient_list_condition_id="0" patient_list_id="0" field="v.attr.ward"
+                            operator="EQUALS" value="male" condition_order="0" uuid="4028814B39B565A20139B95FB3440008" />
+    <patient_list_condition patient_list_condition_id="1" patient_list_id="0" field="p.identifier"
+                            operator="EQUALS" value="23" condition_order="1" uuid="4028814B39B565A20139B95FB3440009" />
+    <patient_list_order patient_list_order_id="1" patient_list_id="0" field="p.identifier"
+                            sort_order="desc" condition_order="0" uuid="4028814B39B565A20139B95FB3440010" />
 
 </dataset>

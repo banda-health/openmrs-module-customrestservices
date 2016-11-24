@@ -1,6 +1,6 @@
 package org.openmrs.module.patientlist.api.impl;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -9,6 +9,7 @@ import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
+import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientInformationField;
 import org.openmrs.module.patientlist.api.model.PatientListData;
@@ -116,19 +117,36 @@ public class PatientListDataServiceImpl extends
 			}
 
 			// only join person attributes and attribute types if required to
-			if (searchField(patientList.getPatientListConditions(), "p.attr")) {
+			if (searchField(patientList.getPatientListConditions(), "p.attr")
+			        || searchField(patientList.getOrdering(), "p.attr")) {
 				hql.append("inner join p.attributes as attr ");
 				hql.append("inner join attr.attributeType as attrType ");
 			}
 
 			// only join visit attributes and attribute types if required to
-			if (searchField(patientList.getPatientListConditions(), "v.attr")) {
+			if (searchField(patientList.getPatientListConditions(), "v.attr")
+			        || searchField(patientList.getOrdering(), "v.attr")) {
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
 			}
 
-			hql.append("inner join p.names as pnames ");
-			hql.append("inner join p.addresses as paddresses ");
+			// only join names if required
+			if (searchMappingField(patientList.getPatientListConditions(), "p.names")
+			        || searchMappingField(patientList.getOrdering(), "p.names")) {
+				hql.append("inner join p.names as pnames ");
+			}
+
+			// only join addresses if required
+			if (searchMappingField(patientList.getPatientListConditions(), "p.addresses")
+			        || searchMappingField(patientList.getOrdering(), "p.addresses")) {
+				hql.append("inner join p.addresses as paddresses ");
+			}
+
+			// only join identifiers if required
+			if (searchMappingField(patientList.getPatientListConditions(), "p.identifiers")
+			        || searchMappingField(patientList.getOrdering(), "p.identifiers")) {
+				hql.append("inner join p.identifiers as pidentifiers ");
+			}
 		}
 
 		// add where clause
@@ -168,7 +186,8 @@ public class PatientListDataServiceImpl extends
 				        || StringUtils.contains(condition.getField(), "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
 				} else if (StringUtils.contains(mappingFieldName, "p.names.")
-				        || StringUtils.contains(mappingFieldName, "p.addresses.")) {
+				        || StringUtils.contains(mappingFieldName, "p.addresses.")
+				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else {
 					if (mappingFieldName == null) {
@@ -212,7 +231,7 @@ public class PatientListDataServiceImpl extends
 	private String createAttributeSubQueries(PatientListCondition condition, List<Object> paramValues) {
 		StringBuilder hql = new StringBuilder();
 		String attributeName = condition.getField().split("\\.")[2];
-		attributeName = attributeName.replaceAll("_", " ").toLowerCase();
+		attributeName = attributeName.replaceAll("_", " ");
 
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
 			hql.append("(attrType.name = ?");
@@ -258,7 +277,11 @@ public class PatientListDataServiceImpl extends
 				hql.append(searchField);
 				hql.append(" ");
 			} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
-				hql.append("(paddresses.");
+				hql.append("paddresses.");
+				hql.append(searchField);
+				hql.append(" ");
+			} else if (StringUtils.contains(mappingFieldName, "p.identifiers.")) {
+				hql.append("pidentifiers.");
 				hql.append(searchField);
 				hql.append(" ");
 			}
@@ -299,9 +322,11 @@ public class PatientListDataServiceImpl extends
 
 				// aliases
 				if (StringUtils.contains(mappingFieldName, "p.names.")) {
-					mappingFieldName = "pnames." + mappingFieldName.split("//.")[2];
+					mappingFieldName = "pnames." + mappingFieldName.split("\\.")[2];
 				} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
-					mappingFieldName = "paddresses." + mappingFieldName.split("//.")[2];
+					mappingFieldName = "paddresses." + mappingFieldName.split("\\.")[2];
+				} else if (StringUtils.contains(mappingFieldName, "p.identifiers.")) {
+					mappingFieldName = "pidentifiers." + mappingFieldName.split("\\.")[2];
 				}
 
 				if (mappingFieldName == null) {
@@ -321,18 +346,60 @@ public class PatientListDataServiceImpl extends
 	}
 
 	/**
-	 * Searches for a given field in the patient list conditions.
-	 * @param patientListConditions
+	 * Searches for a given field in the patient list conditions and ordering.
+	 * @param list
 	 * @param search
 	 * @return
 	 */
-	private boolean searchField(List<PatientListCondition> patientListConditions, String search) {
-		for (PatientListCondition patientListCondition : patientListConditions) {
-			if (patientListCondition == null) {
+	private <T> boolean searchField(List<T> list, String search) {
+		for (T t : list) {
+			if (t == null) {
 				continue;
 			}
 
-			if (StringUtils.contains(patientListCondition.getField(), search)) {
+			String field = null;
+			if (t instanceof PatientListCondition) {
+				field = ((PatientListCondition)t).getField();
+			} else if (t instanceof PatientListOrder) {
+				field = ((PatientListOrder)t).getField();
+			}
+
+			if (field == null) {
+				continue;
+			}
+
+			if (StringUtils.contains(field, search)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private <T> boolean searchMappingField(List<T> list, String search) {
+		for (T t : list) {
+			if (t == null) {
+				continue;
+			}
+
+			String field = null;
+			if (t instanceof PatientListCondition) {
+				field = ((PatientListCondition)t).getField();
+			} else if (t instanceof PatientListOrder) {
+				field = ((PatientListOrder)t).getField();
+			}
+
+			if (field == null) {
+				continue;
+			}
+
+			PatientInformationField patientInformationField = patientInformation.getField(field);
+			if (patientInformationField == null) {
+				continue;
+			}
+
+			String matchField = patientInformationField.getMappingFieldName();
+			if (StringUtils.contains(matchField, search)) {
 				return true;
 			}
 		}
