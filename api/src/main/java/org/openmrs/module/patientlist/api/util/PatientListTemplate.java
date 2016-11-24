@@ -1,6 +1,5 @@
 package org.openmrs.module.patientlist.api.util;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,8 +50,6 @@ public class PatientListTemplate {
 			LOG.error("error reading file " + filename + ", " + io);
 		}
 
-		String output = sb.toString();
-		output = StringEscapeUtils.escapeHtml(output);
-		return output;
+		return sb.toString();
 	}
 }

@@ -230,11 +230,11 @@
 					return false;
 				}
 				
-				if ($scope.entity.headerTemplate === "" || angular.isDefined($scope.entity.headerTemplate || $scope.entity.headerTemplate == null)) {
+				if ($scope.entity.headerTemplate === "" || !angular.isDefined($scope.entity.headerTemplate) || $scope.entity.headerTemplate == null) {
 					$scope.entity.headerTemplate = null;
 				}
 
-				if ($scope.entity.bodyTemplate === "" || angular.isDefined($scope.entity.bodyTemplate || $scope.entity.bodyTemplate == null)) {
+				if ($scope.entity.bodyTemplate === "" || !angular.isDefined($scope.entity.bodyTemplate) || $scope.entity.bodyTemplate == null) {
 					$scope.entity.bodyTemplate = null;
 				}
 

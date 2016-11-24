@@ -5,9 +5,6 @@
                   body_template="&lt;div class='body_template'&gt;Visit: {v.startDate} - {v.visitType}&lt;/div&gt;"
                   retired="false" uuid="5628814B399DFD5AA0139958CCF8D0005" />
     <patient_list_condition patient_list_condition_id="0" patient_list_id="0" field="v.startDate"
-                            operator="GT" value="2016-05-01" condition_order="0" uuid="4028814B39B565A20139B95FB3440008" />
-    <patient_list_condition patient_list_condition_id="1" patient_list_id="0" field="v.endDate"
-                            operator="LT" value="2016-12-31" condition_order="1" uuid="4028814B39B565A20139B95FB3440009" />
-    <patient_list_condition patient_list_condition_id="2" patient_list_id="0" field="p.gender"
-                            operator="EQUALS" value="M" condition_order="2" uuid="4028814B39B565A20139B95FB3440010" />
+                            operator="GTE" value="2016-10-01" condition_order="0" uuid="4028814B39B565A20139B95FB3440008" />
+
 </dataset>

@@ -126,6 +126,9 @@ public class PatientListDataServiceImpl extends
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
 			}
+
+			hql.append("inner join p.names as pnames ");
+			hql.append("inner join p.addresses as paddresses ");
 		}
 
 		// add where clause
@@ -158,13 +161,16 @@ public class PatientListDataServiceImpl extends
 		for (PatientListCondition condition : patientListConditions) {
 			++count;
 			if (condition != null && patientInformation.getField(condition.getField()) != null) {
-				PatientInformationField patientInformationField = patientInformation.getField(condition.getField());
-				String field = patientInformationField.getName();
-				if (StringUtils.contains(field, "p.attr.") || StringUtils.contains(field, "v.attr.")) {
+				PatientInformationField patientInformationField =
+				        patientInformation.getField(condition.getField());
+				String mappingFieldName = patientInformationField.getMappingFieldName();
+				if (StringUtils.contains(condition.getField(), "p.attr.")
+				        || StringUtils.contains(condition.getField(), "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
+				} else if (StringUtils.contains(mappingFieldName, "p.names.")
+				        || StringUtils.contains(mappingFieldName, "p.addresses.")) {
+					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else {
-					String mappingFieldName = patientInformationField.getMappingFieldName();
-
 					if (mappingFieldName == null) {
 						LOG.error("Unknown mapping for field name: " + condition.getField());
 						continue;
@@ -198,7 +204,7 @@ public class PatientListDataServiceImpl extends
 	}
 
 	/**
-	 * Creates hql sub-queries for patient and visit attributes.
+	 * Creates hql sub-queries for patient and visit attributes. Example: v.attr.bed = 2
 	 * @param condition
 	 * @param paramValues
 	 * @return
@@ -209,11 +215,11 @@ public class PatientListDataServiceImpl extends
 		attributeName = attributeName.replaceAll("_", " ").toLowerCase();
 
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
-			hql.append("(lower(attrType.name) = ?");
+			hql.append("(attrType.name = ?");
 			hql.append(" AND ");
 			hql.append("attr.value ");
 		} else if (StringUtils.contains(condition.getField(), "v.attr.")) {
-			hql.append("(lower(vattrType.name) = ?");
+			hql.append("(vattrType.name = ?");
 			hql.append(" AND ");
 			hql.append("vattr.valueReference ");
 		}
@@ -224,6 +230,45 @@ public class PatientListDataServiceImpl extends
 		paramValues.add(attributeName);
 		paramValues.add(condition.getValue());
 		hql.append(") ");
+
+		return hql.toString();
+	}
+
+	/**
+	 * Creates hql sub-queries for patient aliases (names and addresses). Example: p.names.givenName, p.addresses.address1
+	 * @param condition
+	 * @param paramValues
+	 * @return
+	 */
+	private String createAliasesSubQueries(PatientListCondition condition,
+	        String mappingFieldName, List<Object> paramValues) {
+		StringBuilder hql = new StringBuilder();
+		String searchField = null;
+		if (mappingFieldName != null) {
+			// p.names.givenName
+			String subs[] = mappingFieldName.split("\\.");
+			if (subs != null) {
+				searchField = subs[2];
+			}
+		}
+
+		if (searchField != null) {
+			if (StringUtils.contains(mappingFieldName, "p.names.")) {
+				hql.append("pnames.");
+				hql.append(searchField);
+				hql.append(" ");
+			} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
+				hql.append("(paddresses.");
+				hql.append(searchField);
+				hql.append(" ");
+			}
+
+			hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+			hql.append(" ? ");
+
+			paramValues.add(condition.getValue());
+			hql.append(" ");
+		}
 
 		return hql.toString();
 	}
@@ -244,6 +289,21 @@ public class PatientListDataServiceImpl extends
 				}
 
 				String mappingFieldName = patientInformation.getField(order.getField()).getMappingFieldName();
+
+				// attributes
+				if (StringUtils.contains(order.getField(), "p.attr.")) {
+					mappingFieldName = "attrType.name";
+				} else if (StringUtils.contains(order.getField(), "v.attr.")) {
+					mappingFieldName = "vattrType.name";
+				}
+
+				// aliases
+				if (StringUtils.contains(mappingFieldName, "p.names.")) {
+					mappingFieldName = "pnames." + mappingFieldName.split("//.")[2];
+				} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
+					mappingFieldName = "paddresses." + mappingFieldName.split("//.")[2];
+				}
+
 				if (mappingFieldName == null) {
 					LOG.error("Unknown mapping for field name: " + order.getField());
 					continue;
