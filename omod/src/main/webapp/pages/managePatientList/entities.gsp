@@ -21,6 +21,7 @@
     /* load managePatientList modules */
     ui.includeJavascript("patientlist", "managePatientList/models/entity.model.js")
     ui.includeJavascript("patientlist", "managePatientList/models/patientlist.condition.model.js")
+    ui.includeJavascript("patientlist", "managePatientList/models/patientlist.ordering.model.js")
     ui.includeJavascript("patientlist", "managePatientList/services/entity.functions.js")
     ui.includeJavascript("patientlist", "managePatientList/services/entity.restful.services.js")
     ui.includeJavascript("patientlist", "managePatientList/controllers/entity.controller.js")
