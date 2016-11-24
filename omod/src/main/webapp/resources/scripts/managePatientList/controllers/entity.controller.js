@@ -45,8 +45,8 @@
 				$scope.uuid = uuid;
 				$scope.listConditions = [];
 				$scope.listOrderings = [];
-				$scope.conceptAnswers = [];
 				$scope.removeListCondition = self.removeListCondition;
+				$scope.removeListOrdering = self.removeListOrdering;
 				PatientListRestfulService.loadFields(self.onLoadFieldsSuccessful);
 				
 				if ($scope.entity !== undefined) {
@@ -60,12 +60,15 @@
 				$scope.patientListSortOrder = function (listOrdering) {
 					if (listOrdering.field != null && listOrdering.sortOrder != null) {
 						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
+						listOrdering.selected = true;
 						self.getNewPatientListSortOrder(listOrdering);
 						self.addListOrdering();
 					}
 				};
 				
 				$scope.patientListCondition = function (listCondition) {
+					console.log("Called");
+					console.log(listCondition.value);
 					if (listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
@@ -89,6 +92,8 @@
 						listCondition.inputType = "textInput";
 					} else if (datatype == "java.util.Date") {
 						listCondition.inputType = "dateInput";
+					} else if (datatype == "java.lang.Boolean" || datatype == "boolean") {
+						listCondition.inputType = "checkBoxInput"
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -136,6 +141,10 @@
 				PatientListFunctions.populateExistingPatientListCondition($scope.entity.patientListConditions, $scope.listConditions, $scope);
 			};
 		
+		self.addExistingListOrdering = self.addExistingListOrdering || function () {
+				PatientListFunctions.populateExistingPatientListOrdering($scope.entity.ordering, $scope.listOrderings, $scope);
+			};
+		
 		self.addListCondition = self.addListCondition || function () {
 				var addListCondition = true;
 				for (var i = 0; i < $scope.listConditions.length; i++) {
@@ -149,24 +158,6 @@
 					var listCondition = new PatientListConditionModel('', '', '', 'textInput');
 					$scope.listConditions.push(listCondition);
 				}
-			};
-		
-		self.removeListCondition = self.removeListCondition || function(listCondition) {
-				//only remove selected line items..
-				if (listCondition.selected) {
-					var index = $scope.listConditions.indexOf(listCondition);
-					if (index !== -1) {
-						$scope.listConditions.splice(index, 1);
-					}
-					
-					if ($scope.listConditions.length == 0) {
-						self.addListCondition();
-					}
-				}
-			};
-		
-		self.addExistingListOrdering = self.addExistingListOrdering || function () {
-				PatientListFunctions.populateExistingPatientListOrdering($scope.entity.ordering, $scope.listOrderings, $scope);
 			};
 		
 		self.addListOrdering = self.addListOrdering || function () {
@@ -184,6 +175,20 @@
 				}
 			};
 		
+		self.removeListCondition = self.removeListCondition || function(listCondition) {
+				//only remove selected line items..
+				if (listCondition.selected) {
+					var index = $scope.listConditions.indexOf(listCondition);
+					if (index !== -1) {
+						$scope.listConditions.splice(index, 1);
+					}
+					
+					if ($scope.listConditions.length == 0) {
+						self.addListCondition();
+					}
+				}
+			};
+		
 		self.removeListOrdering = self.removeListOrdering || function (listOrdering) {
 				//only remove selected line items..
 				if (listOrdering.selected) {
@@ -196,12 +201,6 @@
 						self.addListOrdering();
 					}
 				}
-			};
-		
-		
-		// call-back functions.
-		self.onConceptAnswersSuccessful = self.onConceptAnswersSuccessful || function (data) {
-				$scope.conceptAnswers = data.answers;
 			};
 		
 		// call-back functions.
@@ -239,6 +238,8 @@
 						sortOrder[i]['conditionOrder'] = i;
 					}
 				}
+				
+				console.log($scope.listConditions);
 				
 				var patientListCondition = $scope.listConditions;
 				for (var r = 0; r < patientListCondition.length; r++) {

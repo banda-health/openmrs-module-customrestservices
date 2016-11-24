@@ -66,21 +66,21 @@
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
 						       title="${ui.message('patientlist.list.condition.removeTitle')}"
 						       class="remove" ng-click="removeListCondition(listCondition)"></td>
-					<td style="width:90% ">
+					<td style="width:60% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields" value="{{field.field}}"
-							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listConditon.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">
 							<option value="">--Select Operator--</option>
-							<option value="EQUALS">Equals</option>
-							<option value="NOT_EQUALS">Not Equals</option>
-							<option value="GT">Greater than</option>
-							<option value="LT">Less than</option>
-							<option value="GTE">Greater than or Equals</option>
+							<option value="EQUALS">=</option>
+							<option value="NOT_EQUALS">!=</option>
+							<option value="GT"> > </option>
+							<option value="LT"> < </option>
+							<option value="GTE"> >= </option>
 							<option value="LTE">Less than or Equals</option>
 							<option value="LIKE">Like</option>
 							<option value="BETWEEN">Between</option>
@@ -88,7 +88,6 @@
 							<option value="NOT NULL">Not Empty</option>
 							<option value="DEFINED">Defined</option>
 							<option value="NOT DEFINED">Not Defined</option>
-							<option value="NOT DEFINED">{{listConditon.inputType}}</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
@@ -109,7 +108,8 @@
 								 required     : 'required',
 								 formFieldName: 'patientConditionDatePicker',
 								 useTime      : false,
-								 name         : 'patientConditionDate'
+								 name         : 'patientConditionDate',
+								 ngChange     : 'patientListCondition(listCondition)'
 								])}
 					</td>
 					<td ng-show="listCondition.numberInput">
@@ -117,9 +117,10 @@
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="listCondition.checkBoxInput">
+					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
-							<input type="checkbox" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)"/> Select</label>
+							<input type="checkbox" ng-model="listCondition.value"
+							       ng-change="patientListCondition(listCondition)"/>&nbsp;Check / Uncheck</label>
 					</td>
 				</tr>
 				
@@ -141,7 +142,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr  ng-repeat="listOrdering in listOrderings">
+				<tr ng-repeat="listOrdering in listOrderings">
 					<td class="item-actions" style="width:10% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listOrdering.selected"
 						       title="${ui.message('patientlist.list.ordering.removeTitle')}"
@@ -150,7 +151,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listOrdering.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
