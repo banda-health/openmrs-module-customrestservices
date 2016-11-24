@@ -8,7 +8,4 @@
                             operator="EQUALS" value="male" condition_order="0" uuid="4028814B39B565A20139B95FB3440008" />
     <patient_list_condition patient_list_condition_id="1" patient_list_id="0" field="p.identifier"
                             operator="EQUALS" value="23" condition_order="1" uuid="4028814B39B565A20139B95FB3440009" />
-    <patient_list_order patient_list_order_id="1" patient_list_id="0" field="p.identifier"
-                            sort_order="desc" condition_order="0" uuid="4028814B39B565A20139B95FB3440010" />
-
 </dataset>
