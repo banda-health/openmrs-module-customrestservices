@@ -47,9 +47,10 @@
 			</li>
 		</ul>
 	</div>
-	<br/>
-	<fieldset class="nested legendHeader">
-		<legend>${ui.message("patientlist.condition.list.header")}</legend>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
+		<br/>
 		<div class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
@@ -127,11 +128,11 @@
 				</tbody>
 			</table>
 		</div>
-	</fieldset>
-	<br/>
-	<br/>
-	<fieldset class="nested">
-		<legend>${ui.message("patientlist.sort.order.header")}</legend>
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
+		<br/>
 		<div class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
@@ -166,12 +167,10 @@
 				</tbody>
 			</table>
 		</div>
-	</fieldset>
-	<br/>
-	<br/>
-	<fieldset class="nested">
-		<legend class="legendHeader">${ui.message("patientlist.display.template.header")}</legend>
-		<div class="col-md-12">
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
 			<br/>
 			<div class="row">
 				<div class="col-md-12">
@@ -179,8 +178,10 @@
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<input name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate" class="form-control"
-						       placeholder="${ui.message("patientlist.display.template.header.label")}" />
+						<textarea name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate"
+						          class="form-control"
+						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
+						          cols="50"></textarea>
 					</div>
 				</div>
 			</div>
@@ -192,15 +193,15 @@
 					</div>
 					<div class="col-md-7">
 						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
-						          cols="40" class="form-control">
+						          cols="50" class="form-control">
 						</textarea>
 					</div>
 				</div>
 			</div>
-		</div>
-	</fieldset>
-	<br/>
-	<div >
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-6">
 			<input type="button" class="cancel" value="${ui.message("general.cancel")}" ng-click="cancel()"/>
