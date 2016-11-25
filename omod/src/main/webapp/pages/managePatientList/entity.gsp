@@ -96,10 +96,11 @@
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="listCondition.dropdownInput">
+					<td ng-show="listCondition.inputType == 'dropDownInput'">
 						<select class="form-control" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)">
-							<option value="">-- Select Value --</option>
-							<option ng-repeat="answer in conceptAnswers" value="{{answer.uuid}}">{{answer.display}}</option>
+							<option value="">--Select Value--</option>
+							<option ng-repeat="dropDownEntry in dropDownEntries" value="{{dropDownEntry.value}}"
+							        ng-selected="dropDownEntry.value == listCondition.value">{{dropDownEntry.display}}</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType =='dateInput'">

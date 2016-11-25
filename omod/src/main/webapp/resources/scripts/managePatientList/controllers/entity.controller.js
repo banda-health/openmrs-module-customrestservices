@@ -45,6 +45,7 @@
 				$scope.uuid = uuid;
 				$scope.listConditions = [];
 				$scope.listOrderings = [];
+				$scope.dropDownEntries = [];
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
 				PatientListRestfulService.loadFields(self.onLoadFieldsSuccessful);
@@ -92,12 +93,16 @@
 						listCondition.inputType = "textInput";
 					} else if (datatype == "java.util.Date") {
 						listCondition.inputType = "dateInput";
-					} else if (datatype == "java.lang.Boolean" || datatype == "boolean") {
+					} else if (datatype == "java.lang.Boolean") {
 						listCondition.inputType = "checkBoxInput"
+					} else if (listCondition.field == "p.gender") {
+						listCondition.inputType = "dropDownInput";
+						$scope.dropDownEntries = [{display: 'Female', value: "F" },{ display: 'Male', value: "M" }];
 					} else {
 						listCondition.inputType = "textInput";
 					}
-				}
+				};
+				
 			};
 			
 			
