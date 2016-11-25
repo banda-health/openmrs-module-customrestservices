@@ -65,8 +65,6 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		if (StringUtils.isEmpty(instance.getHeaderTemplate())) {
 			instance.setHeaderTemplate(PatientListTemplate.getInstance().
 			        getDefaultHeaderTemplate());
-		} else {
-			instance.setHeaderTemplate(StringEscapeUtils.escapeHtml(headerTemplate));
 		}
 	}
 
@@ -85,8 +83,6 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 		if (StringUtils.isEmpty(instance.getBodyTemplate())) {
 			instance.setBodyTemplate(PatientListTemplate.getInstance().
 			        getDefaultBodyTemplate());
-		} else {
-			instance.setBodyTemplate(StringEscapeUtils.escapeHtml(bodyTemplate));
 		}
 	}
 

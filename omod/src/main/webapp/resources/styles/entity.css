@@ -93,3 +93,7 @@ li.no-height{
 .body_template{
   padding: 10px;
 }
+
+.clickable-tr:hover {
+    background-color: white !important;
+}
