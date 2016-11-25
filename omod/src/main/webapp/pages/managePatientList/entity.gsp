@@ -47,9 +47,10 @@
 			</li>
 		</ul>
 	</div>
-	<br/>
-	<fieldset class="nested legendHeader">
-		<legend>${ui.message("patientlist.condition.list.header")}</legend>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
+		<br/>
 		<div class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
@@ -66,21 +67,21 @@
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
 						       title="${ui.message('patientlist.list.condition.removeTitle')}"
 						       class="remove" ng-click="removeListCondition(listCondition)"></td>
-					<td style="width:90% ">
+					<td style="width:60% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields" value="{{field.field}}"
-							        ng-selected="field.field == listConditon.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listConditon.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">
 							<option value="">--Select Operator--</option>
-							<option value="EQUALS">Equals</option>
-							<option value="NOT_EQUALS">Not Equals</option>
-							<option value="GT">Greater than</option>
-							<option value="LT">Less than</option>
-							<option value="GTE">Greater than or Equals</option>
+							<option value="EQUALS">=</option>
+							<option value="NOT_EQUALS">!=</option>
+							<option value="GT"> > </option>
+							<option value="LT"> < </option>
+							<option value="GTE"> >= </option>
 							<option value="LTE">Less than or Equals</option>
 							<option value="LIKE">Like</option>
 							<option value="BETWEEN">Between</option>
@@ -88,7 +89,6 @@
 							<option value="NOT NULL">Not Empty</option>
 							<option value="DEFINED">Defined</option>
 							<option value="NOT DEFINED">Not Defined</option>
-							<option value="NOT DEFINED">{{listConditon.inputType}}</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
@@ -109,7 +109,8 @@
 								 required     : 'required',
 								 formFieldName: 'patientConditionDatePicker',
 								 useTime      : false,
-								 name         : 'patientConditionDate'
+								 name         : 'patientConditionDate',
+								 ngChange     : 'patientListCondition(listCondition)'
 								])}
 					</td>
 					<td ng-show="listCondition.numberInput">
@@ -117,20 +118,21 @@
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="listCondition.checkBoxInput">
+					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
-							<input type="checkbox" ng-model="listCondition.value" ng-change="patientListCondition(listCondition)"/> Select</label>
+							<input type="checkbox" ng-model="listCondition.value"
+							       ng-change="patientListCondition(listCondition)"/>&nbsp;Check / Uncheck</label>
 					</td>
 				</tr>
 				
 				</tbody>
 			</table>
 		</div>
-	</fieldset>
-	<br/>
-	<br/>
-	<fieldset class="nested">
-		<legend>${ui.message("patientlist.sort.order.header")}</legend>
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
+		<br/>
 		<div class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
@@ -141,7 +143,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr  ng-repeat="listOrdering in listOrderings">
+				<tr ng-repeat="listOrdering in listOrderings">
 					<td class="item-actions" style="width:10% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listOrdering.selected"
 						       title="${ui.message('patientlist.list.ordering.removeTitle')}"
@@ -150,7 +152,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listOrdering.field">{{field.desc.name}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
@@ -165,12 +167,10 @@
 				</tbody>
 			</table>
 		</div>
-	</fieldset>
-	<br/>
-	<br/>
-	<fieldset class="nested">
-		<legend class="legendHeader">${ui.message("patientlist.display.template.header")}</legend>
-		<div class="col-md-12">
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
 			<br/>
 			<div class="row">
 				<div class="col-md-12">
@@ -178,8 +178,10 @@
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<input name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate" class="form-control"
-						       placeholder="${ui.message("patientlist.display.template.header.label")}" />
+						<textarea name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate"
+						          class="form-control"
+						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
+						          cols="50"></textarea>
 					</div>
 				</div>
 			</div>
@@ -191,15 +193,15 @@
 					</div>
 					<div class="col-md-7">
 						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
-						          cols="40" class="form-control">
+						          cols="50" class="form-control">
 						</textarea>
 					</div>
 				</div>
 			</div>
-		</div>
-	</fieldset>
-	<br/>
-	<div >
+	</div>
+	<hr/>
+	
+	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-6">
 			<input type="button" class="cancel" value="${ui.message("general.cancel")}" ng-click="cancel()"/>

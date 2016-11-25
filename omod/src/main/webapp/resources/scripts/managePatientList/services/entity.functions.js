@@ -56,9 +56,9 @@
 			}
 		}
 		
-		function populateExistingPatientListOrdering(listOrdering, populatedListOrdering, $scope) {
-			for (var i = 0; i < listOrdering.length; i++) {
-				var listOrdering = listOrdering[i];
+		function populateExistingPatientListOrdering(listOrderings, populatedListOrdering, $scope) {
+			for (var i = 0; i < listOrderings.length; i++) {
+				var listOrdering = listOrderings[i];
 				var listOrderingModel = new PatientListOrderingModel(listOrdering.field, listOrdering.sortOrder);
 				listOrderingModel.setSelected(true);
 				listOrderingModel.setId(listOrdering.field + "_" + listOrdering.value);
