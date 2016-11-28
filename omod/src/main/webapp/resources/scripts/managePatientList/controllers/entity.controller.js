@@ -18,12 +18,14 @@
 	var base = angular.module('app.genericEntityController');
 	base.controller("EntityController", EntityController);
 	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel',
-		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService', 'PatientListOrderingModel'];
+		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService', 'PatientListOrderingModel',
+		'$timeout', '$sce'];
 
 	var ENTITY_NAME = "list";
 
 	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel,
-	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService, PatientListOrderingModel) {
+	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService,
+	                          PatientListOrderingModel, $timeout, $sce) {
 		var self = this;
 
 		var entity_name_message_key = "patientlist.page";
@@ -108,7 +110,7 @@
 				};
 
 				$scope.livePreview = self.livePreview;
-
+				$scope.renderTemplate = self.renderTemplate;
 			};
 
 
@@ -213,7 +215,16 @@
 			};
 
 		self.livePreview = self.livePreview || function(headerTemplate, bodyTemplate) {
-			PatientListRestfulService.livePreview(headerTemplate, bodyTemplate, self.onLivePreviewSuccessful);
+				// render every 3 seconds
+				$timeout(function() {
+					PatientListRestfulService.livePreview(
+						headerTemplate, bodyTemplate, self.onLivePreviewSuccessful
+					)
+				}, 3000);
+			}
+
+		self.renderTemplate = self.renderTemplate || function(template) {
+				return $sce.trustAsHtml(template);
 			}
 
 		// call-back functions.

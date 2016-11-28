@@ -203,7 +203,8 @@
 
 			<!-- live preview section -->
 			<div>
-				{{headerContent}} - {{bodyContent}}
+				<span ng-bind-html="renderTemplate(headerContent)"></span>
+				<span ng-bind-html="renderTemplate(bodyContent)"></span>
 			</div>
 	</div>
 	<hr/>
