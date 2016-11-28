@@ -70,8 +70,8 @@
 					<td style="width:60% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
-							<option ng-repeat="field in fields" value="{{field.field}}"
-							        ng-selected="field.field == listConditon.field">{{field.field}}</option>
+							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
+							        ng-selected="field.field == listCondition.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
@@ -172,8 +172,9 @@
 	<hr/>
 	
 	<div class="row detail-section-border-top">
-			<br/>
-			<div class="row">
+		<br/>
+		
+		<div class="row">
 				<div class="col-md-12">
 					<div class="col-md-4">
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
@@ -186,9 +187,10 @@
 						          cols="50"></textarea>
 					</div>
 				</div>
-			</div>
-			<br/>
-			<div class="row">
+		</div>
+		<br/>
+		
+		<div class="row">
 				<div class="col-md-12">
 					<div class="col-md-4">
 						<span>${ui.message("patientlist.display.template.body.label")}</span>
@@ -199,16 +201,26 @@
 						</textarea>
 					</div>
 				</div>
-			</div>
-
-			<!-- live preview section -->
-			<div>
-				<span ng-bind-html="renderTemplate(headerContent)"></span>
-				<span ng-bind-html="renderTemplate(bodyContent)"></span>
-			</div>
+		</div>
+		<br/>
+		
+		<!-- live preview section -->
+		<div class="col-md-12">
+			<table style="margin-bottom:5px;" class="manage-entities-table">
+				<thead>
+				<tr>
+					<th><span ng-bind-html="renderTemplate(headerContent)"></span></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td><span ng-bind-html="renderTemplate(bodyContent)"></span></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<hr/>
-	
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-6">
