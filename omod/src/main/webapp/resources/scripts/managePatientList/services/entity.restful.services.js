@@ -19,13 +19,14 @@
 	angular.module('app.restfulServices').service(
 		'PatientListRestfulService', PatientListRestfulService);
 	
-	PatientListRestfulService.$inject = ['EntityRestFactory', 'PaginationService'];
+	PatientListRestfulService.$inject = ['EntityRestFactory'];
 	
-	function PatientListRestfulService(EntityRestFactory, PaginationService) {
+	function PatientListRestfulService(EntityRestFactory) {
 		var service;
 		service = {
 			loadConceptAnswers : loadConceptAnswers,
-			loadFields: loadFields
+			loadFields: loadFields,
+			livePreview: livePreview,
 		};
 		
 		return service;
@@ -55,6 +56,17 @@
 			requestParams['rest_entity_name'] = 'fields';
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadFieldsSuccessful,
+				errorCallback
+			);
+		}
+
+		function livePreview(headerTemplate, bodyTemplate, onLivePreviewSuccessful){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'live';
+			requestParams['headerTemplate'] = headerTemplate;
+			requestParams['bodyTemplate'] = bodyTemplate;
+			EntityRestFactory.loadEntities(requestParams,
+				onLivePreviewSuccessful,
 				errorCallback
 			);
 		}

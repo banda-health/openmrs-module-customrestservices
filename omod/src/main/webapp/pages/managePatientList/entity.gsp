@@ -181,6 +181,7 @@
 					<div class="col-md-7">
 						<textarea name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate"
 						          class="form-control"
+							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
 						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
 						          cols="50"></textarea>
 					</div>
@@ -194,10 +195,15 @@
 					</div>
 					<div class="col-md-7">
 						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
-						          cols="50" class="form-control">
+						          cols="50" class="form-control" ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)">
 						</textarea>
 					</div>
 				</div>
+			</div>
+
+			<!-- live preview section -->
+			<div>
+				{{headerContent}} - {{bodyContent}}
 			</div>
 	</div>
 	<hr/>

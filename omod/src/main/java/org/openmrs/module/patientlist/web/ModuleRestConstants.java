@@ -13,4 +13,5 @@ public class ModuleRestConstants extends WebConstants {
 	public static final String PATIENT_LIST_CONDITION_RESOURCE = MODULE_REST_ROOT + "condition";
 	public static final String PATIENT_LIST_ORDER_RESOURCE = MODULE_REST_ROOT + "order";
 	public static final String PATIENT_LIST_FIELDS_RESOURCE = MODULE_REST_ROOT + "fields";
+	public static final String PATIENT_LIST_LIVE_PREVIEWING_RESOURCE = MODULE_REST_ROOT + "live";
 }

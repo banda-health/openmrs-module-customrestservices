@@ -47,15 +47,9 @@ public class PatientListDataServiceImpl extends
 		return;
 	}
 
-	private PatientInformation patientInformation;
-
 	@Override
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {
 		List<PatientListData> patientListDataSet = new ArrayList<PatientListData>();
-		if (patientInformation == null) {
-			patientInformation = PatientInformation.getInstance();
-		}
-
 		try {
 			List<Object> paramValues = new ArrayList<Object>();
 			// Create query
@@ -178,9 +172,9 @@ public class PatientListDataServiceImpl extends
 		// apply conditions
 		for (PatientListCondition condition : patientListConditions) {
 			++count;
-			if (condition != null && patientInformation.getField(condition.getField()) != null) {
+			if (condition != null && PatientInformation.getInstance().getField(condition.getField()) != null) {
 				PatientInformationField patientInformationField =
-				        patientInformation.getField(condition.getField());
+						PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
 				if (StringUtils.contains(condition.getField(), "p.attr.")
 				        || StringUtils.contains(condition.getField(), "v.attr.")) {
@@ -311,7 +305,8 @@ public class PatientListDataServiceImpl extends
 					hql.append("order by ");
 				}
 
-				String mappingFieldName = patientInformation.getField(order.getField()).getMappingFieldName();
+				String mappingFieldName = PatientInformation.getInstance().
+						getField(order.getField()).getMappingFieldName();
 
 				// attributes
 				if (StringUtils.contains(order.getField(), "p.attr.")) {
@@ -393,7 +388,8 @@ public class PatientListDataServiceImpl extends
 				continue;
 			}
 
-			PatientInformationField patientInformationField = patientInformation.getField(field);
+			PatientInformationField patientInformationField =
+					PatientInformation.getInstance().getField(field);
 			if (patientInformationField == null) {
 				continue;
 			}
@@ -415,34 +411,37 @@ public class PatientListDataServiceImpl extends
 		// apply header template.
 		if (patientListData.getPatientList().getHeaderTemplate() != null) {
 			patientListData.setHeaderContent(
-			        applyTemplates(patientListData.getPatientList().getHeaderTemplate(), patientListData));
+			        applyTemplate(patientListData.getPatientList().getHeaderTemplate(), patientListData));
 		}
 
 		// apply body template
 		if (patientListData.getPatientList().getBodyTemplate() != null) {
 			patientListData.setBodyContent(
-			        applyTemplates(patientListData.getPatientList().getBodyTemplate(), patientListData));
+			        applyTemplate(patientListData.getPatientList().getBodyTemplate(), patientListData));
 		}
 	}
 
-	private String applyTemplates(String template, PatientListData patientListData) {
+	@Override
+	public String applyTemplate(String template, PatientListData patientListData) {
 		String[] fields = StringUtils.substringsBetween(template, "{", "}");
-		for (String field : fields) {
-			Object value = null;
-			PatientInformationField patientInformationField = patientInformation.getField(field);
-			if (patientInformationField != null) {
-				if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
-					value = patientInformationField.getValue(patientListData.getPatient());
-
-				} else if (patientListData.getVisit() != null && StringUtils.contains(field, "v.")) {
-					value = patientInformationField.getValue(patientListData.getVisit());
+		if(fields != null){
+			for (String field : fields) {
+				Object value = null;
+				PatientInformationField patientInformationField =
+						PatientInformation.getInstance().getField(field);
+				if (patientInformationField != null) {
+					if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
+						value = patientInformationField.getValue(patientListData.getPatient());
+					} else if (patientListData.getVisit() != null && StringUtils.contains(field, "v.")) {
+						value = patientInformationField.getValue(patientListData.getVisit());
+					}
 				}
-			}
 
-			if (value != null) {
-				template = StringUtils.replace(template, "{" + field + "}", value.toString());
-			} else {
-				template = StringUtils.replace(template, "{" + field + "}", "");
+				if (value != null) {
+					template = StringUtils.replace(template, "{" + field + "}", value.toString());
+				} else {
+					template = StringUtils.replace(template, "{" + field + "}", "");
+				}
 			}
 		}
 
