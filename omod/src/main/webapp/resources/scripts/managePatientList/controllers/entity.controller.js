@@ -104,6 +104,9 @@
 					} else if(listCondition.field == "p.gender") {
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
+					} else if (datatype == "org.openmrs.Location") {
+						listCondition.inputType = "dropDownInput";
+						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -230,8 +233,19 @@
 		// call-back functions.
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
+				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
 			};
-
+		
+		// call-back functions.
+		self.onLoadLocationsSuccessful = self.onLoadLocationsSuccessful || function (data) {
+				$scope.locations = data.results;
+				for (var i = 0; i < $scope.locations.length; i++) {
+					$scope.locations[i].value = $scope.locations[i].uuid;
+				}
+				$scope.dropDownEntries = $scope.locations;
+				console.log($scope.dropDownEntries);
+			};
+		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
 				$scope.bodyContent = data['bodyContent'];

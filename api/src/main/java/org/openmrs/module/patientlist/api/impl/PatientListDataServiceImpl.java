@@ -174,7 +174,7 @@ public class PatientListDataServiceImpl extends
 			++count;
 			if (condition != null && PatientInformation.getInstance().getField(condition.getField()) != null) {
 				PatientInformationField patientInformationField =
-						PatientInformation.getInstance().getField(condition.getField());
+				        PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
 				if (StringUtils.contains(condition.getField(), "p.attr.")
 				        || StringUtils.contains(condition.getField(), "v.attr.")) {
@@ -306,7 +306,7 @@ public class PatientListDataServiceImpl extends
 				}
 
 				String mappingFieldName = PatientInformation.getInstance().
-						getField(order.getField()).getMappingFieldName();
+				        getField(order.getField()).getMappingFieldName();
 
 				// attributes
 				if (StringUtils.contains(order.getField(), "p.attr.")) {
@@ -389,7 +389,7 @@ public class PatientListDataServiceImpl extends
 			}
 
 			PatientInformationField patientInformationField =
-					PatientInformation.getInstance().getField(field);
+			        PatientInformation.getInstance().getField(field);
 			if (patientInformationField == null) {
 				continue;
 			}
@@ -424,11 +424,11 @@ public class PatientListDataServiceImpl extends
 	@Override
 	public String applyTemplate(String template, PatientListData patientListData) {
 		String[] fields = StringUtils.substringsBetween(template, "{", "}");
-		if(fields != null){
+		if (fields != null) {
 			for (String field : fields) {
 				Object value = null;
 				PatientInformationField patientInformationField =
-						PatientInformation.getInstance().getField(field);
+				        PatientInformation.getInstance().getField(field);
 				if (patientInformationField != null) {
 					if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
 						value = patientInformationField.getValue(patientListData.getPatient());

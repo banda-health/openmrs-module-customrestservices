@@ -27,23 +27,38 @@
 			loadConceptAnswers : loadConceptAnswers,
 			loadFields: loadFields,
 			livePreview: livePreview,
+			loadLocations: loadLocations
 		};
 		
 		return service;
 		
 		/**
 		 * @param limit
-		 * @param onConceptAnswersSuccessful
+		 * @param onLoadConceptAnswersSuccessful
 		 * @param module_name
 		 * @param uuid
 		 */
-		function loadConceptAnswers(module_name, limit, uuid, onConceptAnswersSuccessful) {
+		function loadConceptAnswers(module_name, limit, uuid, onLoadConceptAnswersSuccessful) {
 			var requestParams = [];
 			requestParams['rest_entity_name'] = '';
 			requestParams['limit'] = limit;
 			EntityRestFactory.setBaseUrl('concept/' + uuid, 'v1');
 			EntityRestFactory.loadEntities(requestParams,
-				onConceptAnswersSuccessful, errorCallback);
+				onLoadConceptAnswersSuccessful, errorCallback);
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
+		
+		/**
+		 * @param onLoadLocationsSuccessful
+		 * @param module_name
+		 */
+		function loadLocations(module_name,onLoadLocationsSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = '';
+			EntityRestFactory.setBaseUrl('location', 'v1');
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadLocationsSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
