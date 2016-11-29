@@ -183,6 +183,8 @@ public class PatientListDataServiceImpl extends
 				        || StringUtils.contains(mappingFieldName, "p.addresses.")
 				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
+				} else if (StringUtils.contains(condition.getField(), "v.hasActiveVisit")) {
+					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else {
 					if (mappingFieldName == null) {
 						LOG.error("Unknown mapping for field name: " + condition.getField());
@@ -329,20 +331,19 @@ public class PatientListDataServiceImpl extends
 		StringBuilder hql = new StringBuilder();
 		for (PatientListOrder order : ordering) {
 			if (order != null) {
+				PatientInformationField field = PatientInformation.getInstance().
+				        getField(order.getField());
+
+				if (field == null) {
+					continue;
+				}
+
 				hql.append(" ");
 				if (count++ == 0) {
 					hql.append("order by ");
 				}
 
-				String mappingFieldName = PatientInformation.getInstance().
-				        getField(order.getField()).getMappingFieldName();
-
-				// attributes
-				if (StringUtils.contains(order.getField(), "p.attr.")) {
-					mappingFieldName = "attrType.name";
-				} else if (StringUtils.contains(order.getField(), "v.attr.")) {
-					mappingFieldName = "vattrType.name";
-				}
+				String mappingFieldName = field.getMappingFieldName();
 
 				// aliases
 				if (StringUtils.contains(mappingFieldName, "p.names.")) {

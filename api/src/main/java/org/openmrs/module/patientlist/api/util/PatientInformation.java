@@ -157,6 +157,14 @@ public class PatientInformation {
 				return visit.getVisitType().getName();
 			}
 		}, VISIT_PREFIX + ".visitType");
+
+		addField(tempFields, VISIT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+			@Override
+			public Object apply(Visit visit) {
+				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
+			}
+		}, null);
+
 		// And so on for each visit field
 
 		List<VisitAttributeType> visitAttributeTypes = Context.getVisitService().getAllVisitAttributeTypes();
