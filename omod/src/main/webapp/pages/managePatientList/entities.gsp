@@ -6,6 +6,8 @@
     ui.includeCss("openhmis.commons", "bootstrap.css")
     ui.includeCss("openhmis.commons", "entities2x.css")
     ui.includeCss("uicommons", "ngDialog/ngDialog.min.css")
+    ui.includeCss("uicommons", "datetimepicker.css")
+    ui.includeCss("patientlist", "entity.css")
 
     /* load angular libraries */
     ui.includeJavascript("uicommons", "angular.min.js")

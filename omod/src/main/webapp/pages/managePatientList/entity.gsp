@@ -13,6 +13,18 @@
 	];
 	
 	jQuery('#breadcrumbs').html(emr.generateBreadcrumbHtml(breadcrumbs));
+	jQuery(function () {
+		jQuery('body').on('focus', ".date", function () {
+			jQuery(this).datetimepicker({
+				minView: 2,
+				autoclose: true,
+				pickerPosition: "bottom-left",
+				todayHighlight: false,
+				format: "dd M yyyy",
+				startDate: new Date(),
+			});
+		});
+	});
 </script>
 
 <div ng-show="loading" class="loading-msg">
@@ -77,12 +89,12 @@
 					<td>
 						<select class="form-control" ng-model="listCondition.operator">
 							<option value="">--Select Operator--</option>
-							<option value="EQUALS">=</option>
-							<option value="NOT_EQUALS">!=</option>
+							<option value="EQUALS"> = </option>
+							<option value="NOT_EQUALS"> != </option>
 							<option value="GT"> > </option>
 							<option value="LT"> < </option>
 							<option value="GTE"> >= </option>
-							<option value="LTE">Less than or Equals</option>
+							<option value="LTE"> <= </option>
 							<option value="LIKE">Like</option>
 							<option value="BETWEEN">Between</option>
 							<option value="NULL">Empty</option>
@@ -123,6 +135,18 @@
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value"
 							       ng-change="patientListCondition(listCondition)"/>&nbsp;Check / Uncheck</label>
+					</td>
+					<td ng-show="listCondition.inputType == 'conceptInput'"
+					    ng-class="{'not-valid': listCondition.invalidEntry === true}">
+						${ui.includeFragment("openhmis.commons", "searchFragment", [
+								typeahead        : ["concept.display for concept in searchConcepts(\$viewValue)"],
+								model            : "listCondition.value",
+								typeaheadOnSelect: "selectConcept(\$item)",
+								typeaheadEditable: "true",
+								class            : ["form-control conceptSearch"],
+								placeholder      : [ui.message('patientlist.list.enterConceptName')],
+								ngChange: "patientListCondition(listCondition)"
+						])}
 					</td>
 				</tr>
 				
