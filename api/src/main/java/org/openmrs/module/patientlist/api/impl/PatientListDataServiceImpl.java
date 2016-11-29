@@ -189,20 +189,34 @@ public class PatientListDataServiceImpl extends
 						continue;
 					}
 
+					String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
 					hql.append(mappingFieldName);
 					hql.append(" ");
-					hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+					hql.append(operator);
 					hql.append(" ");
 					if (StringUtils.isNotEmpty(condition.getValue())) {
+						String value = condition.getValue();
 						hql.append("?");
 						if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
 							try {
-								paramValues.add(sdf.parse(condition.getValue()));
+								// BETWEEN dates should be separated by |
+								if (StringUtils.contains(value, "|")) {
+									String[] dates = StringUtils.split(value, "|");
+									paramValues.add(sdf.parse(dates[0]));
+									paramValues.add(sdf.parse(dates[1]));
+									hql.append(" AND ? ");
+								} else {
+									paramValues.add(sdf.parse(value));
+								}
 							} catch (ParseException pex) {
-								paramValues.add(condition.getValue());
+								paramValues.add(value);
 							}
 						} else {
-							paramValues.add(condition.getValue());
+							if (StringUtils.equals(operator, "LIKE")) {
+								paramValues.add("%" + value + "%");
+							} else {
+								paramValues.add(value);
+							}
 						}
 					}
 				}
@@ -226,6 +240,8 @@ public class PatientListDataServiceImpl extends
 		StringBuilder hql = new StringBuilder();
 		String attributeName = condition.getField().split("\\.")[2];
 		attributeName = attributeName.replaceAll("_", " ");
+		String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
+		String value = condition.getValue();
 
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
 			hql.append("(attrType.name = ?");
@@ -237,11 +253,17 @@ public class PatientListDataServiceImpl extends
 			hql.append("vattr.valueReference ");
 		}
 
-		hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+		hql.append(operator);
 		hql.append(" ? ");
 
 		paramValues.add(attributeName);
-		paramValues.add(condition.getValue());
+
+		if (StringUtils.equals(operator, "LIKE")) {
+			paramValues.add("%" + value + "%");
+		} else {
+			paramValues.add(value);
+		}
+
 		hql.append(") ");
 
 		return hql.toString();
@@ -257,6 +279,8 @@ public class PatientListDataServiceImpl extends
 	        String mappingFieldName, List<Object> paramValues) {
 		StringBuilder hql = new StringBuilder();
 		String searchField = null;
+		String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
+		String value = condition.getValue();
 		if (mappingFieldName != null) {
 			// p.names.givenName
 			String subs[] = mappingFieldName.split("\\.");
@@ -280,10 +304,15 @@ public class PatientListDataServiceImpl extends
 				hql.append(" ");
 			}
 
-			hql.append(ConvertPatientListOperators.convertOperator(condition.getOperator()));
+			hql.append(operator);
 			hql.append(" ? ");
 
-			paramValues.add(condition.getValue());
+			if (StringUtils.equals(operator, "LIKE")) {
+				paramValues.add("%" + value + "%");
+			} else {
+				paramValues.add(value);
+			}
+
 			hql.append(" ");
 		}
 

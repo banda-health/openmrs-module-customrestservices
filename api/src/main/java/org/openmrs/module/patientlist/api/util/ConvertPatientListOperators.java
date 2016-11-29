@@ -40,6 +40,12 @@ public class ConvertPatientListOperators {
 			case LIKE:
 				literalOperator = "LIKE";
 				return literalOperator;
+			case DEFINED:
+				literalOperator = "EXISTS";
+				return literalOperator;
+			case NOT_DEFINED:
+				literalOperator = "NOT EXISTS";
+				return literalOperator;
 			default:
 				throw new IllegalArgumentException("Invalid operator " + operator);
 		}
