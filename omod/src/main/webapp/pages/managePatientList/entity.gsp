@@ -205,7 +205,7 @@
 		<br/>
 		
 		<!-- live preview section -->
-		<div class="col-md-12">
+		<div  ng-show="headerContent != null && bodyContent != null" class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">
 				<thead>
 				<tr>
