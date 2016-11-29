@@ -97,3 +97,6 @@ li.no-height{
 .clickable-tr:hover {
     background-color: white !important;
 }
+.conceptSearch {
+    width: 275px;
+}

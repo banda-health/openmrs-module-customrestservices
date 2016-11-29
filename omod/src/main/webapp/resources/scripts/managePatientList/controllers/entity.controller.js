@@ -51,6 +51,11 @@
 				$scope.dropDownEntries = [];
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
+				
+				// auto-complete search concept function
+				$scope.searchConcepts = function (search) {
+					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
+				};
 
 				if($scope.entity !== undefined) {
 					self.addExistingListConditions();
@@ -74,9 +79,7 @@
 				};
 
 				$scope.patientListCondition = function(listCondition) {
-					console.log("Called");
-					console.log(listCondition.value);
-					if(listCondition.field != null && listCondition.operator != null && listCondition.value != null) {
+					if(listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
 						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
@@ -107,6 +110,8 @@
 					} else if (datatype == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
+					} else if (datatype == "org.openmrs.Concept") {
+						listCondition.inputType = "conceptInput";
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -243,8 +248,18 @@
 					$scope.locations[i].value = $scope.locations[i].uuid;
 				}
 				$scope.dropDownEntries = $scope.locations;
-				console.log($scope.dropDownEntries);
 			};
+		
+		/**
+		 * Binds the selected concept item to entity
+		 * @type {Function}
+		 * @parameter concept
+		 */
+		self.selectConcept = self.selectConcept || function(concept){
+				$scope.concept = concept;
+				console.log(concept);
+				$scope.listCondition.value = $scope.concept;
+			}
 		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
@@ -280,8 +295,6 @@
 						sortOrder[i]['conditionOrder'] = i;
 					}
 				}
-
-				console.log($scope.listConditions);
 
 				var patientListCondition = $scope.listConditions;
 				for(var r = 0; r < patientListCondition.length; r++) {

@@ -27,7 +27,8 @@
 			loadConceptAnswers : loadConceptAnswers,
 			loadFields: loadFields,
 			livePreview: livePreview,
-			loadLocations: loadLocations
+			loadLocations: loadLocations,
+			searchConcepts: searchConcepts
 		};
 		
 		return service;
@@ -61,6 +62,19 @@
 				onLoadLocationsSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
+		}
+		
+		/**
+		 * An auto-complete function to search concepts given a query term.
+		 * @param module_name
+		 * @param q - search term
+		 * @param limit
+		 */
+		function searchConcepts(module_name, q) {
+			var requestParams = [];
+			requestParams['q'] = q;
+			requestParams['limit'] = 10;
+			return EntityRestFactory.autocompleteSearch(requestParams, 'concept', module_name, 'v1');
 		}
 		
 		/**
