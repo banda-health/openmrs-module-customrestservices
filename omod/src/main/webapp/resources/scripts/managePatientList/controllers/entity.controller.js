@@ -51,6 +51,7 @@
 				$scope.dropDownEntries = [];
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
+				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
 				
 				// auto-complete search concept function
 				$scope.searchConcepts = function (search) {
@@ -124,9 +125,6 @@
 
 				$scope.livePreview = self.livePreview;
 				$scope.renderTemplate = self.renderTemplate;
-				
-				PatientListFunctions.onChangeDatePicker(
-					self.onListConditionDateSuccessfulCallback);
 				
 				$scope.selectConcept = self.selectConcept;
 			};

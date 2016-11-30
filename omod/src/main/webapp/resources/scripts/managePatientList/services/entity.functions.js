@@ -57,6 +57,10 @@
 						$scope.valueInputConditions(datatype, listCondition);
 					}
 				}
+				if (listCondition.inputType == "dateInput") {
+					console.log("am hherer effdhcxvhdfckjfds")
+					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
+				}
 				
 				listConditionModel.setInputType(listCondition.inputType);
 				listConditionModel.setId(listCondition.field + "_" + listCondition.value);
