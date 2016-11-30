@@ -104,10 +104,10 @@ public class PatientListDataServiceImpl extends
 		if (patientList != null && patientList.getPatientListConditions() != null) {
 			if (searchField(patientList.getPatientListConditions(), "v.")) {
 				// join visit and patient tables
-				hql.append("select distinct v from Visit v inner join v.patient as p ");
+				hql.append("select v from Visit v inner join v.patient as p ");
 			} else {
 				// use only the patient table
-				hql.append("select distinct p from Patient p ");
+				hql.append("select p from Patient p ");
 			}
 
 			// only join person attributes and attribute types if required to
@@ -338,12 +338,15 @@ public class PatientListDataServiceImpl extends
 					continue;
 				}
 
-				hql.append(" ");
-				if (count++ == 0) {
-					hql.append("order by ");
-				}
+				String mappingFieldName = PatientInformation.getInstance().
+				        getField(order.getField()).getMappingFieldName();
 
-				String mappingFieldName = field.getMappingFieldName();
+				// attributes
+				if (StringUtils.contains(order.getField(), "p.attr.")) {
+					mappingFieldName = "attrType.name";
+				} else if (StringUtils.contains(order.getField(), "v.attr.")) {
+					mappingFieldName = "vattrType.name";
+				}
 
 				// aliases
 				if (StringUtils.contains(mappingFieldName, "p.names.")) {
@@ -357,6 +360,11 @@ public class PatientListDataServiceImpl extends
 				if (mappingFieldName == null) {
 					LOG.error("Unknown mapping for field name: " + order.getField());
 					continue;
+				}
+
+				hql.append(" ");
+				if (count++ == 0) {
+					hql.append("order by ");
 				}
 
 				hql.append(mappingFieldName);
