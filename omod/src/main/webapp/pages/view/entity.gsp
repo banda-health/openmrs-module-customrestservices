@@ -56,7 +56,11 @@
                                 ${ui.message('coreapps.patientDashBoard.visitDetails')}</a>
                             <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
 
-                            <a class="right" ng-show="entity.visit.stopDatetime !== null">${ ui.message("coreapps.task.startVisit.label") }</a>
+                            <a class="right"
+                               ng-show="entity.visit.stopDatetime !== null"
+                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">
+                                ${ ui.message("coreapps.task.startVisit.label") }
+                            </a>
                             <a class="right" ng-show="entity.visit.stopDatetime === null"
                                ng-click="endVisitDialog(entity.visit.uuid)">${ ui.message("coreapps.task.endVisit.label") }</a>
                         </div>

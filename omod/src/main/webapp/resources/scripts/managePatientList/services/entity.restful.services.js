@@ -28,7 +28,8 @@
 			loadFields: loadFields,
 			livePreview: livePreview,
 			loadLocations: loadLocations,
-			searchConcepts: searchConcepts
+			searchConcepts: searchConcepts,
+			getConceptId: getConceptId,
 		};
 		
 		return service;
@@ -96,6 +97,16 @@
 			requestParams['bodyTemplate'] = bodyTemplate;
 			EntityRestFactory.loadEntities(requestParams,
 				onLivePreviewSuccessful,
+				errorCallback
+			);
+		}
+
+		function getConceptId(uuid, onLoadConceptId){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'conceptId';
+			requestParams['conceptUuid'] = uuid;
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadConceptId,
 				errorCallback
 			);
 		}

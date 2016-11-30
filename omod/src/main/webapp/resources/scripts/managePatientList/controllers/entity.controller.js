@@ -127,6 +127,8 @@
 				PatientListFunctions.onChangeDatePicker(
 					self.onListConditionDateSuccessfulCallback,
 					'operationDateId-display');
+				
+				$scope.selectConcept = self.selectConcept;
 			};
 
 
@@ -271,10 +273,13 @@
 		 * @type {Function}
 		 * @parameter concept
 		 */
-		self.selectConcept = self.selectConcept || function (concept, listCondition) {
-				$scope.concept = concept;
-				listCondition.value = concept;
-			};
+		self.selectConcept = self.selectConcept || function(concept, listCondition){
+
+				PatientListRestfulService.getConceptId(concept.uuid, function(data){
+						console.log(data);
+						listCondition.value = data;
+					});
+			}
 		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
