@@ -276,8 +276,8 @@
 		self.selectConcept = self.selectConcept || function(concept, listCondition){
 
 				PatientListRestfulService.getConceptId(concept.uuid, function(data){
-						console.log(data);
-						listCondition.value = data;
+						listCondition.value = concept;
+						listCondition.valueRef = data.toString();
 					});
 			}
 		
@@ -339,7 +339,10 @@
 					} else {
 						delete patientListCondition[r]['selected'];
 						patientListCondition[r]['conditionOrder'] = r;
-
+						if (patientListCondition[r]['valueRef'] != undefined) {
+							patientListCondition[r]['value'] = patientListCondition[r]['valueRef'];
+							delete patientListCondition[r]['valueRef'];
+						}
 					}
 				}
 
