@@ -119,6 +119,7 @@
 
 				$scope.livePreview = self.livePreview;
 				$scope.renderTemplate = self.renderTemplate;
+				$scope.selectConcept = self.selectConcept;
 			};
 
 
@@ -255,10 +256,12 @@
 		 * @type {Function}
 		 * @parameter concept
 		 */
-		self.selectConcept = self.selectConcept || function(concept){
-				$scope.concept = concept;
-				console.log(concept);
-				$scope.listCondition.value = $scope.concept;
+		self.selectConcept = self.selectConcept || function(concept, listCondition){
+
+				PatientListRestfulService.getConceptId(concept.uuid, function(data){
+						console.log(data);
+						listCondition.value = data;
+					});
 			}
 		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {

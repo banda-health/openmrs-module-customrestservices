@@ -141,7 +141,7 @@
 						${ui.includeFragment("openhmis.commons", "searchFragment", [
 								typeahead        : ["concept.display for concept in searchConcepts(\$viewValue)"],
 								model            : "listCondition.value",
-								typeaheadOnSelect: "selectConcept(\$item)",
+								typeaheadOnSelect: "selectConcept(\$item, listCondition)",
 								typeaheadEditable: "true",
 								class            : ["form-control conceptSearch"],
 								placeholder      : [ui.message('patientlist.list.enterConceptName')],
