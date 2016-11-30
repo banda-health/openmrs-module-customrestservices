@@ -51,12 +51,15 @@
 				$scope.dropDownEntries = [];
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
+				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
 				
 				// auto-complete search concept function
 				$scope.searchConcepts = function (search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
-
+				
+				$scope.selectConcept = self.selectConcept;
+				
 				if($scope.entity !== undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
@@ -102,7 +105,8 @@
 						listCondition.inputType = "textInput";
 					} else if(datatype == "java.util.Date") {
 						listCondition.inputType = "dateInput";
-					} else if(datatype == "java.lang.Boolean") {
+						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
+					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 					} else if(listCondition.field == "p.gender") {
 						listCondition.inputType = "dropDownInput";
@@ -112,6 +116,8 @@
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 					} else if (datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
+					} else if (datatype == "java.lang.Integer") {
+						listCondition.inputType = "numberInput";
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -119,6 +125,7 @@
 
 				$scope.livePreview = self.livePreview;
 				$scope.renderTemplate = self.renderTemplate;
+				
 				$scope.selectConcept = self.selectConcept;
 			};
 
@@ -240,6 +247,14 @@
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
 				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
+				
+				$scope.orderingFields = data.results;
+				for (var i = 0; i < $scope.orderingFields.length; i++) {
+					if ($scope.orderingFields[i].desc.prefix === "v.attr" || $scope.orderingFields[i].desc.prefix === "p.attr") {
+						$scope.orderingFields.splice(i, 1);
+					}
+				}
+				$scope.orderingFields = $filter('orderBy')($scope.orderingFields, 'desc.name');
 			};
 		
 		// call-back functions.
@@ -259,15 +274,23 @@
 		self.selectConcept = self.selectConcept || function(concept, listCondition){
 
 				PatientListRestfulService.getConceptId(concept.uuid, function(data){
-						console.log(data);
-						listCondition.value = data;
+						listCondition.value = concept;
+						listCondition.valueRef = data.toString();
 					});
 			}
 		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
 				$scope.bodyContent = data['bodyContent'];
-			}
+			};
+		
+		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function(date) {
+				console.log("herererere")
+				if (date !== undefined) {
+					var listConditionValueDate = PatientListFunctions.formatDate(date);
+					console.log(listConditionValueDate);
+				}
+			};
 
 		/**
 		 * All post-submit validations are done here.
@@ -314,7 +337,10 @@
 					} else {
 						delete patientListCondition[r]['selected'];
 						patientListCondition[r]['conditionOrder'] = r;
-
+						if (patientListCondition[r]['valueRef'] != undefined) {
+							patientListCondition[r]['value'] = patientListCondition[r]['valueRef'];
+							delete patientListCondition[r]['valueRef'];
+						}
 					}
 				}
 

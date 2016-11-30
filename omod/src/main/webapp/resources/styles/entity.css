@@ -18,17 +18,6 @@ ul.table-layout{
   margin: 0px;
 }
 
-table #manage_condition-table{
-  table-layout: fixed;
-}
-
-table #manage_condition-table th:first-child, td:first-child{
-  width: 100%;
-}
-
-table #manage_condition-table th, td{
-  width: 40%;
-}
 
 .main-content .status-container{
   margin: 5px 6px !important;

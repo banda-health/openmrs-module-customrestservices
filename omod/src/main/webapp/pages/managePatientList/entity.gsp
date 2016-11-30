@@ -20,8 +20,7 @@
 				autoclose: true,
 				pickerPosition: "bottom-left",
 				todayHighlight: false,
-				format: "dd M yyyy",
-				startDate: new Date(),
+				format: "yyyy-MM-dd"
 			});
 		});
 	});
@@ -116,17 +115,13 @@
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType =='dateInput'">
-						${ui.includeFragment("uicommons", "field/datetimepicker",
-								[id           : 'patientConditionDate',
-								 label        : '',
-								 required     : 'required',
-								 formFieldName: 'patientConditionDatePicker',
-								 useTime      : false,
-								 name         : 'patientConditionDate',
-								 ngChange     : 'patientListCondition(listCondition)'
+						${ui.includeFragment("uicommons", "field/datetimepicker", [
+								label        : "",
+								useTime      : false,
+								formFieldName: 'patientConditionDatePicker'
 								])}
 					</td>
-					<td ng-show="listCondition.numberInput">
+					<td ng-show="listCondition.inputType == 'numberInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
@@ -145,7 +140,7 @@
 								typeaheadEditable: "true",
 								class            : ["form-control conceptSearch"],
 								placeholder      : [ui.message('patientlist.list.enterConceptName')],
-								ngChange: "patientListCondition(listCondition)"
+								ngEnterEvent     : "patientListCondition(listCondition)"
 						])}
 					</td>
 				</tr>
@@ -176,8 +171,9 @@
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
-							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>
+							<option ng-repeat="orderingField in orderingFields track by orderingField.field"
+							        value="{{orderingField.field}}"
+							        ng-selected="orderingField.field == listOrdering.field">{{orderingField.field}}</option>
 						</select>
 					</td>
 					<td>

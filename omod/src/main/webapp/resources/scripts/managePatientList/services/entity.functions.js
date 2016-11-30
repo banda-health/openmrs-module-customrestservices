@@ -19,18 +19,28 @@
 	var app = angular.module('app.patientListFunctionsFactory', []);
 	app.service('PatientListFunctions', PatientListFunctions);
 	
-	PatientListFunctions.$inject = ['EntityFunctions', 'PatientListConditionModel','PatientListOrderingModel'];
+	PatientListFunctions.$inject = ['EntityFunctions', 'PatientListConditionModel','PatientListOrderingModel', '$filter'];
 	
-	function PatientListFunctions(EntityFunctions, PatientListConditionModel,PatientListOrderingModel) {
+	function PatientListFunctions(EntityFunctions, PatientListConditionModel,PatientListOrderingModel, $filter) {
 		var service;
 		
 		service = {
 			populateExistingPatientListCondition: populateExistingPatientListCondition,
 			populateExistingPatientListOrdering: populateExistingPatientListOrdering,
-			validateListConditions: validateListConditions
+			validateListConditions: validateListConditions,
+			onChangeDatePicker: onChangeDatePicker,
+			formatDate: formatDate
 		};
 		
 		return service;
+		
+		function formatDate(date, includeTime) {
+			var format = 'yyyy-MM-dd';
+			if (includeTime) {
+				format += ' HH:mm';
+			}
+			return ($filter('date')(new Date(date), format));
+		}
 		
 		function populateExistingPatientListCondition(listConditions, populatedListConditions, $scope) {
 			for (var i = 0; i < listConditions.length; i++) {
@@ -46,6 +56,10 @@
 						datatype = $scope.fields[r].desc.dataType;
 						$scope.valueInputConditions(datatype, listCondition);
 					}
+				}
+				if (listCondition.inputType == "dateInput") {
+					console.log("am hherer effdhcxvhdfckjfds")
+					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
 				}
 				
 				listConditionModel.setInputType(listCondition.inputType);
@@ -65,6 +79,31 @@
 				populatedListOrdering.push(listOrderingModel);
 				
 				$scope.listOrdering= listOrderingModel;
+			}
+		}
+		
+		function onChangeDatePicker(successfulCallback, id, listCondition) {
+			var picker;
+			if (id !== undefined) {
+				picker = angular.element(document.getElementById(id));
+				picker.bind('keyup change select', function() {
+					successfulCallback(this.value);
+				});
+			} else {
+				var elements = angular.element(document.getElementsByTagName("input"));
+				for (var i = 0; i < elements.length; i++) {
+					var element = elements[i];
+					if (element.id.indexOf("display") > -1) {
+						if (listCondition !== undefined) {
+							element.id = listCondition.id;
+						}
+						picker = angular.element(element);
+						picker.bind('keyup change select', function() {
+							listCondition.value = formatDate(new Date(this.value));
+							console.log(listCondition.value)
+						});
+					}
+				}
 			}
 		}
 		
