@@ -56,7 +56,9 @@
 				$scope.searchConcepts = function (search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
-
+				
+				$scope.selectConcept = self.selectConcept;
+				
 				if($scope.entity !== undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
@@ -102,7 +104,7 @@
 						listCondition.inputType = "textInput";
 					} else if(datatype == "java.util.Date") {
 						listCondition.inputType = "dateInput";
-					} else if(datatype == "java.lang.Boolean") {
+					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 					} else if(listCondition.field == "p.gender") {
 						listCondition.inputType = "dropDownInput";
@@ -112,6 +114,8 @@
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 					} else if (datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
+					} else if (datatype == "java.lang.Integer") {
+						listCondition.inputType = "numberInput";
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -119,6 +123,10 @@
 
 				$scope.livePreview = self.livePreview;
 				$scope.renderTemplate = self.renderTemplate;
+				
+				PatientListFunctions.onChangeDatePicker(
+					self.onListConditionDateSuccessfulCallback,
+					'operationDateId-display');
 			};
 
 
@@ -239,6 +247,14 @@
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
 				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
+				
+				$scope.orderingFields = data.results;
+				for (var i = 0; i < $scope.orderingFields.length; i++) {
+					if ($scope.orderingFields[i].desc.prefix === "v.attr" || $scope.orderingFields[i].desc.prefix === "p.attr") {
+						$scope.orderingFields.splice(i, 1);
+					}
+				}
+				$scope.orderingFields = $filter('orderBy')($scope.orderingFields, 'desc.name');
 			};
 		
 		// call-back functions.
@@ -255,16 +271,23 @@
 		 * @type {Function}
 		 * @parameter concept
 		 */
-		self.selectConcept = self.selectConcept || function(concept){
+		self.selectConcept = self.selectConcept || function (concept, listCondition) {
 				$scope.concept = concept;
-				console.log(concept);
-				$scope.listCondition.value = $scope.concept;
-			}
+				listCondition.value = concept;
+			};
 		
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
 				$scope.bodyContent = data['bodyContent'];
-			}
+			};
+		
+		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function(date) {
+				$scope.operationOccurDate = undefined;
+				if (date !== undefined) {
+					var listConditionValueDate = PatientListFunctions.formatDate(new Date(date));
+					self.loadStockOperations(listConditionValueDate);
+				}
+			};
 
 		/**
 		 * All post-submit validations are done here.
