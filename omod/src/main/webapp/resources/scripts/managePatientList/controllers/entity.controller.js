@@ -104,6 +104,7 @@
 						listCondition.inputType = "textInput";
 					} else if(datatype == "java.util.Date") {
 						listCondition.inputType = "dateInput";
+						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
 					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 					} else if(listCondition.field == "p.gender") {
@@ -125,8 +126,7 @@
 				$scope.renderTemplate = self.renderTemplate;
 				
 				PatientListFunctions.onChangeDatePicker(
-					self.onListConditionDateSuccessfulCallback,
-					'operationDateId-display');
+					self.onListConditionDateSuccessfulCallback);
 				
 				$scope.selectConcept = self.selectConcept;
 			};
@@ -287,10 +287,10 @@
 			};
 		
 		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function(date) {
-				$scope.operationOccurDate = undefined;
+				console.log("herererere")
 				if (date !== undefined) {
-					var listConditionValueDate = PatientListFunctions.formatDate(new Date(date));
-					self.loadStockOperations(listConditionValueDate);
+					var listConditionValueDate = PatientListFunctions.formatDate(date);
+					console.log(listConditionValueDate);
 				}
 			};
 

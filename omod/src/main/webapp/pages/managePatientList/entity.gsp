@@ -20,8 +20,7 @@
 				autoclose: true,
 				pickerPosition: "bottom-left",
 				todayHighlight: false,
-				format: "dd M yyyy",
-				startDate: new Date(),
+				format: "yyyy-MM-dd"
 			});
 		});
 	});
@@ -119,7 +118,6 @@
 						${ui.includeFragment("uicommons", "field/datetimepicker", [
 								label        : "",
 								useTime      : false,
-								startDate    : new Date(),
 								formFieldName: 'patientConditionDatePicker'
 								])}
 					</td>

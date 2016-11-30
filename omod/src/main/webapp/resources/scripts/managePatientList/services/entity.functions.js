@@ -35,7 +35,7 @@
 		return service;
 		
 		function formatDate(date, includeTime) {
-			var format = 'dd-MM-yyyy';
+			var format = 'yyyy-MM-dd';
 			if (includeTime) {
 				format += ' HH:mm';
 			}
@@ -96,6 +96,7 @@
 						picker = angular.element(element);
 						picker.bind('keyup change select', function() {
 							listCondition.value = formatDate(new Date(this.value));
+							console.log(listCondition.value)
 						});
 					}
 				}
