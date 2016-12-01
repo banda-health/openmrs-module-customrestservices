@@ -1,5 +1,6 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
@@ -18,14 +19,23 @@ public class PatientListConceptResourceController {
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
-	public int get(@RequestParam("conceptUuid") String uuid) {
-		int conceptId = 0;
+	public String get(@RequestParam(value = "conceptUuid", required = false) String uuid,
+	        @RequestParam(required = false, value = "conceptId") Integer conceptId) {
 
-		Concept concept = Context.getConceptService().getConceptByUuid(uuid);
-		if (concept != null) {
-			conceptId = concept.getConceptId();
+		if (StringUtils.isNotEmpty(uuid)) {
+			Concept concept = Context.getConceptService().getConceptByUuid(uuid);
+			if (concept != null) {
+				return String.valueOf(concept.getConceptId());
+			}
 		}
 
-		return conceptId;
+		if (conceptId != null) {
+			Concept concept = Context.getConceptService().getConcept(conceptId);
+			if (concept != null) {
+				return concept.getUuid();
+			}
+		}
+
+		return null;
 	}
 }

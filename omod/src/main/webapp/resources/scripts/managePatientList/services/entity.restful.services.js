@@ -30,6 +30,7 @@
 			loadLocations: loadLocations,
 			searchConcepts: searchConcepts,
 			getConceptId: getConceptId,
+			getConceptUuid: getConceptUuid,
 		};
 		
 		return service;
@@ -107,6 +108,16 @@
 			requestParams['conceptUuid'] = uuid;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptId,
+				errorCallback
+			);
+		}
+
+		function getConceptUuid(id, onLoadConceptUuid){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'conceptId';
+			requestParams['conceptId'] = id;
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadConceptUuid,
 				errorCallback
 			);
 		}
