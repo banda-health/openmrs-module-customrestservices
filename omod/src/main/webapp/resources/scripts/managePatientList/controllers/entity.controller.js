@@ -127,7 +127,7 @@
 				$scope.renderTemplate = self.renderTemplate;
 
 				$scope.selectConcept = self.selectConcept;
-				$scope.getConceptUuid = self.getConceptUuid;
+				$scope.getConceptName = self.getConceptName;
 			};
 
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function(newPatientListSortOrder) {
@@ -278,7 +278,7 @@
 				});
 			}
 
-		self.getConceptUuid = self.getConceptUuid || function(id, listCondition) {
+		self.getConceptName = self.getConceptName || function(id, listCondition) {
 				PatientListRestfulService.getConceptUuid(id, function(data) {
 					listCondition.value = data;
 					listCondition.valueRef = id;

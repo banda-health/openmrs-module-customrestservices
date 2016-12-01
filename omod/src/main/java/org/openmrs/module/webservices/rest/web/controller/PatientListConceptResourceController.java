@@ -32,7 +32,7 @@ public class PatientListConceptResourceController {
 		if (conceptId != null) {
 			Concept concept = Context.getConceptService().getConcept(conceptId);
 			if (concept != null) {
-				return concept.getUuid();
+				return concept.getName().getName();
 			}
 		}
 
