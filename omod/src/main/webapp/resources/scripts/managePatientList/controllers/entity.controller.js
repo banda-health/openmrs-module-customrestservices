@@ -91,6 +91,9 @@
 				};
 
 				$scope.inputsValueChange = function(listCondition) {
+					if (listCondition.value != null) {
+						$scope.resetValue(listCondition);
+					}
 					for(var i = 0; i < $scope.fields.length; i++) {
 						var datatype = null;
 						if($scope.fields[i].field == listCondition.field) {
@@ -116,12 +119,18 @@
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 					} else if(datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
+						
 					} else if(datatype == "java.lang.Integer") {
 						listCondition.inputType = "numberInput";
 					} else {
 						listCondition.inputType = "textInput";
 					}
 				};
+				
+				$scope.resetValue = function (listCondition) {
+					listCondition.value = ""
+				};
+				
 
 				$scope.livePreview = self.livePreview;
 				$scope.renderTemplate = self.renderTemplate;
@@ -274,16 +283,13 @@
 		self.selectConcept = self.selectConcept || function(concept, listCondition) {
 				PatientListRestfulService.getConceptId(concept.uuid, function(data) {
 					listCondition.value = concept;
-					listCondition.valueRef = data.toString();
+					listCondition.valueRef = data["id"];
 				});
 			}
 
-		self.getConceptName = self.getConceptName || function(id, listCondition) {
-				PatientListRestfulService.getConceptUuid(id, function(data) {
-					listCondition.value = data;
-					listCondition.valueRef = id;
-				});
-			}
+		self.getConceptName = self.getConceptName || function(id, onConceptNameSuccessfulCallback) {
+				PatientListRestfulService.getConceptUuid(id, onConceptNameSuccessfulCallback);
+			};
 
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
@@ -291,7 +297,6 @@
 			};
 
 		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function(date) {
-				console.log("herererere")
 				if(date !== undefined) {
 					var listConditionValueDate = PatientListFunctions.formatDate(date);
 					console.log(listConditionValueDate);

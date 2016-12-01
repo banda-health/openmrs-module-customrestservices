@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
+import org.openmrs.module.webservices.rest.SimpleObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,23 +20,25 @@ public class PatientListConceptResourceController {
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
-	public String get(@RequestParam(value = "conceptUuid", required = false) String uuid,
+	public SimpleObject get(@RequestParam(value = "conceptUuid", required = false) String uuid,
 	        @RequestParam(required = false, value = "conceptId") Integer conceptId) {
+
+		SimpleObject results = new SimpleObject();
 
 		if (StringUtils.isNotEmpty(uuid)) {
 			Concept concept = Context.getConceptService().getConceptByUuid(uuid);
 			if (concept != null) {
-				return String.valueOf(concept.getConceptId());
+				results.put("id", String.valueOf(concept.getConceptId()));
 			}
 		}
 
 		if (conceptId != null) {
 			Concept concept = Context.getConceptService().getConcept(conceptId);
 			if (concept != null) {
-				return concept.getName().getName();
+				results.put("name", concept.getName().getName());
 			}
 		}
 
-		return null;
+		return results;
 	}
 }
