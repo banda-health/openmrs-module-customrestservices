@@ -118,8 +118,8 @@
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
 					} else if(datatype == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
-						listCondition.dataType = "org.openmrs.Location";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
+						listCondition.dataType = "org.openmrs.Location";
 					} else if(datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
 					} else if(datatype == "java.lang.Integer") {
@@ -139,6 +139,7 @@
 
 				$scope.selectConcept = self.selectConcept;
 				$scope.getConceptName = self.getConceptName;
+				$scope.getLocationUuid = self.getLocationUuid
 			};
 
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function(newPatientListSortOrder) {
@@ -289,6 +290,10 @@
 				});
 			};
 		
+		self.getConceptName = self.getConceptName || function(id, onGetConceptNameSuccessfulCallback) {
+				PatientListRestfulService.getConceptName(id, onGetConceptNameSuccessfulCallback);
+			};
+		
 		self.selectLocation = self.selectLocation || function(listCondition) {
 				console.log(listCondition);
 				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
@@ -296,8 +301,8 @@
 				});
 			};
 
-		self.getConceptName = self.getConceptName || function(id, onConceptNameSuccessfulCallback) {
-				PatientListRestfulService.getConceptUuid(id, onConceptNameSuccessfulCallback);
+		self.getLocationUuid = self.getLocationUuid || function(id, onGetLocationUuidSuccessfulCallback) {
+				PatientListRestfulService.getLocationUuid(id, onGetLocationUuidSuccessfulCallback);
 			};
 
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {

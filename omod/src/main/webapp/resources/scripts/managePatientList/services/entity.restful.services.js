@@ -30,7 +30,7 @@
 			loadLocations: loadLocations,
 			searchConcepts: searchConcepts,
 			getConceptId: getConceptId,
-			getConceptUuid: getConceptUuid,
+			getConceptName: getConceptName,
 			getLocationId: getLocationId,
 			getLocationUuid: getLocationUuid,
 		};
@@ -115,13 +115,13 @@
 			);
 		}
 
-		function getConceptUuid(id, onLoadConceptUuid){
+		function getConceptName(id, onLoadConceptName){
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'lookup';
 			requestParams['id'] = id;
 			requestParams['type'] = "Concept";
 			EntityRestFactory.loadEntities(requestParams,
-				onLoadConceptUuid,
+				onLoadConceptName,
 				errorCallback
 			);
 		}
