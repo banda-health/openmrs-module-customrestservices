@@ -34,6 +34,7 @@
 		// @Override
 		self.setRequiredInitParameters = self.setRequiredInitParameters || function() {
 				self.bindBaseParameters(PATIENT_LIST_MODULE_NAME, REST_ENTITY_NAME, entity_name_message_key, '');
+				self.checkPrivileges(TASK_VIEW_PATIENT_LIST);
 			}
 		/**
 		 * Initializes and binds any required variable and/or function specific to entity.page

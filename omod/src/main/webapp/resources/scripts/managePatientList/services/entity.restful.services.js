@@ -31,6 +31,8 @@
 			searchConcepts: searchConcepts,
 			getConceptId: getConceptId,
 			getConceptUuid: getConceptUuid,
+			getLocationId: getLocationId,
+			getLocationUuid: getLocationUuid,
 		};
 		
 		return service;
@@ -104,8 +106,8 @@
 
 		function getConceptId(uuid, onLoadConceptId){
 			var requestParams = [];
-			requestParams['rest_entity_name'] = 'conceptId';
-			requestParams['conceptUuid'] = uuid;
+			requestParams['rest_entity_name'] = 'lookup';
+			requestParams['uuid'] = uuid;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptId,
 				errorCallback
@@ -114,10 +116,30 @@
 
 		function getConceptUuid(id, onLoadConceptUuid){
 			var requestParams = [];
-			requestParams['rest_entity_name'] = 'conceptId';
-			requestParams['conceptId'] = id;
+			requestParams['rest_entity_name'] = 'lookup';
+			requestParams['id'] = id;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptUuid,
+				errorCallback
+			);
+		}
+
+		function getLocationId(uuid, onLoadLocationId){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'lookup';
+			requestParams['uuid'] = uuid;
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadLocationId,
+				errorCallback
+			);
+		}
+
+		function getLocationUuid(id, onLoadLocationUuid){
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'lookup';
+			requestParams['id'] = id;
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadLocationUuid,
 				errorCallback
 			);
 		}
