@@ -45,6 +45,7 @@
 		function populateExistingPatientListCondition(listConditions, populatedListConditions, $scope) {
 			for (var i = 0; i < listConditions.length; i++) {
 				var listCondition = listConditions[i];
+				
 				var listConditionModel = new PatientListConditionModel(listCondition.field, listCondition.operator,
 					listCondition.value, listCondition.inputType, listCondition.conditionOrder);
 				listConditionModel.setSelected(true);
@@ -58,9 +59,15 @@
 					}
 				}
 				if (listCondition.inputType == "dateInput") {
-					console.log("am hherer effdhcxvhdfckjfds")
 					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
+				} else if (listCondition.inputType == "conceptInput") {
+					$scope.getConceptName(listCondition.value, function (data) {
+						listCondition.valueRef = listCondition.value;
+						listConditionModel.setValue(data["name"]);
+					});
+					
 				}
+				
 				
 				listConditionModel.setInputType(listCondition.inputType);
 				listConditionModel.setId(listCondition.field + "_" + listCondition.value);

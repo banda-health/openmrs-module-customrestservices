@@ -109,7 +109,7 @@ public class PatientInformation {
 			public Object apply(Patient patient) {
 				return patient.getFamilyName();
 			}
-		}, PATIENT_PREFIX + ".familyName");
+		}, PATIENT_PREFIX + ".names.familyName");
 
 		addField(tempFields, PATIENT_PREFIX, "fullName", String.class, new Func1<Patient, Object>() {
 			@Override
