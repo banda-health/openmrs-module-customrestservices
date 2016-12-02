@@ -23,6 +23,7 @@ import org.openmrs.module.patientlist.api.util.PatientInformation;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -173,6 +174,7 @@ public class PatientListDataServiceImpl extends
 		for (PatientListCondition condition : patientListConditions) {
 			++count;
 			if (condition != null && PatientInformation.getInstance().getField(condition.getField()) != null) {
+				String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
 				PatientInformationField patientInformationField =
 				        PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
@@ -185,13 +187,31 @@ public class PatientListDataServiceImpl extends
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else if (StringUtils.contains(condition.getField(), "v.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
+				} else if (StringUtils.contains(condition.getField(), "p.age")) {
+					try {
+						hql.append(" p.birthdate ");
+						if (StringUtils.contains(operator, "<")) {
+							operator = StringUtils.replace(operator, "<", ">");
+						} else if (StringUtils.contains(operator, ">")) {
+							operator = StringUtils.replace(operator, ">", "<");
+						}
+
+						hql.append(operator);
+						hql.append(" ? ");
+
+						int age = Integer.valueOf(condition.getValue());
+						Calendar calendar = Calendar.getInstance();
+						calendar.add(Calendar.YEAR, -age);
+						paramValues.add(sdf.parse(sdf.format(calendar.getTime())));
+					} catch (ParseException pex) {
+						LOG.error("error parsing date: ", pex);
+					}
 				} else {
 					if (mappingFieldName == null) {
 						LOG.error("Unknown mapping for field name: " + condition.getField());
 						continue;
 					}
 
-					String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
 					hql.append(mappingFieldName);
 					hql.append(" ");
 					hql.append(operator);
@@ -346,6 +366,8 @@ public class PatientListDataServiceImpl extends
 					mappingFieldName = "attrType.name";
 				} else if (StringUtils.contains(order.getField(), "v.attr.")) {
 					mappingFieldName = "vattrType.name";
+				} else if (StringUtils.contains(order.getField(), "p.age")) {
+					mappingFieldName = "p.birthdate";
 				}
 
 				// aliases

@@ -12,6 +12,8 @@
                             operator="EQUALS" value="23" condition_order="2" uuid="4028814B39B565A20139B95FB3440009" />
     <patient_list_condition patient_list_condition_id="3" patient_list_id="0" field="v.start"
                             operator="BETWEEN" value="2016-01-01|2016-10-31" condition_order="3" uuid="4028814B39B565A20139B95FB3440010" />
-    <patient_list_order patient_list_order_id="0" patient_list_id="0" field="v.attr.ward"
+    <patient_list_condition patient_list_condition_id="4" patient_list_id="0" field="p.age"
+                            operator="LTE" value="20" condition_order="4" uuid="4028814B39B565A20139B95FB3440011" />
+    <patient_list_order patient_list_order_id="0" patient_list_id="0" field="p.age"
                             sort_order="asc" condition_order="0" uuid="4028814B39B565A20139B95FB3440011" />
 </dataset>

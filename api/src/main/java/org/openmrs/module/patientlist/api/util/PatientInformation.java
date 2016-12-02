@@ -88,7 +88,7 @@ public class PatientInformation {
 				return patient.getAge();
 			}
 		},
-		    PATIENT_PREFIX + ".birthdate");
+		    PATIENT_PREFIX + ".age");
 
 		addField(tempFields, PATIENT_PREFIX, "givenName", String.class, new Func1<Patient, Object>() {
 			@Override

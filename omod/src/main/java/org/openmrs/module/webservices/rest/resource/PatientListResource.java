@@ -62,9 +62,11 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 
 	@PropertySetter(value = "headerTemplate")
 	public void setHeaderTemplate(PatientList instance, String headerTemplate) {
-		if (StringUtils.isEmpty(instance.getHeaderTemplate())) {
+		if (StringUtils.isEmpty(instance.getHeaderTemplate()) && StringUtils.isEmpty(headerTemplate)) {
 			instance.setHeaderTemplate(PatientListTemplate.getInstance().
 			        getDefaultHeaderTemplate());
+		} else if (StringUtils.isNotEmpty(headerTemplate)) {
+			instance.setHeaderTemplate(headerTemplate);
 		}
 	}
 
@@ -80,9 +82,11 @@ public class PatientListResource extends BaseRestMetadataResource<PatientList> {
 
 	@PropertySetter(value = "bodyTemplate")
 	public void setBodyTemplate(PatientList instance, String bodyTemplate) {
-		if (StringUtils.isEmpty(instance.getBodyTemplate())) {
+		if (StringUtils.isEmpty(instance.getBodyTemplate()) && StringUtils.isEmpty(bodyTemplate)) {
 			instance.setBodyTemplate(PatientListTemplate.getInstance().
 			        getDefaultBodyTemplate());
+		} else if (StringUtils.isNotEmpty(bodyTemplate)) {
+			instance.setBodyTemplate(bodyTemplate);
 		}
 	}
 
