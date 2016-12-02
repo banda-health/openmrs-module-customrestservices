@@ -66,6 +66,12 @@
 						listConditionModel.setValue(data["name"]);
 					});
 					
+				} else if (listCondition.inputType == "checkBoxInput") {
+					if (listCondition.value == "false") {
+						listConditionModel.setValue(false);
+					} else {
+						listConditionModel.setValue(true);
+					}
 				}
 				
 				

@@ -118,7 +118,8 @@
 						${ui.includeFragment("uicommons", "field/datetimepicker", [
 								label        : "",
 								useTime      : false,
-								formFieldName: 'patientConditionDatePicker'
+								formFieldName: 'patientConditionDatePicker',
+								model        : 'listConditionValue'
 								])}
 					</td>
 					<td ng-show="listCondition.inputType == 'numberInput'">
@@ -129,7 +130,8 @@
 					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value"
-							       ng-change="patientListCondition(listCondition)"/>&nbsp;Check / Uncheck</label>
+							       ng-change="patientListCondition(listCondition)"
+							       ng-checked="listCondition.value"/>&nbsp;Check / Uncheck</label>
 					</td>
 					<td ng-show="listCondition.inputType == 'conceptInput'"
 					    ng-class="{'not-valid': listCondition.invalidEntry === true}">
@@ -171,9 +173,8 @@
 					<td>
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
-							<option ng-repeat="orderingField in orderingFields track by orderingField.field"
-							        value="{{orderingField.field}}"
-							        ng-selected="orderingField.field == listOrdering.field">{{orderingField.field}}</option>
+							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
+							        ng-selected="field.field == listCondition.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
