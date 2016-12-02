@@ -22,13 +22,13 @@ public class PatientListLookupDatatypeResourceController {
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
 	public SimpleObject get(
-	        @RequestParam(value = "datatype") String datatype,
+	        @RequestParam(value = "type") String type,
 	        @RequestParam(value = "uuid", required = false) String uuid,
 	        @RequestParam(required = false, value = "id") Integer id) {
 
 		SimpleObject results = new SimpleObject();
 
-		if (StringUtils.equalsIgnoreCase(datatype, "concept")) {
+		if (StringUtils.equalsIgnoreCase(type, "concept")) {
 			if (StringUtils.isNotEmpty(uuid)) {
 				Concept concept = Context.getConceptService().getConceptByUuid(uuid);
 				if (concept != null) {
@@ -42,7 +42,7 @@ public class PatientListLookupDatatypeResourceController {
 					results.put("name", concept.getName().getName());
 				}
 			}
-		} else if (StringUtils.equalsIgnoreCase(datatype, "location")) {
+		} else if (StringUtils.equalsIgnoreCase(type, "location")) {
 			if (StringUtils.isNotEmpty(uuid)) {
 				Location location = Context.getLocationService().getLocationByUuid(uuid);
 				if (location != null) {
