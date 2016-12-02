@@ -118,7 +118,8 @@
 						${ui.includeFragment("uicommons", "field/datetimepicker", [
 								label        : "",
 								useTime      : false,
-								formFieldName: 'patientConditionDatePicker'
+								formFieldName: 'patientConditionDatePicker',
+								model        : 'listConditionValue'
 								])}
 					</td>
 					<td ng-show="listCondition.inputType == 'numberInput'">

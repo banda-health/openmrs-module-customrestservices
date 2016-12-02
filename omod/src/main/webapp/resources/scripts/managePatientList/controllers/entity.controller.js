@@ -58,8 +58,6 @@
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
 
-				$scope.selectConcept = self.selectConcept;
-
 				if($scope.entity !== undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
@@ -87,6 +85,10 @@
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
+					}
+					
+					if (listCondition.dataType == "org.openmrs.Location") {
+						self.selectLocation(listCondition);
 					}
 				};
 
@@ -116,10 +118,10 @@
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
 					} else if(datatype == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
+						listCondition.dataType = "org.openmrs.Location";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 					} else if(datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
-						
 					} else if(datatype == "java.lang.Integer") {
 						listCondition.inputType = "numberInput";
 					} else {
@@ -282,10 +284,17 @@
 		 */
 		self.selectConcept = self.selectConcept || function(concept, listCondition) {
 				PatientListRestfulService.getConceptId(concept.uuid, function(data) {
-					listCondition.value = concept;
+					listCondition.value = concept.display;
 					listCondition.valueRef = data["id"];
 				});
-			}
+			};
+		
+		self.selectLocation = self.selectLocation || function(listCondition) {
+				console.log(listCondition);
+				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
+					listCondition.valueRef = data["id"];
+				});
+			};
 
 		self.getConceptName = self.getConceptName || function(id, onConceptNameSuccessfulCallback) {
 				PatientListRestfulService.getConceptUuid(id, onConceptNameSuccessfulCallback);
@@ -351,6 +360,9 @@
 						if(patientListCondition[r]['valueRef'] != undefined) {
 							patientListCondition[r]['value'] = patientListCondition[r]['valueRef'];
 							delete patientListCondition[r]['valueRef'];
+						}
+						if (patientListCondition[r]['dataType'] != undefined){
+							delete patientListCondition[r]['dataType']
 						}
 					}
 				}
