@@ -102,7 +102,7 @@
 							<option value="NOT DEFINED">Not Defined</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType == 'textInput'">
+					<td ng-show="listCondition.inputType == 'textInput' || listCondition.inputType == undefined">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
@@ -201,7 +201,7 @@
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<textarea name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate"
+						<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
 						          class="form-control"
 							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
 						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"

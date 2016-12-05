@@ -65,12 +65,18 @@
 						listCondition.valueRef = listCondition.value;
 						listConditionModel.setValue(data["name"]);
 					});
-					
 				} else if (listCondition.inputType == "checkBoxInput") {
 					if (listCondition.value == "false") {
 						listConditionModel.setValue(false);
 					} else {
 						listConditionModel.setValue(true);
+					}
+				} else if (listCondition.inputType == "dropDownInput") {
+					if (listCondition.field != "p.gender") {
+						$scope.getLocationUuid(listCondition.value, function (data) {
+							listCondition.valueRef = listCondition.value;
+							listConditionModel.setValue(data["uuid"]);
+						});
 					}
 				}
 				
@@ -78,6 +84,7 @@
 				listConditionModel.setInputType(listCondition.inputType);
 				listConditionModel.setId(listCondition.field + "_" + listCondition.value);
 				populatedListConditions.push(listConditionModel);
+				populatedListConditions.push(new PatientListConditionModel());
 				
 				$scope.listConditon= listConditionModel;
 			}
@@ -90,6 +97,7 @@
 				listOrderingModel.setSelected(true);
 				listOrderingModel.setId(listOrdering.field + "_" + listOrdering.value);
 				populatedListOrdering.push(listOrderingModel);
+				populatedListOrdering.push(new PatientListOrderingModel());
 				
 				$scope.listOrdering= listOrderingModel;
 			}
