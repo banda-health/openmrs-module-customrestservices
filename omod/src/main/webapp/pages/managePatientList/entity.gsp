@@ -174,7 +174,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listCondition.field">{{field.field}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>

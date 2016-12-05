@@ -52,7 +52,6 @@
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
 				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
-
 				// auto-complete search concept function
 				$scope.searchConcepts = function(search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
@@ -153,14 +152,6 @@
 				} else {
 					$scope.listOrderings[index] = newPatientListSortOrder;
 				}
-
-				/*
-				 * This loop is to remove any stock that had the actualQuantity updated and before saving changed again to either a value
-				 * equal to null or a value equal to the quantity
-				 * */
-				for(var i = 0; i < $scope.listOrderings.length; i++) {
-					$scope.listOrderings[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.listOrderings, $scope.listOrderings[i].id);
-				}
 			};
 
 		self.getNewPatientListCondition = self.getNewPatientListCondition || function(newPatientListCondition) {
@@ -170,22 +161,16 @@
 				} else {
 					$scope.listConditions[index] = newPatientListCondition;
 				}
-
-				/*
-				 * This loop is to remove any stock that had the actualQuantity updated and before saving changed again to either a value
-				 * equal to null or a value equal to the quantity
-				 * */
-				for(var i = 0; i < $scope.listConditions.length; i++) {
-					$scope.listConditions[i].conditionOrder = EntityFunctions.findIndexByKeyValue($scope.listConditions, $scope.listConditions[i].id);
-				}
 			};
 
 		self.addExistingListConditions = self.addExistingListConditions || function() {
 				PatientListFunctions.populateExistingPatientListCondition($scope.entity.patientListConditions, $scope.listConditions, $scope);
+				self.addListCondition();
 			};
 
 		self.addExistingListOrdering = self.addExistingListOrdering || function() {
 				PatientListFunctions.populateExistingPatientListOrdering($scope.entity.ordering, $scope.listOrderings, $scope);
+				self.addListOrdering();
 			};
 
 		self.addListCondition = self.addListCondition || function() {
@@ -377,6 +362,8 @@
 						}
 					}
 				}
+				
+				console.log(patientListCondition.conditionOrder);
 
 				if($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;

@@ -84,7 +84,7 @@
 				listConditionModel.setInputType(listCondition.inputType);
 				listConditionModel.setId(listCondition.field + "_" + listCondition.value);
 				populatedListConditions.push(listConditionModel);
-				populatedListConditions.push(new PatientListConditionModel());
+				//populatedListConditions.push(new PatientListConditionModel());
 				
 				$scope.listConditon= listConditionModel;
 			}
@@ -97,7 +97,7 @@
 				listOrderingModel.setSelected(true);
 				listOrderingModel.setId(listOrdering.field + "_" + listOrdering.value);
 				populatedListOrdering.push(listOrderingModel);
-				populatedListOrdering.push(new PatientListOrderingModel());
+				//populatedListOrdering.push(new PatientListOrderingModel());
 				
 				$scope.listOrdering= listOrderingModel;
 			}
