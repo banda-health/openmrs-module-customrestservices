@@ -1,6 +1,5 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.patientlist.api.model.PatientInformationField;
@@ -29,11 +28,10 @@ public class PatientListFieldsResourceController {
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
-	public SimpleObject get(@RequestParam(value = "template", required = false) String template) {
+	public SimpleObject get(@RequestParam(value = "template", required = false) Boolean template) {
 		SimpleObject results = new SimpleObject();
-		if (StringUtils.equalsIgnoreCase(template, "header")) {
+		if (template) {
 			results.put("headerTemplate", PatientListTemplate.getInstance().getDefaultHeaderTemplate());
-		} else if (StringUtils.equalsIgnoreCase(template, "body")) {
 			results.put("bodyTemplate", PatientListTemplate.getInstance().getDefaultBodyTemplate());
 		} else {
 			List<SimpleObject> fields = new ArrayList<SimpleObject>();

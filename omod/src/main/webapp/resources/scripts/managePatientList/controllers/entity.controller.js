@@ -58,16 +58,20 @@
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
 
-				if($scope.entity !== undefined) {
+				if($scope.entity != undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
 						self.addExistingListOrdering();
 					} else {
 						self.addListOrdering();
 					}
+					self.livePreview($scope.entity.headerTemplate, $scope.entity.bodyTemplate);
+					self.renderTemplate($scope.entity.headerTemplate);
+					self.renderTemplate($scope.entity.bodyTemplate);
 				} else {
 					self.addListCondition();
 					self.addListOrdering();
+					PatientListRestfulService.preLoadDefaultDisplayTemplate(self.onPreLoadDefaultDisplayTemplateSuccessful);
 				}
 
 				$scope.patientListSortOrder = function(listOrdering) {
@@ -118,8 +122,8 @@
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
 					} else if(datatype == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
-						listCondition.dataType = "org.openmrs.Location";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
+						listCondition.dataType = "org.openmrs.Location";
 					} else if(datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
 					} else if(datatype == "java.lang.Integer") {
@@ -139,6 +143,7 @@
 
 				$scope.selectConcept = self.selectConcept;
 				$scope.getConceptName = self.getConceptName;
+				$scope.getLocationUuid = self.getLocationUuid
 			};
 
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function(newPatientListSortOrder) {
@@ -258,14 +263,16 @@
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
 				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
-
-				$scope.orderingFields = data.results;
-				for(var i = 0; i < $scope.orderingFields.length; i++) {
-					if($scope.orderingFields[i].desc.prefix === "v.attr" || $scope.orderingFields[i].desc.prefix === "p.attr") {
-						$scope.orderingFields.splice(i, 1);
-					}
-				}
-				$scope.orderingFields = $filter('orderBy')($scope.orderingFields, 'desc.name');
+			};
+		
+		// call-back functions.
+		self.onPreLoadDefaultDisplayTemplateSuccessful = self.onPreLoadDefaultDisplayTemplateSuccessful || function (data) {
+				$scope.entity.headerTemplate = data.headerTemplate;
+				$scope.entity.bodyTemplate = data.bodyTemplate;
+				
+				self.livePreview(data.headerTemplate, data.bodyTemplate);
+				self.renderTemplate(data.headerTemplate);
+				self.renderTemplate(data.bodyTemplate);
 			};
 
 		// call-back functions.
@@ -289,6 +296,10 @@
 				});
 			};
 		
+		self.getConceptName = self.getConceptName || function(id, onGetConceptNameSuccessfulCallback) {
+				PatientListRestfulService.getConceptName(id, onGetConceptNameSuccessfulCallback);
+			};
+		
 		self.selectLocation = self.selectLocation || function(listCondition) {
 				console.log(listCondition);
 				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
@@ -296,8 +307,8 @@
 				});
 			};
 
-		self.getConceptName = self.getConceptName || function(id, onConceptNameSuccessfulCallback) {
-				PatientListRestfulService.getConceptUuid(id, onConceptNameSuccessfulCallback);
+		self.getLocationUuid = self.getLocationUuid || function(id, onGetLocationUuidSuccessfulCallback) {
+				PatientListRestfulService.getLocationUuid(id, onGetLocationUuidSuccessfulCallback);
 			};
 
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
