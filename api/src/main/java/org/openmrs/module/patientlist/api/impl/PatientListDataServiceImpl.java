@@ -413,6 +413,16 @@ public class PatientListDataServiceImpl extends
 				hql.append(mappingFieldName);
 				hql.append(" ");
 				if (!handleSpecialFields) {
+					// flip sort order for birthdate/age
+					if (StringUtils.equalsIgnoreCase(mappingFieldName, "p.birthdate")) {
+						String sortOrder = order.getSortOrder();
+						if (StringUtils.equalsIgnoreCase(sortOrder, "asc")) {
+							order.setSortOrder("desc");
+						} else {
+							order.setSortOrder("asc");
+						}
+					}
+
 					hql.append(order.getSortOrder());
 				}
 

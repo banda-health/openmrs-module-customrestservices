@@ -156,7 +156,7 @@ public class PatientInformation {
 			public Object apply(Visit visit) {
 				return visit.getVisitType().getName();
 			}
-		}, VISIT_PREFIX + ".visitType");
+		}, VISIT_PREFIX + ".visitType.name");
 
 		addField(tempFields, VISIT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
 			@Override
