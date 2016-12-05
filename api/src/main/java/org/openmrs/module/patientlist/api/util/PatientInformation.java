@@ -116,7 +116,7 @@ public class PatientInformation {
 			public Object apply(Patient patient) {
 				return (patient.getGivenName() + " " + patient.getFamilyName()).trim();
 			}
-		}, null);
+		}, PATIENT_PREFIX + ".names.fullName");
 
 		addField(tempFields, PATIENT_PREFIX, "identifier", String.class, new Func1<Patient, Object>() {
 			@Override

@@ -313,21 +313,34 @@ public class PatientListDataServiceImpl extends
 
 		if (searchField != null) {
 			if (StringUtils.contains(mappingFieldName, "p.names.")) {
-				hql.append("pnames.");
-				hql.append(searchField);
-				hql.append(" ");
+				if (StringUtils.contains(condition.getField(), "p.fullName")) {
+					hql.append(" (pnames.givenName ");
+					hql.append(operator);
+					hql.append(" ? or pnames.familyName ");
+					hql.append(operator);
+					hql.append(" ");
+					hql.append(" ?) ");
+					paramValues.add(value);
+				} else {
+					hql.append("pnames.");
+					hql.append(searchField);
+					hql.append(" ");
+					hql.append(operator);
+					hql.append(" ? ");
+				}
 			} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
 				hql.append("paddresses.");
 				hql.append(searchField);
 				hql.append(" ");
+				hql.append(operator);
+				hql.append(" ? ");
 			} else if (StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 				hql.append("pidentifiers.");
 				hql.append(searchField);
 				hql.append(" ");
+				hql.append(operator);
+				hql.append(" ? ");
 			}
-
-			hql.append(operator);
-			hql.append(" ? ");
 
 			if (StringUtils.equals(operator, "LIKE")) {
 				paramValues.add("%" + value + "%");
@@ -349,6 +362,7 @@ public class PatientListDataServiceImpl extends
 	private String applyPatientListOrdering(List<PatientListOrder> ordering) {
 		int count = 0;
 		StringBuilder hql = new StringBuilder();
+		boolean handleSpecialFields = false;
 		for (PatientListOrder order : ordering) {
 			if (order != null) {
 				PatientInformationField field = PatientInformation.getInstance().
@@ -372,7 +386,14 @@ public class PatientListDataServiceImpl extends
 
 				// aliases
 				if (StringUtils.contains(mappingFieldName, "p.names.")) {
-					mappingFieldName = "pnames." + mappingFieldName.split("\\.")[2];
+					if (StringUtils.contains(mappingFieldName, "p.names.fullName")) {
+						mappingFieldName = "pnames.givenName " + order.getSortOrder()
+						        + ", pnames.familyName " + order.getSortOrder();
+						handleSpecialFields = true;
+
+					} else {
+						mappingFieldName = "pnames." + mappingFieldName.split("\\.")[2];
+					}
 				} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
 					mappingFieldName = "paddresses." + mappingFieldName.split("\\.")[2];
 				} else if (StringUtils.contains(mappingFieldName, "p.identifiers.")) {
@@ -391,7 +412,10 @@ public class PatientListDataServiceImpl extends
 
 				hql.append(mappingFieldName);
 				hql.append(" ");
-				hql.append(order.getSortOrder());
+				if (!handleSpecialFields) {
+					hql.append(order.getSortOrder());
+				}
+
 				hql.append(",");
 			}
 		}
