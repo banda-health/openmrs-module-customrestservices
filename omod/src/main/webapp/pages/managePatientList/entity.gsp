@@ -102,7 +102,7 @@
 							<option value="NOT DEFINED">Not Defined</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType == 'textInput' || listCondition.inputType == undefined">
+					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
@@ -174,7 +174,7 @@
 						<select class="form-control" ng-model="listOrdering.field">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
-							        ng-selected="field.field == listCondition.field">{{field.field}}</option>
+							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>
 						</select>
 					</td>
 					<td>
