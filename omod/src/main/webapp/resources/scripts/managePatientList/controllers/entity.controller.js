@@ -65,6 +65,9 @@
 					} else {
 						self.addListOrdering();
 					}
+					self.livePreview($scope.entity.headerTemplate, $scope.entity.bodyTemplate);
+					self.renderTemplate($scope.entity.headerTemplate);
+					self.renderTemplate($scope.entity.bodyTemplate);
 				} else {
 					self.addListCondition();
 					self.addListOrdering();
