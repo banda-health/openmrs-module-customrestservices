@@ -102,7 +102,7 @@
 							<option value="NOT DEFINED">Not Defined</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType == 'textInput' || listCondition.inputType == undefined">
+					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-blur="patientListCondition(listCondition)"/>
