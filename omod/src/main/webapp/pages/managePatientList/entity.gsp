@@ -201,7 +201,7 @@
 						<span>${ui.message("patientlist.display.template.header.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<textarea name="entityHeaderTemplater" type="text" ng-model="entity.headerTemplate"
+						<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
 						          class="form-control"
 							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
 						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"

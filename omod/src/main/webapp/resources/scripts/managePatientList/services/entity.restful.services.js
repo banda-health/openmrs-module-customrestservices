@@ -33,6 +33,7 @@
 			getConceptName: getConceptName,
 			getLocationId: getLocationId,
 			getLocationUuid: getLocationUuid,
+			preLoadDefaultDisplayTemplate: preLoadDefaultDisplayTemplate
 		};
 		
 		return service;
@@ -87,8 +88,19 @@
 		function loadFields(onLoadFieldsSuccessful) {
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'fields';
+			requestParams['template'] = false;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadFieldsSuccessful,
+				errorCallback
+			);
+		}
+		
+		function preLoadDefaultDisplayTemplate(onPreLoadDefaultDisplayTemplateSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = 'fields';
+			requestParams['template'] = true;
+			EntityRestFactory.loadEntities(requestParams,
+				onPreLoadDefaultDisplayTemplateSuccessful,
 				errorCallback
 			);
 		}

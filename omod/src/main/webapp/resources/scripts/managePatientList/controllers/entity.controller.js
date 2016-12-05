@@ -58,7 +58,7 @@
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
 
-				if($scope.entity !== undefined) {
+				if($scope.entity != undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
 						self.addExistingListOrdering();
@@ -68,6 +68,7 @@
 				} else {
 					self.addListCondition();
 					self.addListOrdering();
+					PatientListRestfulService.preLoadDefaultDisplayTemplate(self.onPreLoadDefaultDisplayTemplateSuccessful);
 				}
 
 				$scope.patientListSortOrder = function(listOrdering) {
@@ -259,14 +260,16 @@
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
 				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
-
-				$scope.orderingFields = data.results;
-				for(var i = 0; i < $scope.orderingFields.length; i++) {
-					if($scope.orderingFields[i].desc.prefix === "v.attr" || $scope.orderingFields[i].desc.prefix === "p.attr") {
-						$scope.orderingFields.splice(i, 1);
-					}
-				}
-				$scope.orderingFields = $filter('orderBy')($scope.orderingFields, 'desc.name');
+			};
+		
+		// call-back functions.
+		self.onPreLoadDefaultDisplayTemplateSuccessful = self.onPreLoadDefaultDisplayTemplateSuccessful || function (data) {
+				$scope.entity.headerTemplate = data.headerTemplate;
+				$scope.entity.bodyTemplate = data.bodyTemplate;
+				
+				self.livePreview(data.headerTemplate, data.bodyTemplate);
+				self.renderTemplate(data.headerTemplate);
+				self.renderTemplate(data.bodyTemplate);
 			};
 
 		// call-back functions.
