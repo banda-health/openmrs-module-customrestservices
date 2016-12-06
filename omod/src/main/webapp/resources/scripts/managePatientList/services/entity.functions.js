@@ -47,7 +47,7 @@
 				var listCondition = listConditions[i];
 				
 				var listConditionModel = new PatientListConditionModel(listCondition.field, listCondition.operator,
-					listCondition.value, listCondition.inputType, listCondition.conditionOrder);
+					listCondition.value, listCondition.inputType, listCondition.conditionOrder, listCondition.valueRef);
 				listConditionModel.setSelected(true);
 				
 				for (var r = 0; r < $scope.fields.length; r++) {
@@ -58,11 +58,14 @@
 						$scope.valueInputConditions(datatype, listCondition);
 					}
 				}
+				
+				console.log(listCondition.inputType);
+				
 				if (listCondition.inputType == "dateInput") {
 					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
 				} else if (listCondition.inputType == "conceptInput") {
 					$scope.getConceptName(listCondition.value, function (data) {
-						listCondition.valueRef = listCondition.value;
+						listConditionModel.setValueRef(listCondition.value);
 						listConditionModel.setValue(data["name"]);
 					});
 				} else if (listCondition.inputType == "checkBoxInput") {
@@ -72,20 +75,22 @@
 						listConditionModel.setValue(true);
 					}
 				} else if (listCondition.inputType == "dropDownInput") {
+					console.log(listCondition.field);
 					if (listCondition.field != "p.gender") {
 						$scope.getLocationUuid(listCondition.value, function (data) {
-							listCondition.valueRef = listCondition.value;
+							console.log(data);
+							listConditionModel.setValueRef(listCondition.value);
 							listConditionModel.setValue(data["uuid"]);
 						});
 					}
 				}
-				
 				
 				listConditionModel.setInputType(listCondition.inputType);
 				listConditionModel.setId(listCondition.field + "_" + listCondition.value);
 				populatedListConditions.push(listConditionModel);
 				
 				$scope.listConditon= listConditionModel;
+				console.log($scope.listConditon);
 			}
 		}
 		

@@ -20,7 +20,7 @@
 
 	function PatientListConditionModel() {
 
-		function PatientListConditionModel(field, operator, value, inputType, conditionOrder,id) {
+		function PatientListConditionModel(field, operator, value, inputType, conditionOrder,id, valueRef) {
 			this.field = field;
 			this.operator = operator;
 			this.value = value;
@@ -28,6 +28,7 @@
 			this.conditionOrder = conditionOrder;
 			this.inputType = inputType;
 			this.id = id;
+			this.valueRef = valueRef;
 		}
 
 		PatientListConditionModel.prototype = {
@@ -70,6 +71,14 @@
 
 			setValue: function(value) {
 				this.value = value;
+			},
+			
+			getValueRef: function() {
+				return this.valueRef;
+			},
+			
+			setValueRef: function(valueRef) {
+				this.valueRef = valueRef;
 			},
 			
 			getConditionOrder: function() {

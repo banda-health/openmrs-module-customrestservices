@@ -56,7 +56,7 @@
 				$scope.searchConcepts = function(search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
-
+				
 				if($scope.entity != undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
@@ -70,6 +70,9 @@
 				} else {
 					self.addListCondition();
 					self.addListOrdering();
+				}
+				
+				if (uuid == undefined) {
 					PatientListRestfulService.preLoadDefaultDisplayTemplate(self.onPreLoadDefaultDisplayTemplateSuccessful);
 				}
 
@@ -252,12 +255,12 @@
 		
 		// call-back functions.
 		self.onPreLoadDefaultDisplayTemplateSuccessful = self.onPreLoadDefaultDisplayTemplateSuccessful || function (data) {
-				$scope.entity.headerTemplate = data.headerTemplate;
-				$scope.entity.bodyTemplate = data.bodyTemplate;
-				
-				self.livePreview(data.headerTemplate, data.bodyTemplate);
-				self.renderTemplate(data.headerTemplate);
-				self.renderTemplate(data.bodyTemplate);
+					$scope.entity.headerTemplate = data.headerTemplate;
+					$scope.entity.bodyTemplate = data.bodyTemplate;
+					
+					self.livePreview(data.headerTemplate, data.bodyTemplate);
+					self.renderTemplate(data.headerTemplate);
+					self.renderTemplate(data.bodyTemplate);
 			};
 
 		// call-back functions.
@@ -339,6 +342,8 @@
 				}
 
 				var patientListCondition = $scope.listConditions;
+				console.log($scope.listConditions);
+				
 				for(var r = 0; r < patientListCondition.length; r++) {
 					delete patientListCondition[r]['$$hashKey'];
 					delete patientListCondition[r]['id'];
@@ -354,17 +359,16 @@
 						delete patientListCondition[r]['selected'];
 						patientListCondition[r]['conditionOrder'] = r;
 						if(patientListCondition[r]['valueRef'] != undefined) {
+							console.log("I am herere ")
 							patientListCondition[r]['value'] = patientListCondition[r]['valueRef'];
 							delete patientListCondition[r]['valueRef'];
 						}
 						if (patientListCondition[r]['dataType'] != undefined){
-							delete patientListCondition[r]['dataType']
+							delete patientListCondition[r]['dataType'];
 						}
 					}
 				}
 				
-				console.log(patientListCondition.conditionOrder);
-
 				if($scope.listConditions.length != 0) {
 					$scope.entity.ordering = sortOrder;
 					$scope.entity.patientListConditions = patientListCondition;
