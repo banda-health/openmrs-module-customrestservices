@@ -97,9 +97,9 @@
 							<option value="LIKE">Like</option>
 							<option value="BETWEEN">Between</option>
 							<option value="NULL">Empty</option>
-							<option value="NOT NULL">Not Empty</option>
+							<option value="NOT_NULL">Not Empty</option>
 							<option value="DEFINED">Defined</option>
-							<option value="NOT DEFINED">Not Defined</option>
+							<option value="NOT_DEFINED">Not Defined</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
