@@ -105,6 +105,7 @@
 					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
+						       ng-enter="patientListCondition(listCondition)"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="listCondition.inputType == 'dropDownInput'">
@@ -125,12 +126,14 @@
 					<td ng-show="listCondition.inputType == 'numberInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
+							   ng-enter="patientListCondition(listCondition)"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value"
 							       ng-change="patientListCondition(listCondition)"
+								   ng-enter="patientListCondition(listCondition)"
 							       ng-checked="listCondition.value"/>&nbsp;Check / Uncheck</label>
 					</td>
 					<td ng-show="listCondition.inputType == 'conceptInput'"
