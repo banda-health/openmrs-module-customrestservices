@@ -316,6 +316,7 @@
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function() {
 				if(!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
 					$scope.submitted = true;
+					emr.errorAlert('Name required');
 					return false;
 				}
 
@@ -326,51 +327,66 @@
 					$scope.entity.bodyTemplate = null;
 				}
 
-				var sortOrder = $scope.listOrderings;
-				for(var i = 0; i < sortOrder.length; i++) {
-					delete sortOrder[i]['$$hashKey'];
-					delete sortOrder[i]['id'];
-					if(sortOrder[i].selected == false) {
-						sortOrder.splice(i, 1);
-					} else {
-						delete sortOrder[i]['selected'];
-						sortOrder[i]['conditionOrder'] = i;
-					}
-				}
-
-				var patientListCondition = $scope.listConditions;
-				for(var r = 0; r < patientListCondition.length; r++) {
-					delete patientListCondition[r]['$$hashKey'];
-					delete patientListCondition[r]['id'];
-					delete patientListCondition[r]['checkBoxInput'];
-					delete patientListCondition[r]['textInput'];
-					delete patientListCondition[r]['dropdownInput'];
-					delete patientListCondition[r]['numberInput'];
-					delete patientListCondition[r]['dateInput'];
-					delete patientListCondition[r]['inputType'];
-					if(patientListCondition[r].selected == false) {
-						patientListCondition.splice(r, 1);
-					} else {
-						delete patientListCondition[r]['selected'];
-						patientListCondition[r]['conditionOrder'] = r;
-						if(patientListCondition[r]['valueRef'] != undefined) {
-							patientListCondition[r]['value'] = patientListCondition[r]['valueRef'];
-							delete patientListCondition[r]['valueRef'];
-						}
-						if (patientListCondition[r]['dataType'] != undefined){
-							delete patientListCondition[r]['dataType']
-						}
-					}
-				}
-				
-				console.log(patientListCondition.conditionOrder);
-
-				if($scope.listConditions.length != 0) {
-					$scope.entity.ordering = sortOrder;
-					$scope.entity.patientListConditions = patientListCondition;
-					$scope.loading = true;
-				} else {
+				if($scope.listConditions.length == 1) {
+					emr.errorAlert('You are required to input at least one patient list condition');
 					return false;
+				} else {
+					var patientListConditions = [];
+					for(var r = 0; r < $scope.listConditions.length; r++) {
+						var patientListCondition = $scope.listConditions[r];
+						if(patientListCondition.selected == false){
+							continue;
+						} else {
+							var requestCondition = {};
+
+							if(patientListCondition.field === "") {
+								emr.errorAlert("Condition field required ");
+								return false;
+							}
+
+							if(patientListCondition.operator === "") {
+								emr.errorAlert("Condition operator required ");
+								return false;
+							}
+
+							requestCondition['field'] = patientListCondition.field;
+							requestCondition['conditionOrder'] = r;
+							requestCondition['operator'] = patientListCondition.operator;
+							requestCondition['value'] = patientListCondition.value;
+							if(patientListCondition.valueRef !== undefined) {
+								requestCondition['value'] = patientListCondition.valueRef;
+							}
+
+							patientListConditions.push(requestCondition);
+						}
+					}
+
+					var ordering = [];
+					for(var i = 0; i < $scope.listOrderings.length; i++) {
+						var sortOrder = {};
+						if($scope.listOrderings[i].selected == false) {
+							continue;
+						}
+
+						if($scope.listOrderings[i].field === "") {
+							emr.errorAlert("Sort Order field required ");
+							return false;
+						}
+
+						if($scope.listOrderings[i].sortOrder === "") {
+							emr.errorAlert("Input sort order for field " + $scope.listOrderings[i].field);
+							return false;
+						}
+
+						sortOrder.conditionOrder = i;
+						sortOrder.field = $scope.listOrderings[i].field;
+						sortOrder.sortOrder = $scope.listOrderings[i].sortOrder;
+						ordering.push(sortOrder);
+					}
+
+					$scope.entity.ordering = ordering;
+					$scope.entity.patientListConditions = patientListConditions;
+					$scope.loading = true;
 				}
 
 				return true;
