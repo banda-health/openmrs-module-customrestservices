@@ -46,63 +46,61 @@
 			for (var i = 0; i < listConditions.length; i++) {
 				var listCondition = listConditions[i];
 				
-				var listConditionModel = new PatientListConditionModel(listCondition.field, listCondition.operator,
-					listCondition.value, listCondition.inputType, listCondition.conditionOrder, listCondition.valueRef);
-				listConditionModel.setSelected(true);
-				
-				for (var r = 0; r < $scope.fields.length; r++) {
-					var datatype = null;
-					if ($scope.fields[r].field == listCondition.field) {
-						
-						datatype = $scope.fields[r].desc.dataType;
-						$scope.valueInputConditions(datatype, listCondition);
+				if (listCondition !== null) {
+					var listConditionModel = new PatientListConditionModel(listCondition.field, listCondition.operator,
+						listCondition.value, listCondition.inputType, listCondition.conditionOrder);
+					listConditionModel.setSelected(true);
+					
+					for (var r = 0; r < $scope.fields.length; r++) {
+						var datatype = null;
+						if ($scope.fields[r].field == listCondition.field) {
+							
+							datatype = $scope.fields[r].desc.dataType;
+							$scope.valueInputConditions(datatype, listCondition);
+						}
 					}
-				}
-				
-				console.log(listCondition.inputType);
-				
-				if (listCondition.inputType == "dateInput") {
-					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
-				} else if (listCondition.inputType == "conceptInput") {
-					$scope.getConceptName(listCondition.value, function (data) {
-						listConditionModel.setValueRef(listCondition.value);
-						listConditionModel.setValue(data["name"]);
-					});
-				} else if (listCondition.inputType == "checkBoxInput") {
-					if (listCondition.value == "false") {
-						listConditionModel.setValue(false);
-					} else {
-						listConditionModel.setValue(true);
-					}
-				} else if (listCondition.inputType == "dropDownInput") {
-					console.log(listCondition.field);
-					if (listCondition.field != "p.gender") {
-						$scope.getLocationUuid(listCondition.value, function (data) {
-							console.log(data);
-							listConditionModel.setValueRef(listCondition.value);
-							listConditionModel.setValue(data["uuid"]);
+					if (listCondition.inputType == "dateInput") {
+						onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
+					} else if (listCondition.inputType == "conceptInput") {
+						$scope.getConceptName(listCondition.value, function (data) {
+							listCondition.valueRef = listCondition.value;
+							listConditionModel.setValue(data["name"]);
 						});
+					} else if (listCondition.inputType == "checkBoxInput") {
+						if (listCondition.value == "false") {
+							listConditionModel.setValue(false);
+						} else {
+							listConditionModel.setValue(true);
+						}
+					} else if (listCondition.inputType == "dropDownInput") {
+						if (listCondition.field != "p.gender") {
+							$scope.getLocationUuid(listCondition.value, function (data) {
+								listCondition.valueRef = listCondition.value;
+								listConditionModel.setValue(data["uuid"]);
+							});
+						}
 					}
+					
+					listConditionModel.setInputType(listCondition.inputType);
+					listConditionModel.setId(listCondition.field + "_" + listCondition.value);
+					populatedListConditions.push(listConditionModel);
+					
+					$scope.listConditon = listConditionModel;
 				}
-				
-				listConditionModel.setInputType(listCondition.inputType);
-				listConditionModel.setId(listCondition.field + "_" + listCondition.value);
-				populatedListConditions.push(listConditionModel);
-				
-				$scope.listConditon= listConditionModel;
-				console.log($scope.listConditon);
 			}
 		}
 		
 		function populateExistingPatientListOrdering(listOrderings, populatedListOrdering, $scope) {
 			for (var i = 0; i < listOrderings.length; i++) {
 				var listOrdering = listOrderings[i];
-				var listOrderingModel = new PatientListOrderingModel(listOrdering.field, listOrdering.sortOrder);
-				listOrderingModel.setSelected(true);
-				listOrderingModel.setId(listOrdering.field + "_" + listOrdering.value);
-				populatedListOrdering.push(listOrderingModel);
-				
-				$scope.listOrdering= listOrderingModel;
+				if (listOrdering !== null) {
+					var listOrderingModel = new PatientListOrderingModel(listOrdering.field, listOrdering.sortOrder);
+					listOrderingModel.setSelected(true);
+					listOrderingModel.setId(listOrdering.field + "_" + listOrdering.value);
+					populatedListOrdering.push(listOrderingModel);
+					
+					$scope.listOrdering = listOrderingModel;
+				}
 			}
 		}
 		

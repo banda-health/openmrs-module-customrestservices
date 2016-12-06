@@ -20,7 +20,7 @@
 				autoclose: true,
 				pickerPosition: "bottom-left",
 				todayHighlight: false,
-				format: "yyyy-MM-dd"
+				format: "dd M yyyy"
 			});
 		});
 	});
@@ -99,7 +99,7 @@
 							<option value="NULL">Empty</option>
 							<option value="NOT_NULL">Not Empty</option>
 							<option value="DEFINED">Defined</option>
-							<option value="NOT DEFINED">Not Defined</option>
+							<option value="NOT_DEFINED">Not Defined</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
