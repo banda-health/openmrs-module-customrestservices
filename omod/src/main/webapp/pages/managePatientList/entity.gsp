@@ -96,8 +96,8 @@
 							<option value="LTE"> <= </option>
 							<option value="LIKE">Like</option>
 							<option value="BETWEEN">Between</option>
-							<option value="NULL">Empty</option>
-							<option value="NOT_NULL">Not Empty</option>
+							<option value="NULL">Null</option>
+							<option value="NOT_NULL">Not Null</option>
 							<option value="DEFINED">Defined</option>
 							<option value="NOT_DEFINED">Not Defined</option>
 						</select>

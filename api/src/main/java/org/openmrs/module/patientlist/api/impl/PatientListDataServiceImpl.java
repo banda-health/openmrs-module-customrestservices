@@ -9,7 +9,6 @@ import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
-import org.openmrs.module.openhmis.commons.api.entity.model.BaseSerializableOpenmrsMetadata;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientInformationField;
 import org.openmrs.module.patientlist.api.model.PatientListData;
@@ -22,10 +21,10 @@ import org.openmrs.module.patientlist.api.util.PatientInformation;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Data service implementation class for {@link PatientListData}'s.
@@ -197,12 +196,14 @@ public class PatientListDataServiceImpl extends
 						}
 
 						hql.append(operator);
-						hql.append(" ? ");
 
-						int age = Integer.valueOf(condition.getValue());
-						Calendar calendar = Calendar.getInstance();
-						calendar.add(Calendar.YEAR, -age);
-						paramValues.add(sdf.parse(sdf.format(calendar.getTime())));
+						if (!StringUtils.containsIgnoreCase(operator, "null")) {
+							hql.append(" ? ");
+							int age = Integer.valueOf(condition.getValue());
+							Calendar calendar = Calendar.getInstance();
+							calendar.add(Calendar.YEAR, -age);
+							paramValues.add(sdf.parse(sdf.format(calendar.getTime())));
+						}
 					} catch (ParseException pex) {
 						LOG.error("error parsing date: ", pex);
 					}
@@ -218,26 +219,28 @@ public class PatientListDataServiceImpl extends
 					hql.append(" ");
 					if (StringUtils.isNotEmpty(condition.getValue())) {
 						String value = condition.getValue();
-						hql.append("?");
-						if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
-							try {
-								// BETWEEN dates should be separated by |
-								if (StringUtils.contains(value, "|")) {
-									String[] dates = StringUtils.split(value, "|");
-									paramValues.add(sdf.parse(dates[0]));
-									paramValues.add(sdf.parse(dates[1]));
-									hql.append(" AND ? ");
-								} else {
-									paramValues.add(sdf.parse(value));
+						if (!StringUtils.containsIgnoreCase(operator, "null")) {
+							hql.append("?");
+							if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
+								try {
+									// BETWEEN dates should be separated by |
+									if (StringUtils.contains(value, "|")) {
+										String[] dates = StringUtils.split(value, "|");
+										paramValues.add(sdf.parse(dates[0]));
+										paramValues.add(sdf.parse(dates[1]));
+										hql.append(" AND ? ");
+									} else {
+										paramValues.add(sdf.parse(value));
+									}
+								} catch (ParseException pex) {
+									paramValues.add(value);
 								}
-							} catch (ParseException pex) {
-								paramValues.add(value);
-							}
-						} else {
-							if (StringUtils.equals(operator, "LIKE")) {
-								paramValues.add("%" + value + "%");
 							} else {
-								paramValues.add(value);
+								if (StringUtils.equals(operator, "LIKE")) {
+									paramValues.add("%" + value + "%");
+								} else {
+									paramValues.add(value);
+								}
 							}
 						}
 					}
@@ -268,22 +271,37 @@ public class PatientListDataServiceImpl extends
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
 			hql.append("(attrType.name = ?");
 			hql.append(" AND ");
-			hql.append("attr.value ");
+			if (StringUtils.equalsIgnoreCase(operator, "exists")) {
+				hql.append("attr is not null");
+			} else if (StringUtils.equalsIgnoreCase(operator, "not exists")) {
+				hql.append("attr is null");
+			} else {
+				hql.append("attr.value ");
+				hql.append(operator);
+			}
 		} else if (StringUtils.contains(condition.getField(), "v.attr.")) {
 			hql.append("(vattrType.name = ?");
 			hql.append(" AND ");
-			hql.append("vattr.valueReference ");
+			if (StringUtils.equalsIgnoreCase(operator, "exists")) {
+				hql.append("vattr is not null");
+			} else if (StringUtils.equalsIgnoreCase(operator, "not exists")) {
+				hql.append("vattr is null");
+			} else {
+				hql.append("vattr.valueReference ");
+				hql.append(operator);
+			}
 		}
-
-		hql.append(operator);
-		hql.append(" ? ");
 
 		paramValues.add(attributeName);
 
-		if (StringUtils.equals(operator, "LIKE")) {
-			paramValues.add("%" + value + "%");
-		} else {
-			paramValues.add(value);
+		if (!StringUtils.containsIgnoreCase(operator, "null")
+		        && !StringUtils.containsIgnoreCase(operator, "exists")) {
+			hql.append(" ? ");
+			if (StringUtils.equals(operator, "LIKE")) {
+				paramValues.add("%" + value + "%");
+			} else {
+				paramValues.add(value);
+			}
 		}
 
 		hql.append(") ");
@@ -316,35 +334,49 @@ public class PatientListDataServiceImpl extends
 				if (StringUtils.contains(condition.getField(), "p.fullName")) {
 					hql.append(" (pnames.givenName ");
 					hql.append(operator);
-					hql.append(" ? or pnames.familyName ");
+					if (!StringUtils.containsIgnoreCase(operator, "null")) {
+						hql.append(" ? ");
+					}
+
+					hql.append(" or pnames.familyName ");
 					hql.append(operator);
 					hql.append(" ");
-					hql.append(" ?) ");
-					paramValues.add(value);
+					if (!StringUtils.containsIgnoreCase(operator, "null")) {
+						hql.append(" ? ");
+						paramValues.add(value);
+					}
+
+					hql.append(" ) ");
 				} else {
 					hql.append("pnames.");
 					hql.append(searchField);
 					hql.append(" ");
 					hql.append(operator);
-					hql.append(" ? ");
+					if (!StringUtils.containsIgnoreCase(operator, "null")) {
+						hql.append(" ? ");
+					}
 				}
 			} else if (StringUtils.contains(mappingFieldName, "p.addresses.")) {
 				hql.append("paddresses.");
 				hql.append(searchField);
 				hql.append(" ");
 				hql.append(operator);
-				hql.append(" ? ");
+				if (!StringUtils.containsIgnoreCase(operator, "null")) {
+					hql.append(" ? ");
+				}
 			} else if (StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 				hql.append("pidentifiers.");
 				hql.append(searchField);
 				hql.append(" ");
 				hql.append(operator);
-				hql.append(" ? ");
+				if (!StringUtils.containsIgnoreCase(operator, "null")) {
+					hql.append(" ? ");
+				}
 			}
 
 			if (StringUtils.equals(operator, "LIKE")) {
 				paramValues.add("%" + value + "%");
-			} else {
+			} else if (!StringUtils.containsIgnoreCase(operator, "null")) {
 				paramValues.add(value);
 			}
 
