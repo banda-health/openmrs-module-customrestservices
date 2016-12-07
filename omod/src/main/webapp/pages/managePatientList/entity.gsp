@@ -206,6 +206,7 @@
 					<div class="col-md-7">
 						<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
 						          class="form-control"
+								  ng-model-options="{ debounce: 1000 }"
 							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
 						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
 						          cols="50"></textarea>
@@ -220,8 +221,11 @@
 						<span>${ui.message("patientlist.display.template.body.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
-						          cols="50" class="form-control" ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)">
+						<textarea ng-model="entity.bodyTemplate"
+								  placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
+						          cols="50" class="form-control"
+								  ng-model-options="{ debounce: 1000 }"
+								  ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)">
 						</textarea>
 					</div>
 				</div>
