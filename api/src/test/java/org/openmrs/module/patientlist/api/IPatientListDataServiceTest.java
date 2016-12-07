@@ -10,6 +10,8 @@ public class IPatientListDataServiceTest extends IMetadataDataServiceTest<IPatie
 	public void before() throws Exception {
 		super.before();
 		executeDataSet(PATIENT_LIST_DATASET);
+		executeDataSet(TestConstants.CORE_DATASET);
+
 	}
 
 	@Override
