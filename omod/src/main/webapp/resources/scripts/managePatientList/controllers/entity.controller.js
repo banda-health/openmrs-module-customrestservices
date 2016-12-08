@@ -19,13 +19,13 @@
 	base.controller("EntityController", EntityController);
 	EntityController.$inject = ['$stateParams', '$injector', '$scope', '$filter', 'EntityRestFactory', 'PatientListModel',
 		'PatientListConditionModel', 'PatientListFunctions', 'EntityFunctions', 'PatientListRestfulService', 'PatientListOrderingModel',
-		'$timeout', '$sce'];
+		'$sce'];
 
 	var ENTITY_NAME = "list";
 
 	function EntityController($stateParams, $injector, $scope, $filter, EntityRestFactory, PatientListModel,
 	                          PatientListConditionModel, PatientListFunctions, EntityFunctions, PatientListRestfulService,
-	                          PatientListOrderingModel, $timeout, $sce) {
+	                          PatientListOrderingModel, $sce) {
 		var self = this;
 
 		var entity_name_message_key = "patientlist.page";
@@ -237,12 +237,8 @@
 			};
 
 		self.livePreview = self.livePreview || function(headerTemplate, bodyTemplate) {
-				// render every 3 seconds
-				$timeout(function() {
-					PatientListRestfulService.livePreview(
-						headerTemplate, bodyTemplate, self.onLivePreviewSuccessful
-					)
-				}, 3000);
+				PatientListRestfulService.livePreview(headerTemplate,
+					bodyTemplate, self.onLivePreviewSuccessful);
 			}
 
 		self.renderTemplate = self.renderTemplate || function(template) {

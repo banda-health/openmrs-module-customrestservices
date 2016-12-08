@@ -105,7 +105,8 @@
 					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="patientListCondition(listCondition)"/>
+						       ng-enter="patientListCondition(listCondition)"
+						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="listCondition.inputType == 'dropDownInput'">
 						<select class="form-control" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)" ng-change="patientListCondition(listCondition)">
@@ -124,14 +125,14 @@
 					</td>
 					<td ng-show="listCondition.inputType == 'numberInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
-						       class="form-control input-md" type="text" ng-model="listCondition.value"
-						       ng-blur="patientListCondition(listCondition)" ng-enter="patientListCondition(listCondition)"/>
+						       class="form-control input-md" type="text" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)"
+						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
 					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value"
-							       ng-change="patientListCondition(listCondition)"
-							       ng-checked="listCondition.value" ng-enter="patientListCondition(listCondition)"/>&nbsp;Check / Uncheck</label>
+							       ng-change="patientListCondition(listCondition)" ng-enter="patientListCondition(listCondition)"
+							       ng-checked="listCondition.value"/>&nbsp;Check / Uncheck</label>
 					</td>
 					<td ng-show="listCondition.inputType == 'conceptInput'"
 					    ng-class="{'not-valid': listCondition.invalidEntry === true}">
@@ -203,6 +204,7 @@
 					<div class="col-md-7">
 						<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
 						          class="form-control"
+								  ng-model-options="{ debounce: 1000 }"
 							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
 						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
 						          cols="50"></textarea>
@@ -217,8 +219,11 @@
 						<span>${ui.message("patientlist.display.template.body.label")}</span>
 					</div>
 					<div class="col-md-7">
-						<textarea ng-model="entity.bodyTemplate" placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
-						          cols="50" class="form-control" ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)">
+						<textarea ng-model="entity.bodyTemplate"
+								  placeholder="${ui.message("patientlist.display.template.body.label")}" rows="10"
+						          cols="50" class="form-control"
+								  ng-model-options="{ debounce: 1000 }"
+								  ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)">
 						</textarea>
 					</div>
 				</div>
