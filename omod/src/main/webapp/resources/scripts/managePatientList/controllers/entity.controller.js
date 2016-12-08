@@ -145,7 +145,8 @@
 
 				$scope.selectConcept = self.selectConcept;
 				$scope.getConceptName = self.getConceptName;
-				$scope.getLocationUuid = self.getLocationUuid
+				$scope.getLocationUuid = self.getLocationUuid;
+				$scope.addListCondition = self.addListCondition;
 			};
 
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function(newPatientListSortOrder) {
@@ -168,7 +169,6 @@
 
 		self.addExistingListConditions = self.addExistingListConditions || function() {
 				PatientListFunctions.populateExistingPatientListCondition($scope.entity.patientListConditions, $scope.listConditions, $scope);
-				self.addListCondition();
 			};
 
 		self.addExistingListOrdering = self.addExistingListOrdering || function() {
@@ -188,6 +188,8 @@
 				if(addListCondition) {
 					var listCondition = new PatientListConditionModel('', '', '', 'textInput');
 					$scope.listConditions.push(listCondition);
+					
+					console.log($scope.listConditions);
 				}
 			};
 
@@ -292,6 +294,7 @@
 				console.log(listCondition);
 				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
 					listCondition.valueRef = data["id"];
+					console.log(listCondition.valueRef);
 				});
 			};
 
@@ -357,6 +360,7 @@
 							requestCondition['operator'] = patientListCondition.operator;
 							requestCondition['value'] = patientListCondition.value;
 							if(patientListCondition.valueRef !== undefined) {
+								console.log("I am here ")
 								requestCondition['value'] = patientListCondition.valueRef;
 							}
 							
