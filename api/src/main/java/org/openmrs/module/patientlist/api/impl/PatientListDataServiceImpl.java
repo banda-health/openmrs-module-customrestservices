@@ -102,7 +102,8 @@ public class PatientListDataServiceImpl extends
 	private String constructHqlQuery(PatientList patientList, List<Object> paramValues) {
 		StringBuilder hql = new StringBuilder();
 		if (patientList != null && patientList.getPatientListConditions() != null) {
-			if (searchField(patientList.getPatientListConditions(), "v.")) {
+			if (searchField(patientList.getPatientListConditions(), "v.")
+			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit")) {
 				// join visit and patient tables
 				hql.append("select v from Visit v inner join v.patient as p ");
 			} else {
@@ -174,7 +175,12 @@ public class PatientListDataServiceImpl extends
 			++count;
 			if (condition != null && PatientInformation.getInstance().getField(condition.getField()) != null) {
 				String join = " AND ";
-				String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
+				String operator = "";
+				if (condition.getOperator() != null) {
+					operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
+					;
+				}
+
 				PatientInformationField patientInformationField =
 				        PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();

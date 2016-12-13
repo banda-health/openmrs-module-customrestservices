@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("patientlist.admin.patientList") ])
+    ui.decorateWith("appui", "standardEmrPage", [ title: ui.message("patientlist.page") ])
 
     /* load stylesheets */
     ui.includeCss("openhmis.commons", "bootstrap.css")
