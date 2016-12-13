@@ -24,10 +24,14 @@
         </li>
     </ul>
 
-    <div class="main-content">
-        <table class="manage-entities-table">
+    <div class="main-content" >
+        <div ng-show="fetchedEntities.length == 0 && loaded == true" class="empty-patient-list">
+            ${ui.message('patientlist.list.empty')}
+        </div>
+
+        <table class="manage-entities-table" ng-show="fetchedEntities.length > 0">
             <tr class="clickable-tr" pagination-id="__patientListData"
-                dir-paginate="entity in patientListData | itemsPerPage: limit"
+                dir-paginate="entity in fetchedEntities | itemsPerPage: limit"
                 total-items="totalNumOfResults" current-page="patientList.currentPage">
 
                 <td>
@@ -69,7 +73,6 @@
             </tr>
         </table>
         ${ui.includeFragment("openhmis.commons", "paginationFragment", [
-                hide              : "totalNumOfResults === 0",
                 paginationId      : "__patientListData",
                 onPageChange      : "getPatientListData(patientList, patientList.currentPage, limit)",
                 onChange          : "getPatientListData(patientList, patientList.currentPage, limit)",

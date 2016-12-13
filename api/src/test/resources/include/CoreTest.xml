@@ -26,19 +26,19 @@
 	<location location_id="0" name="Test Location 0 " creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="ef93c695-ac43-450a-93f8-4b2b4d50a3c8"/>
 	<location location_id="1" name="Test Location 2" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="FF8081813D91C2DA013D91C3D8040001"/>
 	<patient patient_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false"/>
-	<patient_identifier patient_identifier_id="0" patient_id="0" identifier="Test 1234" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+	<patient_identifier patient_identifier_id="0" patient_id="0" identifier="10000" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
 	<patient_identifier_type patient_identifier_type_id="0" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2005-01-01 00:00:00.0" required="false" retired="false" uuid="0cbecb62-7249-4f91-8edf-d0206ecceb63"/>
 
 	<patient patient_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false"/>
-	<patient_identifier patient_identifier_id="0" patient_id="0" identifier="Test 2345" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0000"/>
+	<patient_identifier patient_identifier_id="0" patient_id="0" identifier="10001" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0000"/>
 	<patient_identifier_type patient_identifier_type_id="0" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2005-01-01 00:00:00.0" required="false" retired="false" uuid="4028814B3A0CDF3A013A0CDF73C40003"/>
 
 	<patient patient_id="1" creator="1" date_created="2005-01-01 00:00:00.0" voided="false"/>
-	<patient_identifier patient_identifier_id="1" patient_id="0" identifier="Test 23" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0001"/>
+	<patient_identifier patient_identifier_id="1" patient_id="0" identifier="10002" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0001"/>
 	<patient_identifier_type patient_identifier_type_id="1" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2005-01-01 00:00:00.0" required="false" retired="false" uuid="4028814B3A0CDF3A013A0CDF73C40005"/>
 
 	<patient patient_id="2" creator="1" date_created="2005-01-01 00:00:00.0" voided="false"/>
-	<patient_identifier patient_identifier_id="2" patient_id="2" identifier="Test 45" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0002"/>
+	<patient_identifier patient_identifier_id="2" patient_id="2" identifier="10003" identifier_type="1" preferred="1" location_id="0" creator="1" date_created="2005-01-01 00:00:00.0" voided="false" uuid="4028814B3A0CDF3A013A0CDF3A3D0002"/>
 	<patient_identifier_type patient_identifier_type_id="2" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2005-01-01 00:00:00.0" required="false" retired="false" uuid="4028814B3A0CDF3A013A0CDF73C40006"/>
 
 	<person_attribute_type person_attribute_type_id="0" name="Phone" format="java.lang.String" foreign_key="0" retired="0" searchable="0" sort_weight="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4038814B3A0CDF3A013A0CDF73C40006"/>
@@ -52,6 +52,8 @@
 	<person_attribute person_attribute_id="3" person_id="3" value="Nairobi" person_attribute_type_id="2" voided="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4438814B3A0CDF3A013A0CDF73C40006"/>
 	<person_attribute person_attribute_id="4" person_id="0" value="N/A" person_attribute_type_id="3" voided="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4538814B3A0CDF3A013A0CDF73C40006"/>
 	<person_attribute person_attribute_id="5" person_id="5" value="809800000" person_attribute_type_id="0" voided="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4638814B3A0CDF3A013A0CDF73C40006"/>
+	<person_attribute person_attribute_id="6" person_id="7" value="none" person_attribute_type_id="3" voided="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4638814B3A0CDF3A013A0CDF73C40007"/>
+	<person_attribute person_attribute_id="7" person_id="7" value="Nairobi" person_attribute_type_id="2" voided="0" creator="1" date_created="2005-01-01 00:00:00.0" uuid="4638814B3A0CDF3A013A0CDF73C40008"/>
 
 	<visit_type visit_type_id="0" name="Outpatient" creator="1" date_created="2016-10-01 00:00:00.0" retired="false" uuid="ef8081813DD43016013DD43016B44568" />
 	<visit_type visit_type_id="1" name="Facility" creator="1" date_created="2016-10-01 00:00:00.0" retired="false" uuid="ef8081813DD43016013DD43016B44579" />

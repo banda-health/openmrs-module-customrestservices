@@ -6,13 +6,13 @@ import org.junit.Test;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
-import org.openmrs.logic.op.Operator;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.model.*;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
@@ -205,28 +205,261 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
-	public void patientList_shouldCreateListWithMultiplePersonAttributes() throws Exception {}
+	public void patientList_shouldCreateListWithMultiplePersonAttributes() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(10);
+		Assert.assertEquals("p.attr.State", condition.getField());
+
+		PatientListCondition condition2 = conditions.get(11);
+		Assert.assertEquals("p.attr.City", condition2.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+		patientList.getPatientListConditions().add(condition2);
+
+		Assert.assertEquals(2, patientList.getPatientListConditions().size());
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet =
+		        patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreateListWithSingleVisitDetail() throws Exception {}
+	public void patientList_shouldCreateListWithSingleVisitDetail() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(12);
+
+		Assert.assertEquals("v.startDate", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreateListWithSingleVisitAttribute() throws Exception {}
+	public void patientList_shouldCreateListWithSingleVisitAttribute() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(13);
+		Assert.assertEquals("v.attr.First Visit", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(1, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreateListWithMultipleVisitAttributes() throws Exception {}
+	public void patientList_shouldCreateListWithMultipleVisitAttributes() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(13);
+		Assert.assertEquals("v.attr.First Visit", condition.getField());
+
+		PatientListCondition condition2 = conditions.get(14);
+		Assert.assertEquals("v.attr.Admission Date", condition2.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+		patientList.getPatientListConditions().add(condition2);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithSingleConditionSingleSortOrder() throws Exception {}
+	public void patientList_shouldCreatePatientListWithSingleConditionSingleSortOrder() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(15);
+		Assert.assertEquals("v.attr.First Visit", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PatientListOrder order = new PatientListOrder();
+		order.setId(1);
+		order.setSortOrder("asc");
+		order.setField("v.startDate");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+		String startDate =
+		        new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
+		Assert.assertEquals("2016-06-27", startDate);
+
+		// order by desc
+		patientList.getOrdering().get(0).setSortOrder("desc");
+		patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+		startDate =
+		        new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
+		Assert.assertEquals("2016-11-01", startDate);
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithMultipleConditionsSingleSortOrder() throws Exception {}
+	public void patientList_shouldCreatePatientListWithMultipleConditionsSingleSortOrder() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition givenNameCondition = conditions.get(0);
+		PatientListCondition ageCondition = conditions.get(16);
+
+		Assert.assertEquals("p.givenName", givenNameCondition.getField());
+		Assert.assertEquals("p.age", ageCondition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(givenNameCondition);
+		patientList.getPatientListConditions().add(ageCondition);
+
+		PatientListOrder order = new PatientListOrder();
+		order.setId(1);
+		order.setSortOrder("asc");
+		order.setField("p.age");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
+
+		// change ordering
+		patientList.getOrdering().get(0).setSortOrder("desc");
+		patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithSingleConditionMultipleSortOrder() throws Exception {}
+	public void patientList_shouldCreatePatientListWithSingleConditionMultipleSortOrder() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(12);
+
+		Assert.assertEquals("v.startDate", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PatientListOrder order = new PatientListOrder();
+		order.setId(1);
+		order.setSortOrder("desc");
+		order.setField("p.age");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		order = new PatientListOrder();
+		order.setId(2);
+		order.setSortOrder("desc");
+		order.setField("p.identifier");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+
+		patientList.getOrdering().get(1).setSortOrder("asc");
+		patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithMultipleConditionsMultipleSortOrder() throws Exception {}
+	public void patientList_shouldCreatePatientListWithMultipleConditionsMultipleSortOrder() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition givenNameCondition = conditions.get(0);
+		PatientListCondition ageCondition = conditions.get(16);
+
+		Assert.assertEquals("p.givenName", givenNameCondition.getField());
+		Assert.assertEquals("p.age", ageCondition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(givenNameCondition);
+		patientList.getPatientListConditions().add(ageCondition);
+
+		PatientListOrder order = new PatientListOrder();
+		order.setId(1);
+		order.setSortOrder("desc");
+		order.setField("p.age");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		order = new PatientListOrder();
+		order.setId(2);
+		order.setSortOrder("asc");
+		order.setField("p.givenName");
+		order.setPatientList(patientList);
+		patientList.getOrdering().add(order);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("Mike", patientListDataSet.get(0).getPatient().getGivenName());
+
+		// change ordering
+		patientList.getOrdering().get(1).setSortOrder("desc");
+		patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("Jennifer", patientListDataSet.get(0).getPatient().getGivenName());
+
+	}
 
 	@Test
 	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}

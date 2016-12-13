@@ -130,13 +130,6 @@ public class PatientInformation {
 			}
 		}, PATIENT_PREFIX + ".identifiers.identifier");
 
-		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
-			@Override
-			public Object apply(Visit visit) {
-				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
-			}
-		}, null);
-
 		// And so on for each patient field
 
 		List<PersonAttributeType> personAttributeTypes = Context.getPersonService().getAllPersonAttributeTypes();
@@ -165,6 +158,12 @@ public class PatientInformation {
 			}
 		}, VISIT_PREFIX + ".visitType.name");
 
+		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+			@Override
+			public Object apply(Visit visit) {
+				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
+			}
+		}, null);
 		// And so on for each visit field
 
 		List<VisitAttributeType> visitAttributeTypes = Context.getVisitService().getAllVisitAttributeTypes();
