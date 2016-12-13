@@ -462,6 +462,25 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
+	public void patientList_shouldCheckActiveVisits() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(17);
+
+		Assert.assertEquals("p.hasActiveVisit", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(7, patientListDataSet.size());
+	}
+
+	@Test
 	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}
 
 	@Test

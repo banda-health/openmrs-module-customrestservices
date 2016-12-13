@@ -38,4 +38,6 @@
                             operator="EQUALS" value="false" condition_order="15" uuid="4028814B39B565A20139B95FB3440019" />
     <patient_list_condition patient_list_condition_id="16" patient_list_id="0" field="p.age"
                             operator="GTE" value="20" condition_order="16" uuid="4028814B39B565A20139B95FB3440020" />
+    <patient_list_condition patient_list_condition_id="17" patient_list_id="0" field="p.hasActiveVisit" condition_order="17"
+                            uuid="4028814B39B565A20139B95FB3440021" />
 </dataset>
