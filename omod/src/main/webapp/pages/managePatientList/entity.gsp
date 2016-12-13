@@ -86,36 +86,45 @@
 						</select>
 					</td>
 					<td style="width:20% ">
-						<select class="form-control" ng-model="listCondition.operator" ng-enter="patientListCondition(listCondition)">
+						<select class="form-control" ng-model="listCondition.operator" ng-enter="patientListCondition(listCondition)" ng-disabled="listCondition.field == 'p.hasActiveVisit'">
 							<option value="">--Select Operator--</option>
-							<option value="EQUALS"> = </option>
-							<option value="NOT_EQUALS"> != </option>
-							<option value="GT"> > </option>
-							<option value="LT"> < </option>
-							<option value="GTE"> >= </option>
-							<option value="LTE"> <= </option>
-							<option value="LIKE">Like</option>
-							<option value="BETWEEN">Between</option>
-							<option value="NULL">Null</option>
-							<option value="NOT_NULL">Not Null</option>
-							<option value="DEFINED">Defined</option>
-							<option value="NOT_DEFINED">Not Defined</option>
+							<option
+							        value="EQUALS">=</option>
+							<option
+							        value="NOT_EQUALS">!=</option>
+							<option ng-hide="listCondition.inputType == 'textInput'"
+							        value="GT">></option>
+							<option ng-hide="listCondition.inputType == 'textInput'"
+							        value="LT"><</option>
+							<option ng-hide="listCondition.inputType == 'textInput'"
+							        value="GTE">>=</option>
+							<option ng-hide="listCondition.inputType == 'textInput'"
+							        value="LTE"><=</option>
+							<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
+							<option ng-show="listCondition.inputType == 'numberInput'" value="BETWEEN">Between</option>
+							<option ng-show="listCondition.inputType == 'numberInput' || listCondition.inputType == 'textInput'"
+							        value="NULL">Null</option>
+							<option ng-show="listCondition.inputType == 'numberInput' || listCondition.inputType == 'textInput'"
+							        value="NOT_NULL">Not Null</option>
+							<option ng-show="listCondition.inputType == 'numberInput'" value="DEFINED">Defined</option>
+							<option ng-show="listCondition.inputType == 'numberInput'"
+							        value="NOT_DEFINED">Not Defined</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-enter="patientListCondition(listCondition)"
-						       ng-blur="patientListCondition(listCondition)"/>
+						       ng-blur="patientListCondition(listCondition)" ng-disabled="listCondition.field == 'p.hasActiveVisit'"/>
 					</td>
 					<td ng-show="listCondition.inputType == 'dropDownInput'">
-						<select class="form-control" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)" ng-change="patientListCondition(listCondition)">
+						<select ng-disabled="listCondition.field == 'p.hasActiveVisit'" class="form-control" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)" ng-change="patientListCondition(listCondition)">
 							<option value="">--Select Value--</option>
 							<option ng-repeat="dropDownEntry in dropDownEntries" value="{{dropDownEntry.value}}"
 							        ng-selected="dropDownEntry.value == listCondition.value">{{dropDownEntry.display}}</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType =='dateInput'">
+					<td ng-show="listCondition.inputType =='dateInput'" ng-disabled="listCondition.field == 'p.hasActiveVisit'">
 						${ui.includeFragment("uicommons", "field/datetimepicker", [
 								label        : "",
 								useTime      : false,
@@ -124,17 +133,17 @@
 								])}
 					</td>
 					<td ng-show="listCondition.inputType == 'numberInput'">
-						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
+						<input ng-disabled="listCondition.field == 'p.hasActiveVisit'" name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="listCondition.inputType == 'checkBoxInput'">
+					<td ng-disabled="listCondition.field == 'p.hasActiveVisit'" ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-model="listCondition.value"
 							       ng-change="patientListCondition(listCondition)" ng-enter="patientListCondition(listCondition)"
 							       ng-checked="listCondition.value"/>&nbsp;Check / Uncheck</label>
 					</td>
-					<td ng-show="listCondition.inputType == 'conceptInput'"
+					<td ng-disabled="listCondition.field == 'p.hasActiveVisit'" ng-show="listCondition.inputType == 'conceptInput'"
 					    ng-class="{'not-valid': listCondition.invalidEntry === true}">
 						${ui.includeFragment("openhmis.commons", "searchFragment", [
 								typeahead        : ["concept.display for concept in searchConcepts(\$viewValue)"],

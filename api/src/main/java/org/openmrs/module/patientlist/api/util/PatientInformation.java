@@ -130,11 +130,18 @@ public class PatientInformation {
 			}
 		}, PATIENT_PREFIX + ".identifiers.identifier");
 
+		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+			@Override
+			public Object apply(Visit visit) {
+				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
+			}
+		}, null);
+
 		// And so on for each patient field
 
 		List<PersonAttributeType> personAttributeTypes = Context.getPersonService().getAllPersonAttributeTypes();
 		for (PersonAttributeType attributeType : personAttributeTypes) {
-			addPatientAttributeField(tempFields, "p." + ATTRIBUTE_PREFIX, attributeType, null);
+			addPatientAttributeField(tempFields, PATIENT_PREFIX + "." + ATTRIBUTE_PREFIX, attributeType, null);
 		}
 
 		addField(tempFields, VISIT_PREFIX, "startDate", Date.class, new Func1<Visit, Object>() {
@@ -157,13 +164,6 @@ public class PatientInformation {
 				return visit.getVisitType().getName();
 			}
 		}, VISIT_PREFIX + ".visitType.name");
-
-		addField(tempFields, VISIT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
-			@Override
-			public Object apply(Visit visit) {
-				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
-			}
-		}, null);
 
 		// And so on for each visit field
 

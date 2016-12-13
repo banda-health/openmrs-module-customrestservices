@@ -90,10 +90,8 @@
 					populatedListConditions.push(listConditionModel);
 					
 					$scope.listConditions = populatedListConditions;
-					
 				}
 			}
-			$scope.addListCondition();
 		}
 		
 		function populateExistingPatientListOrdering(listOrderings, populatedListOrdering, $scope) {

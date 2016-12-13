@@ -184,7 +184,7 @@ public class PatientListDataServiceImpl extends
 				        || StringUtils.contains(mappingFieldName, "p.addresses.")
 				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
-				} else if (StringUtils.contains(condition.getField(), "v.hasActiveVisit")) {
+				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else if (StringUtils.contains(condition.getField(), "p.age")) {
 					try {

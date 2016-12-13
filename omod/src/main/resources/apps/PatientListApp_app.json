@@ -8,7 +8,7 @@
 				"id": "${project.parent.groupId}.${project.parent.artifactId}.managePatientListLink",
 				"extensionPointId": "systemAdministration.apps",
 				"type": "link",
-				"label": "Define Patient List",
+				"label": "Manage Patient List",
 				"url": "${project.parent.artifactId}/managePatientList/entities.page#/",
 				"icon": "icon-list-alt",
 				"requiredPrivilege": "Task: Manage Patient List Metadata",
