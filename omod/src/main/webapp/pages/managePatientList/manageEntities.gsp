@@ -7,7 +7,7 @@
 		},
 		{
 			label: "${ ui.message("patientlist.page")}",
-			link: '${ui.pageLink("patientlist", "patientListLanding")}'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page#/'
 		},
 		{label: "${ ui.message("patientlist.manage.label")}"}
 	];
@@ -59,7 +59,7 @@
 			
 			<div ng-show="fetchedEntities.length == 0">
 				<br/>
-				${ui.message('openhmis.commons.general.preSearchMessage')} - <b>{{searchField}}</b> - {{postSearchMessage}}
+				${ui.message('patientlist.lists.notFound')}
 				<br/><br/>
 				<span><input type="checkbox" ng-checked="includeRetired" ng-model="includeRetired"
 				             ng-change="updateContent()"></span>
