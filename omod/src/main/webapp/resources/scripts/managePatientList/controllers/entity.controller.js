@@ -56,7 +56,7 @@
 				$scope.searchConcepts = function(search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
 				};
-
+				
 				if($scope.entity != undefined) {
 					self.addExistingListConditions();
 					if($scope.entity.ordering.length > 0) {
@@ -70,6 +70,9 @@
 				} else {
 					self.addListCondition();
 					self.addListOrdering();
+				}
+				
+				if (uuid == undefined) {
 					PatientListRestfulService.preLoadDefaultDisplayTemplate(self.onPreLoadDefaultDisplayTemplateSuccessful);
 				}
 
@@ -83,13 +86,20 @@
 				};
 
 				$scope.patientListCondition = function(listCondition) {
-					if(listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
-						listCondition.id = listCondition.field + "_" + listCondition.value;
-						listCondition.selected = true;
+					if (listCondition != undefined || listCondition != null) {
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					}
-					
+					if (listCondition.field == "p.hasActiveVisit") {
+						listCondition.selected = true;
+						listCondition.value = null;
+						listCondition.operator = null;
+					} else {
+						if(listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
+							listCondition.id = listCondition.field + "_" + listCondition.value;
+							listCondition.selected = true;
+						}
+					}
 					if (listCondition.dataType == "org.openmrs.Location") {
 						self.selectLocation(listCondition);
 					}
@@ -105,6 +115,9 @@
 							datatype = $scope.fields[i].desc.dataType;
 							$scope.valueInputConditions(datatype, listCondition);
 						}
+					}
+					if (listCondition.field == "p.hasActiveVisit"){
+						$scope.patientListCondition(listCondition);
 					}
 				};
 
@@ -143,6 +156,7 @@
 				$scope.selectConcept = self.selectConcept;
 				$scope.getConceptName = self.getConceptName;
 				$scope.getLocationUuid = self.getLocationUuid;
+				$scope.addListCondition = self.addListCondition;
 				$scope.loadPreview = false;
 			};
 
@@ -250,12 +264,12 @@
 		
 		// call-back functions.
 		self.onPreLoadDefaultDisplayTemplateSuccessful = self.onPreLoadDefaultDisplayTemplateSuccessful || function (data) {
-				$scope.entity.headerTemplate = data.headerTemplate;
-				$scope.entity.bodyTemplate = data.bodyTemplate;
-				
-				self.livePreview(data.headerTemplate, data.bodyTemplate);
-				self.renderTemplate(data.headerTemplate);
-				self.renderTemplate(data.bodyTemplate);
+					$scope.entity.headerTemplate = data.headerTemplate;
+					$scope.entity.bodyTemplate = data.bodyTemplate;
+					
+					self.livePreview(data.headerTemplate, data.bodyTemplate);
+					self.renderTemplate(data.headerTemplate);
+					self.renderTemplate(data.bodyTemplate);
 			};
 
 		// call-back functions.
@@ -286,6 +300,7 @@
 		self.selectLocation = self.selectLocation || function(listCondition) {
 				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
 					listCondition.valueRef = data["id"];
+					console.log(listCondition.valueRef);
 				});
 			};
 
@@ -317,14 +332,14 @@
 					emr.errorAlert('Name required');
 					return false;
 				}
-
+				
 				if($scope.entity.headerTemplate === "" || !angular.isDefined($scope.entity.headerTemplate) || $scope.entity.headerTemplate == null) {
 					$scope.entity.headerTemplate = null;
 				}
 				if($scope.entity.bodyTemplate === "" || !angular.isDefined($scope.entity.bodyTemplate) || $scope.entity.bodyTemplate == null) {
 					$scope.entity.bodyTemplate = null;
 				}
-
+				
 				if($scope.listConditions.length == 1) {
 					emr.errorAlert('You are required to input at least one patient list condition');
 					return false;
@@ -336,17 +351,19 @@
 							continue;
 						} else {
 							var requestCondition = {};
-
-							if(patientListCondition.field === "") {
-								emr.errorAlert("Condition field required ");
-								return false;
+							
+							if (patientListCondition.field != "p.hasActiveVisit") {
+								if(patientListCondition.field === "") {
+									emr.errorAlert("Condition field required ");
+									return false;
+								}
+								
+								if(patientListCondition.operator === "") {
+									emr.errorAlert("Condition operator required ");
+									return false;
+								}
 							}
-
-							if(patientListCondition.operator === "") {
-								emr.errorAlert("Condition operator required ");
-								return false;
-							}
-
+							
 							requestCondition['field'] = patientListCondition.field;
 							requestCondition['conditionOrder'] = r;
 							requestCondition['operator'] = patientListCondition.operator;
@@ -354,42 +371,43 @@
 							if(patientListCondition.valueRef !== undefined) {
 								requestCondition['value'] = patientListCondition.valueRef;
 							}
-
+							
 							patientListConditions.push(requestCondition);
 						}
 					}
-
+					
 					var ordering = [];
 					for(var i = 0; i < $scope.listOrderings.length; i++) {
 						var sortOrder = {};
 						if($scope.listOrderings[i].selected == false) {
 							continue;
 						}
-
+						
 						if($scope.listOrderings[i].field === "") {
 							emr.errorAlert("Sort Order field required ");
 							return false;
 						}
-
+						
 						if($scope.listOrderings[i].sortOrder === "") {
 							emr.errorAlert("Input sort order for field " + $scope.listOrderings[i].field);
 							return false;
 						}
-
+						
 						sortOrder.conditionOrder = i;
 						sortOrder.field = $scope.listOrderings[i].field;
 						sortOrder.sortOrder = $scope.listOrderings[i].sortOrder;
 						ordering.push(sortOrder);
 					}
-
+					
 					$scope.entity.ordering = ordering;
 					$scope.entity.patientListConditions = patientListConditions;
 					$scope.loading = true;
 				}
-
+				
 				return true;
 			};
-
+		
+		
 		/* ENTRY POINT: Instantiate the base controller which loads the page */
 		$injector.invoke(base.GenericEntityController, self, {
 			$scope: $scope,

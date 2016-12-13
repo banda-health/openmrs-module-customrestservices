@@ -120,7 +120,7 @@
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'lookup';
 			requestParams['uuid'] = uuid;
-			requestParams['type'] = "Concept";
+			requestParams['type'] = "concept";
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptId,
 				errorCallback
@@ -131,7 +131,7 @@
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'lookup';
 			requestParams['id'] = id;
-			requestParams['type'] = "Concept";
+			requestParams['type'] = "concept";
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptName,
 				errorCallback
@@ -142,7 +142,7 @@
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'lookup';
 			requestParams['uuid'] = uuid;
-			requestParams['type'] = "Location";
+			requestParams['type'] = "location";
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadLocationId,
 				errorCallback
@@ -153,7 +153,7 @@
 			var requestParams = [];
 			requestParams['rest_entity_name'] = 'lookup';
 			requestParams['id'] = id;
-			requestParams['type'] = "Location";
+			requestParams['type'] = "location";
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadLocationUuid,
 				errorCallback

@@ -134,7 +134,7 @@ public class PatientInformation {
 
 		List<PersonAttributeType> personAttributeTypes = Context.getPersonService().getAllPersonAttributeTypes();
 		for (PersonAttributeType attributeType : personAttributeTypes) {
-			addPatientAttributeField(tempFields, "p." + ATTRIBUTE_PREFIX, attributeType, null);
+			addPatientAttributeField(tempFields, PATIENT_PREFIX + "." + ATTRIBUTE_PREFIX, attributeType, null);
 		}
 
 		addField(tempFields, VISIT_PREFIX, "startDate", Date.class, new Func1<Visit, Object>() {
@@ -164,7 +164,6 @@ public class PatientInformation {
 				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
 			}
 		}, null);
-
 		// And so on for each visit field
 
 		List<VisitAttributeType> visitAttributeTypes = Context.getVisitService().getAllVisitAttributeTypes();
