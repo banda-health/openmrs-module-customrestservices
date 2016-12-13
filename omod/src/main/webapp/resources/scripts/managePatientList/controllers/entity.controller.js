@@ -266,7 +266,7 @@
 		// call-back functions.
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function(data) {
 				$scope.fields = data.results;
-				$scope.fields = $filter('orderBy')($scope.fields, 'desc.name');
+				$scope.fields = $filter('orderBy')($scope.fields, 'field');
 			};
 		
 		// call-back functions.
