@@ -7,7 +7,7 @@
 		},
 		{
 			label: "${ ui.message("patientlist.page")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page#/'
+			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page##/'
 		},
 		{label: "${ ui.message("patientlist.define.label")}"}
 	];
