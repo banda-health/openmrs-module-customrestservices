@@ -178,7 +178,6 @@ public class PatientListDataServiceImpl extends
 				String operator = "";
 				if (condition.getOperator() != null) {
 					operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
-					;
 				}
 
 				PatientInformationField patientInformationField =
