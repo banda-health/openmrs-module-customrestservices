@@ -25,6 +25,11 @@
     </ul>
 
     <div class="main-content" >
+
+        <div ng-show="patientLists.length === 0" class="empty-patient-list">
+            ${ui.message('patientlist.list.none')}
+        </div>
+
         <div ng-show="fetchedEntities.length == 0 && loaded == true" class="empty-patient-list">
             ${ui.message('patientlist.list.empty')}
         </div>

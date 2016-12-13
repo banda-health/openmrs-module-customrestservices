@@ -19,6 +19,7 @@ import org.openmrs.module.openhmis.commons.api.f.Func1;
 import org.openmrs.module.patientlist.api.model.PatientInformationField;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +35,7 @@ public class PatientInformation {
 	public static final String PATIENT_PREFIX = "p";
 	public static final String VISIT_PREFIX = "v";
 	public static final String ATTRIBUTE_PREFIX = "attr";
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm a");
 
 	protected final Log LOG = LogFactory.getLog(this.getClass());
 
@@ -140,7 +142,12 @@ public class PatientInformation {
 		addField(tempFields, VISIT_PREFIX, "startDate", Date.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
-				return visit.getStartDatetime();
+				Date startDate = visit.getStartDatetime();
+				if (startDate != null) {
+					return sdf.format(startDate);
+				}
+
+				return null;
 			}
 		}, VISIT_PREFIX + ".startDatetime");
 

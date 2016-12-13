@@ -48,6 +48,7 @@
 				$scope.pagingFrom = PaginationService.pagingFrom;
 				$scope.pagingTo = PaginationService.pagingTo;
 				$scope.totalNumOfResults = 0;
+				$scope.fetchedEntities = [];
 
 				$scope.getPatientListData = self.getPatientListData;
 				self.getPatientLists();
