@@ -194,7 +194,9 @@
 						       title="${ui.message('patientlist.list.ordering.removeTitle')}"
 						       class="remove" ng-click="removeListOrdering(listOrdering)"></td>
 					<td>
-						<select class="form-control" ng-model="listOrdering.field" ng-enter="patientListSortOrder(listOrdering)">
+						<select class="form-control" ng-model="listOrdering.field"
+						        ng-enter="patientListSortOrder(listOrdering)"
+						        ng-change="patientListSortOrder(listOrdering)">
 							<option value="">--Select Field--</option>
 							<option ng-repeat="field in fields track by field.field" value="{{field.field}}"
 							        ng-selected="field.field == listOrdering.field">{{field.field}}</option>

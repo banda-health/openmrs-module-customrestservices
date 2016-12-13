@@ -77,7 +77,7 @@
 				}
 
 				$scope.patientListSortOrder = function(listOrdering) {
-					if(listOrdering.field != null && listOrdering.sortOrder != null) {
+					if(listOrdering.field != null) {
 						listOrdering.id = listOrdering.field + "_" + listOrdering.sortOrder;
 						listOrdering.selected = true;
 						self.getNewPatientListSortOrder(listOrdering);
@@ -407,8 +407,7 @@
 						}
 						
 						if($scope.listOrderings[i].sortOrder === "") {
-							emr.errorAlert("Input sort order for field " + $scope.listOrderings[i].field);
-							return false;
+							$scope.listOrderings[i].sortOrder = "asc";
 						}
 						
 						sortOrder.conditionOrder = i;
