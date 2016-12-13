@@ -102,6 +102,15 @@
 						self.selectLocation(listCondition);
 					}
 				};
+				
+				$scope.patientListConditionOperator = function (listCondition) {
+					if (listCondition.field != "" && listCondition.operator != "") {
+						listCondition.id = listCondition.field + "_" + listCondition.value;
+						listCondition.selected = true;
+						self.getNewPatientListCondition(listCondition);
+						self.addListCondition();
+					}
+				};
 
 				$scope.inputsValueChange = function(listCondition) {
 					if (listCondition.value != null) {
@@ -115,7 +124,6 @@
 						}
 					}
 					if (listCondition.field == "p.hasActiveVisit"){
-						console.log("I am here");
 						$scope.patientListCondition(listCondition);
 					}
 				};
@@ -123,7 +131,7 @@
 				$scope.valueInputConditions = function(datatype, listCondition) {
 					if(datatype == "java.lang.String") {
 						listCondition.inputType = "textInput";
-					} else if(datatype == "java.util.Date") {
+					} else if(datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
 						listCondition.inputType = "dateInput";
 						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
 					} else if(datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
@@ -357,13 +365,21 @@
 									return false;
 								}
 								
-								if(patientListCondition.operator === "") {
-									emr.errorAlert("Condition operator required ");
-									return false;
+								if (patientListCondition.operator != "NULL" || patientListCondition.operator != "NOT_NULL"
+									|| patientListCondition.operator != "DEFINED") {
+									if (patientListCondition.operator === "") {
+										emr.errorAlert("Condition operator required ");
+										return false;
+									}
+								} else {
+									patientListCondition.value = null;
+									
+									console.log("I am here tooo")
 								}
 							} else {
 								patientListCondition.value = null;
 								patientListCondition.operator = null;
+								console.log("I am here")
 							}
 							
 							requestCondition['field'] = patientListCondition.field;
