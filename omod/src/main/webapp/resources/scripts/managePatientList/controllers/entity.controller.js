@@ -86,18 +86,16 @@
 				};
 
 				$scope.patientListCondition = function(listCondition) {
-					if (listCondition != undefined || listCondition != null) {
-						self.getNewPatientListCondition(listCondition);
-						self.addListCondition();
-					}
 					if (listCondition.field == "p.hasActiveVisit") {
 						listCondition.selected = true;
-						listCondition.value = null;
-						listCondition.operator = null;
+						self.getNewPatientListCondition(listCondition);
+						self.addListCondition();
 					} else {
 						if(listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
 							listCondition.id = listCondition.field + "_" + listCondition.value;
 							listCondition.selected = true;
+							self.getNewPatientListCondition(listCondition);
+							self.addListCondition();
 						}
 					}
 					if (listCondition.dataType == "org.openmrs.Location") {
@@ -117,6 +115,7 @@
 						}
 					}
 					if (listCondition.field == "p.hasActiveVisit"){
+						console.log("I am here");
 						$scope.patientListCondition(listCondition);
 					}
 				};
@@ -362,6 +361,9 @@
 									emr.errorAlert("Condition operator required ");
 									return false;
 								}
+							} else {
+								patientListCondition.value = null;
+								patientListCondition.operator = null;
 							}
 							
 							requestCondition['field'] = patientListCondition.field;
