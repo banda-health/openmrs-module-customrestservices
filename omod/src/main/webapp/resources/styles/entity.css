@@ -17,8 +17,12 @@ ul.table-layout .gray-button{
 ul.table-layout{
   margin: 0px;
 }
-
-
+.live-preview{
+    margin: 445px;
+}
+.empty-patient-list{
+    margin: 200px;
+}
 .main-content .status-container{
   margin: 5px 6px !important;
 }

@@ -158,7 +158,7 @@ public class PatientInformation {
 			}
 		}, VISIT_PREFIX + ".visitType.name");
 
-		addField(tempFields, VISIT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
 				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;

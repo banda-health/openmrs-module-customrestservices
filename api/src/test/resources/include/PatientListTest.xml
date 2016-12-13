@@ -24,7 +24,18 @@
                             operator="GTE" value="50" condition_order="8" uuid="4028814B39B565A20139B95FB3440012" />
     <patient_list_condition patient_list_condition_id="9" patient_list_id="0" field="p.attr.Phone"
                             operator="EQUALS" value="809586457" condition_order="9" uuid="4028814B39B565A20139B95FB3440013" />
-
-    <patient_list_order patient_list_order_id="0" patient_list_id="0" field="p.fullName"
-                            sort_order="asc" condition_order="0" uuid="4028814B39B565A20139B95FB3440013" />
+    <patient_list_condition patient_list_condition_id="10" patient_list_id="0" field="p.attr.State"
+                            operator="EQUALS" value="none" condition_order="10" uuid="4028814B39B565A20139B95FB3440014" />
+    <patient_list_condition patient_list_condition_id="11" patient_list_id="0" field="p.attr.City"
+                            operator="EQUALS" value="Nairobi" condition_order="11" uuid="4028814B39B565A20139B95FB3440015" />
+    <patient_list_condition patient_list_condition_id="12" patient_list_id="0" field="v.startDate"
+                            operator="GTE" value="2016-10-01" condition_order="12" uuid="4028814B39B565A20139B95FB3440016" />
+    <patient_list_condition patient_list_condition_id="13" patient_list_id="0" field="v.attr.First Visit"
+                            operator="EQUALS" value="true" condition_order="13" uuid="4028814B39B565A20139B95FB3440017" />
+    <patient_list_condition patient_list_condition_id="14" patient_list_id="0" field="v.attr.Admission Date"
+                            operator="EQUALS" value="2016-10-03" condition_order="14" uuid="4028814B39B565A20139B95FB3440018" />
+    <patient_list_condition patient_list_condition_id="15" patient_list_id="0" field="v.attr.First Visit"
+                            operator="EQUALS" value="false" condition_order="15" uuid="4028814B39B565A20139B95FB3440019" />
+    <patient_list_condition patient_list_condition_id="16" patient_list_id="0" field="p.age"
+                            operator="GTE" value="20" condition_order="16" uuid="4028814B39B565A20139B95FB3440020" />
 </dataset>

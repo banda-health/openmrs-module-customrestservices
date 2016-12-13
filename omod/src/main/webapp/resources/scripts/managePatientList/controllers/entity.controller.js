@@ -142,7 +142,8 @@
 
 				$scope.selectConcept = self.selectConcept;
 				$scope.getConceptName = self.getConceptName;
-				$scope.getLocationUuid = self.getLocationUuid
+				$scope.getLocationUuid = self.getLocationUuid;
+				$scope.loadPreview = false;
 			};
 
 		self.getNewPatientListSortOrder = self.getNewPatientListSortOrder || function(newPatientListSortOrder) {
@@ -232,6 +233,7 @@
 			};
 
 		self.livePreview = self.livePreview || function(headerTemplate, bodyTemplate) {
+			$scope.loadPreview = true;
 				PatientListRestfulService.livePreview(headerTemplate,
 					bodyTemplate, self.onLivePreviewSuccessful);
 			}
@@ -282,7 +284,6 @@
 			};
 		
 		self.selectLocation = self.selectLocation || function(listCondition) {
-				console.log(listCondition);
 				PatientListRestfulService.getLocationId(listCondition.value, function(data) {
 					listCondition.valueRef = data["id"];
 				});
@@ -295,6 +296,7 @@
 		self.onLivePreviewSuccessful = self.onLivePreviewSuccessful || function(data) {
 				$scope.headerContent = data['headerContent'];
 				$scope.bodyContent = data['bodyContent'];
+				$scope.loadPreview = false;
 			};
 
 		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function(date) {

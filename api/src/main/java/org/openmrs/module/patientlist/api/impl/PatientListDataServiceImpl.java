@@ -173,6 +173,7 @@ public class PatientListDataServiceImpl extends
 		for (PatientListCondition condition : patientListConditions) {
 			++count;
 			if (condition != null && PatientInformation.getInstance().getField(condition.getField()) != null) {
+				String join = " AND ";
 				String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
 				PatientInformationField patientInformationField =
 				        PatientInformation.getInstance().getField(condition.getField());
@@ -180,11 +181,12 @@ public class PatientListDataServiceImpl extends
 				if (StringUtils.contains(condition.getField(), "p.attr.")
 				        || StringUtils.contains(condition.getField(), "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
+					join = " OR ";
 				} else if (StringUtils.contains(mappingFieldName, "p.names.")
 				        || StringUtils.contains(mappingFieldName, "p.addresses.")
 				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
-				} else if (StringUtils.contains(condition.getField(), "v.hasActiveVisit")) {
+				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else if (StringUtils.contains(condition.getField(), "p.age")) {
 					try {
@@ -247,7 +249,7 @@ public class PatientListDataServiceImpl extends
 				}
 
 				if (count < len) {
-					hql.append(" and ");
+					hql.append(join);
 				}
 			}
 		}

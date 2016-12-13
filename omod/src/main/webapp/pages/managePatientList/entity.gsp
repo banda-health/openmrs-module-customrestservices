@@ -231,7 +231,11 @@
 				</div>
 		</div>
 		<br/>
-		
+
+		<span class="live-preview" ng-show="loadPreview">
+			<img src="${ui.resourceLink("uicommons", "images/spinner.gif")}"/>
+		</span>
+
 		<!-- live preview section -->
 		<div  ng-show="headerContent != null && bodyContent != null" class="col-md-12">
 			<table style="margin-bottom:5px;" class="manage-entities-table">

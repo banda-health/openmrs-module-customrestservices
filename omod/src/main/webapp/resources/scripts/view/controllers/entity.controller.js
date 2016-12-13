@@ -75,8 +75,9 @@
 				}
 
 				patientList.showSpinner = true;
-				$scope.patientListData = [];
+				$scope.fetchedEntities = [];
 				$scope.totalNumOfResults = 0;
+				$scope.loaded = false;
 				$scope.patientList.currentPage = currentPage;
 				PatientListRestfulService.getPatientListData(patientList.uuid, currentPage, limit,
 					self.onLoadPatientListDataSuccessful);
@@ -125,7 +126,8 @@
 			}
 
 		self.onLoadPatientListDataSuccessful = self.onLoadPatientListDataSuccessful || function(data) {
-				$scope.patientListData = data.results;
+				$scope.fetchedEntities = data.results;
+				$scope.loaded=true;
 				$scope.totalNumOfResults = data.length;
 				$scope.patientList.showSpinner = false;
 			}
