@@ -20,7 +20,7 @@ import org.openmrs.module.patientlist.api.security.BasicMetadataAuthorizationPri
  * Data service implementation class for {@link PatientList}'s.
  */
 public class PatientListServiceImpl extends BaseMetadataDataServiceImpl<PatientList> implements
-		IPatientListService {
+        IPatientListService {
 	protected final Log LOG = LogFactory.getLog(this.getClass());
 
 	@Override

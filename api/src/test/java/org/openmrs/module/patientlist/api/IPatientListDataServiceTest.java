@@ -32,8 +32,7 @@ public class IPatientListDataServiceTest extends IMetadataDataServiceTest<IPatie
 	}
 
 	@Override
-	protected void updateEntityFields(PatientList entity) {
-	}
+	protected void updateEntityFields(PatientList entity) {}
 
 	@Override
 	protected void assertEntity(PatientList expected, PatientList actual) {

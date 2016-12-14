@@ -8,5 +8,4 @@ import org.springframework.transaction.annotation.Transactional;
  * Interface that represents classes which perform data operations for {@link PatientListCondition}s.
  */
 @Transactional
-public interface IPatientListConditionService extends IMetadataDataService<PatientListCondition> {
-}
+public interface IPatientListConditionService extends IMetadataDataService<PatientListCondition> {}

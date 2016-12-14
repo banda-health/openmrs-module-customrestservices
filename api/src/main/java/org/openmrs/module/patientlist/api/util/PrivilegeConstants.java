@@ -32,14 +32,12 @@ public class PrivilegeConstants {
 	public static final String TASK_VIEW_PATIENT_LIST = "Task: View Patient List";
 
 	public static final String[] PRIVILEGE_NAMES =
-			new String[] { APP_VIEW_PATIENT_LIST_APP, TASK_MANAGE_PATIENT_LIST_METADATA, TASK_VIEW_PATIENT_LIST };
+	        new String[] { APP_VIEW_PATIENT_LIST_APP, TASK_MANAGE_PATIENT_LIST_METADATA, TASK_VIEW_PATIENT_LIST };
 
-	protected PrivilegeConstants() {
-	}
+	protected PrivilegeConstants() {}
 
 	/**
 	 * Gets all the privileges defined by the module.
-	 *
 	 * @return The module privileges.
 	 */
 	public static Set<Privilege> getModulePrivileges() {
@@ -59,7 +57,6 @@ public class PrivilegeConstants {
 
 	/**
 	 * Gets the default privileges needed to fully use the module.
-	 *
 	 * @return A set containing the default set of privileges.
 	 */
 	public static Set<Privilege> getDefaultPrivileges() {

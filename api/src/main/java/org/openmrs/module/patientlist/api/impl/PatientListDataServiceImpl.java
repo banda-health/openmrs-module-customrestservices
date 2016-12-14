@@ -10,7 +10,11 @@ import org.openmrs.Visit;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
-import org.openmrs.module.patientlist.api.model.*;
+import org.openmrs.module.patientlist.api.model.PatientInformationField;
+import org.openmrs.module.patientlist.api.model.PatientListData;
+import org.openmrs.module.patientlist.api.model.PatientList;
+import org.openmrs.module.patientlist.api.model.PatientListCondition;
+import org.openmrs.module.patientlist.api.model.PatientListOrder;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
 import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
 import org.openmrs.module.patientlist.api.util.PatientInformation;
@@ -26,8 +30,8 @@ import java.util.List;
  * Data service implementation class for {@link PatientListData}'s.
  */
 public class PatientListDataServiceImpl extends
-		BaseObjectDataServiceImpl<PatientListData, BasicObjectAuthorizationPrivileges>
-		implements IPatientListDataService {
+        BaseObjectDataServiceImpl<PatientListData, BasicObjectAuthorizationPrivileges>
+        implements IPatientListDataService {
 
 	protected final Log LOG = LogFactory.getLog(this.getClass());
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -90,7 +94,6 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Constructs a patient list with given conditions (and ordering)
-	 *
 	 * @param patientList
 	 * @param paramValues
 	 * @return
@@ -99,8 +102,8 @@ public class PatientListDataServiceImpl extends
 		StringBuilder hql = new StringBuilder();
 		if (patientList != null && patientList.getPatientListConditions() != null) {
 			if (searchField(patientList.getPatientListConditions(), "v.")
-					|| searchField(patientList.getPatientListConditions(), "hasActiveVisit")
-					|| searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
+			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit")
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
 				// join visit and patient tables
 				hql.append("select v from Visit v inner join v.patient as p ");
 			} else {
@@ -110,39 +113,39 @@ public class PatientListDataServiceImpl extends
 
 			// only join person attributes and attribute types if required to
 			if (searchField(patientList.getPatientListConditions(), "p.attr")
-					|| searchField(patientList.getOrdering(), "p.attr")) {
+			        || searchField(patientList.getOrdering(), "p.attr")) {
 				hql.append("inner join p.attributes as attr ");
 				hql.append("inner join attr.attributeType as attrType ");
 			}
 
 			// only join visit attributes and attribute types if required to
 			if (searchField(patientList.getPatientListConditions(), "v.attr")
-					|| searchField(patientList.getOrdering(), "v.attr")) {
+			        || searchField(patientList.getOrdering(), "v.attr")) {
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
 			}
 
 			if (searchField(patientList.getPatientListConditions(), "v.diagnosis")
-					|| searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
 				hql.append("inner join v.encounters as encounter ");
 				hql.append("inner join encounter.obs as ob ");
 			}
 
 			// only join names if required
 			if (searchMappingField(patientList.getPatientListConditions(), "p.names")
-					|| searchMappingField(patientList.getOrdering(), "p.names")) {
+			        || searchMappingField(patientList.getOrdering(), "p.names")) {
 				hql.append("inner join p.names as pnames ");
 			}
 
 			// only join addresses if required
 			if (searchMappingField(patientList.getPatientListConditions(), "p.addresses")
-					|| searchMappingField(patientList.getOrdering(), "p.addresses")) {
+			        || searchMappingField(patientList.getOrdering(), "p.addresses")) {
 				hql.append("inner join p.addresses as paddresses ");
 			}
 
 			// only join identifiers if required
 			if (searchMappingField(patientList.getPatientListConditions(), "p.identifiers")
-					|| searchMappingField(patientList.getOrdering(), "p.identifiers")) {
+			        || searchMappingField(patientList.getOrdering(), "p.identifiers")) {
 				hql.append("inner join p.identifiers as pidentifiers ");
 			}
 		}
@@ -164,13 +167,12 @@ public class PatientListDataServiceImpl extends
 	/**
 	 * Parse patient list conditions and add create sub queries to be added on the main HQL query. Parameter search values
 	 * will be stored separately and later set when running query.
-	 *
 	 * @param patientListConditions
 	 * @param paramValues
 	 * @return
 	 */
 	private String applyPatientListConditions(List<PatientListCondition> patientListConditions,
-			List<Object> paramValues) {
+	        List<Object> paramValues) {
 		int count = 0;
 		int len = patientListConditions.size();
 		StringBuilder hql = new StringBuilder();
@@ -185,15 +187,15 @@ public class PatientListDataServiceImpl extends
 				}
 
 				PatientInformationField patientInformationField =
-						PatientInformation.getInstance().getField(condition.getField());
+				        PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
 				if (StringUtils.contains(condition.getField(), "p.attr.")
-						|| StringUtils.contains(condition.getField(), "v.attr.")) {
+				        || StringUtils.contains(condition.getField(), "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
 					join = " OR ";
 				} else if (StringUtils.contains(mappingFieldName, "p.names.")
-						|| StringUtils.contains(mappingFieldName, "p.addresses.")
-						|| StringUtils.contains(mappingFieldName, "p.identifiers.")) {
+				        || StringUtils.contains(mappingFieldName, "p.addresses.")
+				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
@@ -276,7 +278,6 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Creates hql sub-queries for patient and visit attributes. Example: v.attr.bed = 2
-	 *
 	 * @param condition
 	 * @param paramValues
 	 * @return
@@ -315,7 +316,7 @@ public class PatientListDataServiceImpl extends
 		paramValues.add(attributeName);
 
 		if (!StringUtils.containsIgnoreCase(operator, "null")
-				&& !StringUtils.containsIgnoreCase(operator, "exists")) {
+		        && !StringUtils.containsIgnoreCase(operator, "exists")) {
 			hql.append(" ? ");
 			if (StringUtils.equals(operator, "LIKE")) {
 				paramValues.add("%" + value + "%");
@@ -331,13 +332,12 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Creates hql sub-queries for patient aliases (names and addresses). Example: p.names.givenName, p.addresses.address1
-	 *
 	 * @param condition
 	 * @param paramValues
 	 * @return
 	 */
 	private String createAliasesSubQueries(PatientListCondition condition,
-			String mappingFieldName, List<Object> paramValues) {
+	        String mappingFieldName, List<Object> paramValues) {
 		StringBuilder hql = new StringBuilder();
 		String searchField = null;
 		String operator = ConvertPatientListOperators.convertOperator(condition.getOperator());
@@ -417,7 +417,6 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Order hql query by given fields
-	 *
 	 * @param ordering
 	 * @return
 	 */
@@ -428,14 +427,14 @@ public class PatientListDataServiceImpl extends
 		for (PatientListOrder order : ordering) {
 			if (order != null) {
 				PatientInformationField field = PatientInformation.getInstance().
-						getField(order.getField());
+				        getField(order.getField());
 
 				if (field == null) {
 					continue;
 				}
 
 				String mappingFieldName = PatientInformation.getInstance().
-						getField(order.getField()).getMappingFieldName();
+				        getField(order.getField()).getMappingFieldName();
 
 				// attributes
 				if (StringUtils.contains(order.getField(), "p.attr.")) {
@@ -450,7 +449,7 @@ public class PatientListDataServiceImpl extends
 				if (StringUtils.contains(mappingFieldName, "p.names.")) {
 					if (StringUtils.contains(mappingFieldName, "p.names.fullName")) {
 						mappingFieldName = "pnames.givenName " + order.getSortOrder()
-								+ ", pnames.familyName " + order.getSortOrder();
+						        + ", pnames.familyName " + order.getSortOrder();
 						handleSpecialFields = true;
 
 					} else {
@@ -498,7 +497,6 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Searches for a given field in the patient list conditions and ordering.
-	 *
 	 * @param list
 	 * @param search
 	 * @return
@@ -546,7 +544,7 @@ public class PatientListDataServiceImpl extends
 			}
 
 			PatientInformationField patientInformationField =
-					PatientInformation.getInstance().getField(field);
+			        PatientInformation.getInstance().getField(field);
 			if (patientInformationField == null) {
 				continue;
 			}
@@ -562,20 +560,19 @@ public class PatientListDataServiceImpl extends
 
 	/**
 	 * Apply header and body templates on patient list data
-	 *
 	 * @param patientListData
 	 */
 	private void applyTemplates(PatientListData patientListData) {
 		// apply header template.
 		if (patientListData.getPatientList().getHeaderTemplate() != null) {
 			patientListData.setHeaderContent(
-					applyTemplate(patientListData.getPatientList().getHeaderTemplate(), patientListData));
+			        applyTemplate(patientListData.getPatientList().getHeaderTemplate(), patientListData));
 		}
 
 		// apply body template
 		if (patientListData.getPatientList().getBodyTemplate() != null) {
 			patientListData.setBodyContent(
-					applyTemplate(patientListData.getPatientList().getBodyTemplate(), patientListData));
+			        applyTemplate(patientListData.getPatientList().getBodyTemplate(), patientListData));
 		}
 	}
 
@@ -586,7 +583,7 @@ public class PatientListDataServiceImpl extends
 			for (String field : fields) {
 				Object value = null;
 				PatientInformationField patientInformationField =
-						PatientInformation.getInstance().getField(field);
+				        PatientInformation.getInstance().getField(field);
 				if (patientInformationField != null) {
 					if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
 						value = patientInformationField.getValue(patientListData.getPatient());

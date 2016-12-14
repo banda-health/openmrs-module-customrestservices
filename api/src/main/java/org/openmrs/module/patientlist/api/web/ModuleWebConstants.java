@@ -25,8 +25,7 @@ public class ModuleWebConstants extends WebConstants {
 
 	public static final String PATIENT_LIST_LANDING_PAGE_EXTENSION_POINT_ID = "org.openmrs.module.patientlist.landing";
 	public static final String PATIENT_LIST_MANAGE_MODULE_PAGE_EXTENSION_POINT_ID =
-			"org.openmrs.module.patientlist.manage.module";
+	        "org.openmrs.module.patientlist.manage.module";
 
-	protected ModuleWebConstants() {
-	}
+	protected ModuleWebConstants() {}
 }

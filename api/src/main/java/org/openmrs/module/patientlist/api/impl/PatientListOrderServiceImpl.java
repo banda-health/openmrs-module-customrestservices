@@ -12,7 +12,7 @@ import org.openmrs.module.patientlist.api.security.BasicMetadataAuthorizationPri
  * Data service implementation class for {@link PatientListOrder}'s.
  */
 public class PatientListOrderServiceImpl extends BaseMetadataDataServiceImpl<PatientListOrder>
-		implements IPatientListOrderService {
+        implements IPatientListOrderService {
 
 	protected final Log LOG = LogFactory.getLog(this.getClass());
 
