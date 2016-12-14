@@ -63,7 +63,8 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-entities-table">
+			<h3>${ui.message('patientlist.condition.list.header')}</h3>
+			<table style="margin-bottom:5px;margin-top: 15px" class="manage-entities-table">
 				<thead>
 				<tr>
 					<th style="width:12% "></th>
@@ -179,7 +180,8 @@
 	<div class="row detail-section-border-top">
 		<br/>
 		<div class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-entities-table">
+			<h3>${ui.message('patientlist.sort.order.header')}</h3>
+			<table style="margin-bottom:5px;margin-top: 15px" class="manage-entities-table">
 				<thead>
 				<tr>
 					<th style="width:10% "></th>
@@ -221,19 +223,26 @@
 		<br/>
 		
 		<div class="row">
-				<div class="col-md-12">
-					<div class="col-md-4">
-						<span>${ui.message("patientlist.display.template.header.label")}</span>
-					</div>
-					<div class="col-md-7">
-						<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
-						          class="form-control"
-								  ng-model-options="{ debounce: 1000 }"
-							      ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
-						          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
-						          cols="50"></textarea>
-					</div>
+			<div class="col-md-12">
+				<div class="col-md-4">
+					<h3>${ui.message('patientlist.display.template.header')}</h3>
 				</div>
+			</div>
+			
+			<div style="margin-bottom:5px;margin-top: 15px" class="col-md-12">
+				<div class="col-md-4">
+					<span>${ui.message("patientlist.display.template.header.label")}</span>
+				</div>
+				
+				<div class="col-md-7">
+					<textarea name="entityHeaderTemplate" type="text" ng-model="entity.headerTemplate"
+					          class="form-control"
+					          ng-model-options="{ debounce: 1000 }"
+					          ng-change="livePreview(entity.headerTemplate, entity.bodyTemplate)"
+					          placeholder="${ui.message("patientlist.display.template.header.label")}" rows="5"
+					          cols="50"></textarea>
+				</div>
+			</div>
 		</div>
 		<br/>
 		
@@ -260,7 +269,8 @@
 
 		<!-- live preview section -->
 		<div  ng-show="headerContent != null && bodyContent != null" class="col-md-12">
-			<table style="margin-bottom:5px;" class="manage-entities-table">
+			<h3>${ui.message('patientlist.live.preview.header')}</h3>
+			<table style="margin-bottom:5px;margin-top: 15px" class="manage-entities-table">
 				<thead>
 				<tr>
 					<th><span ng-bind-html="renderTemplate(headerContent)"></span></th>
