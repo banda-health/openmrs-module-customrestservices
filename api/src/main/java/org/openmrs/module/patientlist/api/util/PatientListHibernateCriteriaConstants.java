@@ -22,5 +22,6 @@ public class PatientListHibernateCriteriaConstants {
 	public static final String RETIRED = "retired";
 	public static final String GLOBAL = "global";
 
-	protected PatientListHibernateCriteriaConstants() {}
+	protected PatientListHibernateCriteriaConstants() {
+	}
 }

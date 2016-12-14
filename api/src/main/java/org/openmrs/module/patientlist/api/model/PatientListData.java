@@ -4,8 +4,6 @@ import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
 
-import java.util.List;
-
 /**
  * Model class that represents patient list data.
  */
@@ -17,7 +15,8 @@ public class PatientListData extends BaseOpenmrsData {
 	private String headerContent;
 	private String bodyContent;
 
-	public PatientListData() {}
+	public PatientListData() {
+	}
 
 	public PatientListData(Patient patient, Visit visit, PatientList patientList) {
 		this.patient = patient;
@@ -31,7 +30,8 @@ public class PatientListData extends BaseOpenmrsData {
 	}
 
 	@Override
-	public void setId(Integer id) {}
+	public void setId(Integer id) {
+	}
 
 	public Patient getPatient() {
 		return patient;

@@ -19,5 +19,6 @@ package org.openmrs.module.patientlist.api.util;
 public class ModuleConstants {
 	public static final String MODULE_NAME = "patientlist";
 
-	protected ModuleConstants() {}
+	protected ModuleConstants() {
+	}
 }

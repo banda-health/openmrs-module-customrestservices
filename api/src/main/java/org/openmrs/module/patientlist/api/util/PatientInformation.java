@@ -2,17 +2,7 @@ package org.openmrs.module.patientlist.api.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Visit;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
-import org.openmrs.OpenmrsData;
-import org.openmrs.Concept;
-import org.openmrs.VisitAttributeType;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.PersonAttribute;
-import org.openmrs.Obs;
-
+import org.openmrs.*;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.attribute.Attribute;
@@ -23,13 +13,7 @@ import org.openmrs.module.patientlist.api.model.PatientInformationField;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Date;
-import java.util.Collections;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Patient information loader class.
@@ -47,10 +31,7 @@ public class PatientInformation {
 
 	private ConceptService conceptService;
 
-	private PatientInformation() {}
-
-	private static class Holder {
-		private static final PatientInformation INSTANCE = new PatientInformation().refresh();
+	private PatientInformation() {
 	}
 
 	public static PatientInformation getInstance() {
@@ -89,12 +70,12 @@ public class PatientInformation {
 		}, PATIENT_PREFIX + ".gender");
 
 		addField(tempFields, PATIENT_PREFIX, "age", Integer.class, new Func1<Patient, Object>() {
-			@Override
-			public Object apply(Patient patient) {
-				return patient.getAge();
-			}
-		},
-		    PATIENT_PREFIX + ".age");
+					@Override
+					public Object apply(Patient patient) {
+						return patient.getAge();
+					}
+				},
+				PATIENT_PREFIX + ".age");
 
 		addField(tempFields, PATIENT_PREFIX, "givenName", String.class, new Func1<Patient, Object>() {
 			@Override
@@ -201,22 +182,22 @@ public class PatientInformation {
 	}
 
 	private <T extends OpenmrsData> void addField(Map<String, PatientInformationField<?>> map, String prefix, String name,
-	        Class<?> dataType, Func1<T, Object> getValueFunc, String mappingFieldName) {
+			Class<?> dataType, Func1<T, Object> getValueFunc, String mappingFieldName) {
 		PatientInformationField field = new PatientInformationField<T>(
-		        prefix, name, dataType, getValueFunc, mappingFieldName);
+				prefix, name, dataType, getValueFunc, mappingFieldName);
 
 		map.put(prefix + "." + name, field);
 	}
 
 	private <T extends OpenmrsData> void addPatientAttributeField(Map<String, PatientInformationField<?>> map,
-	        String prefix,
-	        final PersonAttributeType attributeType, String mappingFieldName) {
+			String prefix,
+			final PersonAttributeType attributeType, String mappingFieldName) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(attributeType.getFormat());
 		} catch (ClassNotFoundException cnfe) {
 			LOG.warn("Could not convert person attribute type '" + attributeType.getName() + "' format ("
-			        + attributeType.getFormat() + ") to a class.");
+					+ attributeType.getFormat() + ") to a class.");
 		}
 
 		if (cls != null) {
@@ -235,13 +216,13 @@ public class PatientInformation {
 	}
 
 	private <T extends OpenmrsData & Customizable<?>> void addAttributeField(Map<String, PatientInformationField<?>> map,
-	        String prefix, final AttributeType<T> attributeType, String mappingFieldName) {
+			String prefix, final AttributeType<T> attributeType, String mappingFieldName) {
 		Class<?> cls = null;
 		try {
 			cls = Class.forName(attributeType.getDatatypeClassname());
 		} catch (ClassNotFoundException cnfe) {
 			LOG.warn("Could not convert attribute type '" + attributeType.getName() + "' datatype ("
-			        + attributeType.getDatatypeClassname() + ") to a class.");
+					+ attributeType.getDatatypeClassname() + ") to a class.");
 		}
 
 		addField(map, prefix, attributeType.getName(), cls, new Func1<T, Object>() {
@@ -271,6 +252,7 @@ public class PatientInformation {
 
 	/**
 	 * Retrieve the answer concept name for the given uuid (value_reference)
+	 *
 	 * @param attribute
 	 * @return
 	 */
@@ -280,7 +262,7 @@ public class PatientInformation {
 		}
 
 		Concept concept = conceptService.getConcept(
-		        attribute.getAttributeType().getDatatypeConfig());
+				attribute.getAttributeType().getDatatypeConfig());
 
 		if (concept != null) {
 			for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
@@ -292,5 +274,9 @@ public class PatientInformation {
 		}
 
 		return null;
+	}
+
+	private static class Holder {
+		private static final PatientInformation INSTANCE = new PatientInformation().refresh();
 	}
 }

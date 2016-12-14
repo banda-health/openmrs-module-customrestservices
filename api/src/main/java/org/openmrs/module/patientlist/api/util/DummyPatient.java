@@ -1,16 +1,6 @@
 package org.openmrs.module.patientlist.api.util;
 
-import org.openmrs.Visit;
-import org.openmrs.Patient;
-import org.openmrs.VisitType;
-import org.openmrs.VisitAttribute;
-import org.openmrs.VisitAttributeType;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonName;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.Location;
+import org.openmrs.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -23,13 +13,10 @@ import java.util.Set;
 public class DummyPatient extends Patient {
 
 	private static final int BIRTH_YEAR = 1990;
-	private static int BIRTH_DATE = 1;
 	private static final String IDENTIFIER = "4564";
+	private static int BIRTH_DATE = 1;
 
-	private DummyPatient() {}
-
-	private static class Holder {
-		private static final DummyPatient INSTANCE = new DummyPatient().loadData();
+	private DummyPatient() {
 	}
 
 	public static DummyPatient getInstance() {
@@ -141,5 +128,9 @@ public class DummyPatient extends Patient {
 		visitAttribute.setAttributeType(visitAttributeType);
 
 		return dummyPatient;
+	}
+
+	private static class Holder {
+		private static final DummyPatient INSTANCE = new DummyPatient().loadData();
 	}
 }

@@ -13,8 +13,8 @@
   ~ Copyright (C) OpenMRS, LLC.  All Rights Reserved.
   -->
 <!DOCTYPE hibernate-configuration PUBLIC
-	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
 	<session-factory>
@@ -24,9 +24,9 @@
 		<property name="use_sql_comments">true</property>
 		-->
 
-		<mapping resource="PatientList.hbm.xml" />
+		<mapping resource="PatientList.hbm.xml"/>
 
 		<!-- Import LazyRole mapping from commons -->
-		<mapping resource="LazyRole.hbm.xml" />
+		<mapping resource="LazyRole.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

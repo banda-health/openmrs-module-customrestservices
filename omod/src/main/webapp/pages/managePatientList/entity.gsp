@@ -155,9 +155,7 @@
 							        || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"/>&nbsp;Check / Uncheck
 						</label>
 					</td>
-					<td ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.operator == 'NULL'
-					 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
-					    ng-show="listCondition.inputType == 'conceptInput'"
+					<td ng-show="listCondition.inputType == 'conceptInput'"
 					    ng-class="{'not-valid': listCondition.invalidEntry === true}">
 						${ui.includeFragment("openhmis.commons", "searchFragment", [
 								typeahead        : ["concept.display for concept in searchConcepts(\$viewValue)"],
