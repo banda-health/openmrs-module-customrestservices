@@ -123,7 +123,7 @@
 				$scope.valueInputConditions = function(datatype, listCondition) {
 					if(datatype == "java.lang.String") {
 						listCondition.inputType = "textInput";
-					} else if(datatype == "java.util.Date") {
+					} else if(datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
 						listCondition.inputType = "dateInput";
 						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
 					} else if(datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {

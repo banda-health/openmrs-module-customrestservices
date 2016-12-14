@@ -40,4 +40,10 @@
                             operator="GTE" value="20" condition_order="16" uuid="4028814B39B565A20139B95FB3440020" />
     <patient_list_condition patient_list_condition_id="17" patient_list_id="0" field="p.hasActiveVisit" condition_order="17"
                             uuid="4028814B39B565A20139B95FB3440021" />
+    <patient_list_condition patient_list_condition_id="18" patient_list_id="0" field="v.diagnosis"
+                            condition_order="18" operator="EQUALS" value="4"
+                            uuid="4028814B39B565A20139B95FB3440022" />
+    <patient_list_condition patient_list_condition_id="19" patient_list_id="0" field="v.hasDiagnosis" condition_order="19"
+                            uuid="4028814B39B565A20139B95FB3440023" />
+
 </dataset>

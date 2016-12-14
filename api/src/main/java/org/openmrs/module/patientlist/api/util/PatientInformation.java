@@ -2,14 +2,17 @@ package org.openmrs.module.patientlist.api.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Patient;
-import org.openmrs.PersonAttributeType;
 import org.openmrs.Visit;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.Encounter;
+import org.openmrs.Patient;
 import org.openmrs.OpenmrsData;
 import org.openmrs.Concept;
 import org.openmrs.VisitAttributeType;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.PersonAttribute;
+import org.openmrs.Obs;
+
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.attribute.Attribute;
@@ -20,12 +23,13 @@ import org.openmrs.module.patientlist.api.model.PatientInformationField;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Date;
+import java.util.Collections;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Patient information loader class.
@@ -132,6 +136,13 @@ public class PatientInformation {
 			}
 		}, PATIENT_PREFIX + ".identifiers.identifier");
 
+		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+			@Override
+			public Object apply(Visit visit) {
+				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
+			}
+		}, null);
+
 		// And so on for each patient field
 
 		List<PersonAttributeType> personAttributeTypes = Context.getPersonService().getAllPersonAttributeTypes();
@@ -165,12 +176,20 @@ public class PatientInformation {
 			}
 		}, VISIT_PREFIX + ".visitType.name");
 
-		addField(tempFields, PATIENT_PREFIX, "hasActiveVisit", String.class, new Func1<Visit, Object>() {
+		addField(tempFields, VISIT_PREFIX, "diagnosis", String.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
-				return visit.getStartDatetime() != null && visit.getStopDatetime() == null;
+				return visit.getVisitType().getName();
+			}
+		}, VISIT_PREFIX + ".visitType.name");
+
+		addField(tempFields, VISIT_PREFIX, "hasDiagnosis", String.class, new Func1<Visit, Object>() {
+			@Override
+			public Object apply(Visit visit) {
+				return "";
 			}
 		}, null);
+
 		// And so on for each visit field
 
 		List<VisitAttributeType> visitAttributeTypes = Context.getVisitService().getAllVisitAttributeTypes();
