@@ -226,7 +226,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		        patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(2, patientListDataSet.size());
+		Assert.assertEquals(3, patientListDataSet.size());
 	}
 
 	@Test
@@ -478,6 +478,44 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(7, patientListDataSet.size());
+	}
+
+	@Test
+	public void patientList_shouldSearchDiagnosis() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(18);
+
+		Assert.assertEquals("v.diagnosis", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+	}
+
+	@Test
+	public void patientList_shouldCheckHasDiagnosis() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(19);
+
+		Assert.assertEquals("v.hasDiagnosis", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(1, patientListDataSet.size());
 	}
 
 	@Test

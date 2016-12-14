@@ -103,7 +103,8 @@ public class PatientListDataServiceImpl extends
 		StringBuilder hql = new StringBuilder();
 		if (patientList != null && patientList.getPatientListConditions() != null) {
 			if (searchField(patientList.getPatientListConditions(), "v.")
-			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit")) {
+			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit")
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
 				// join visit and patient tables
 				hql.append("select v from Visit v inner join v.patient as p ");
 			} else {
@@ -123,6 +124,12 @@ public class PatientListDataServiceImpl extends
 			        || searchField(patientList.getOrdering(), "v.attr")) {
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
+			}
+
+			if (searchField(patientList.getPatientListConditions(), "v.diagnosis")
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
+				hql.append("inner join v.encounters as encounter ");
+				hql.append("inner join encounter.obs as ob ");
 			}
 
 			// only join names if required
@@ -193,6 +200,14 @@ public class PatientListDataServiceImpl extends
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
+				} else if (StringUtils.contains(condition.getField(), "v.hasDiagnosis")) {
+					hql.append(" ob.concept.conceptClass.uuid = ? ");
+					paramValues.add("8d4918b0-c2cc-11de-8d13-0010c6dffd0f");
+				} else if (StringUtils.contains(condition.getField(), "v.diagnosis")) {
+					hql.append(" ob.concept.conceptId ");
+					hql.append(operator);
+					hql.append(" ? ");
+					paramValues.add(Integer.valueOf(condition.getValue()));
 				} else if (StringUtils.contains(condition.getField(), "p.age")) {
 					try {
 						hql.append(" p.birthdate ");
@@ -389,6 +404,14 @@ public class PatientListDataServiceImpl extends
 
 			hql.append(" ");
 		}
+
+		return hql.toString();
+	}
+
+	private String createDiagnosisHql(PatientListCondition condition, List<Object> paramValues) {
+		//diagnosis
+		StringBuilder hql = new StringBuilder();
+		hql.append(" ob.concept.conceptId ? ");
 
 		return hql.toString();
 	}
