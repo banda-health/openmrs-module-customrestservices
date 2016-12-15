@@ -1,5 +1,6 @@
 package org.openmrs.module.patientlist.api.util;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Visit;
@@ -29,6 +30,7 @@ import java.util.Date;
 import java.util.Collections;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Patient information loader class.
@@ -174,15 +176,52 @@ public class PatientInformation {
 		addField(tempFields, VISIT_PREFIX, "diagnosis", String.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
-				// TODO: Return list of diagnosis
-				return "";
+				String diagnosis = "";
+				Set<Encounter> encounters = visit.getEncounters();
+				if (encounters != null) {
+					for (Encounter encounter : encounters) {
+						if (encounter != null) {
+							Set<Obs> obs = encounter.getAllObs(false);
+							for (Obs observation : obs) {
+								if (observation != null) {
+									if (observation.getValueCoded() != null) {
+										diagnosis += observation.getValueCoded().getDisplayString() + ",";
+									} else if (StringUtils.isNotEmpty(observation.getValueText())) {
+										diagnosis += observation.getValueText() + ",";
+									}
+								}
+							}
+						}
+					}
+				}
+
+				return StringUtils.removeEnd(diagnosis, ",");
 			}
 		}, VISIT_PREFIX + ".diagnosis");
 
 		addField(tempFields, VISIT_PREFIX, "hasDiagnosis", String.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
-				return "";
+				boolean hasDiagnosis = false;
+				Set<Encounter> encounters = visit.getEncounters();
+				if (encounters != null) {
+					for (Encounter encounter : encounters) {
+						if (encounter != null) {
+							Set<Obs> obs = encounter.getAllObs(false);
+							for (Obs observation : obs) {
+								if (observation != null) {
+									if (observation.getValueCoded() != null) {
+										hasDiagnosis = true;
+									} else if (StringUtils.isNotEmpty(observation.getValueText())) {
+										hasDiagnosis = true;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				return hasDiagnosis;
 			}
 		}, null);
 

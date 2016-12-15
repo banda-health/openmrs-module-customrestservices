@@ -481,7 +481,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
-	public void patientList_shouldSearchDiagnosis() throws Exception {
+	public void patientList_shouldSearchCodedDiagnosis() throws Exception {
 		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
@@ -497,6 +497,25 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(3, patientListDataSet.size());
+	}
+
+	@Test
+	public void patientList_shouldSearchNoneCodedDiagnosis() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(20);
+
+		Assert.assertEquals("v.diagnosis", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(1, patientListDataSet.size());
 	}
 
 	@Test

@@ -1,6 +1,7 @@
 package org.openmrs.module.patientlist.api.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -200,13 +201,22 @@ public class PatientListDataServiceImpl extends
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else if (StringUtils.contains(condition.getField(), "v.hasDiagnosis")) {
-					hql.append(" ob.valueCoded.conceptClass.uuid = ? ");
+					hql.append(" (ob.valueCoded.conceptClass.uuid = ? or ob.valueText != '')");
 					paramValues.add("8d4918b0-c2cc-11de-8d13-0010c6dffd0f");
 				} else if (StringUtils.contains(condition.getField(), "v.diagnosis")) {
-					hql.append(" ob.valueCoded.conceptId ");
-					hql.append(operator);
-					hql.append(" ? ");
-					paramValues.add(Integer.valueOf(condition.getValue()));
+					// coded diagnosis
+					if (NumberUtils.isDigits(condition.getValue())) {
+						hql.append(" ob.valueCoded.conceptId ");
+						hql.append(operator);
+						hql.append(" ? ");
+						paramValues.add(Integer.valueOf(condition.getValue()));
+					} else {
+						// un-coded diagnosis
+						hql.append(" ob.valueText ");
+						hql.append(operator);
+						hql.append(" ? ");
+						paramValues.add(condition.getValue());
+					}
 				} else if (StringUtils.contains(condition.getField(), "p.age")) {
 					try {
 						hql.append(" p.birthdate ");
