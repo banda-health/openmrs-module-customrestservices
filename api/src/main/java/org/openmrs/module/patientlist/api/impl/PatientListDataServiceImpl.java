@@ -200,7 +200,7 @@ public class PatientListDataServiceImpl extends
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else if (StringUtils.contains(condition.getField(), "v.hasDiagnosis")) {
-					hql.append(" ob.concept.conceptClass.uuid = ? ");
+					hql.append(" ob.valueCoded.conceptClass.uuid = ? ");
 					paramValues.add("8d4918b0-c2cc-11de-8d13-0010c6dffd0f");
 				} else if (StringUtils.contains(condition.getField(), "v.diagnosis")) {
 					hql.append(" ob.valueCoded.conceptId ");
