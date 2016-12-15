@@ -18,7 +18,8 @@ public enum PatientListOperator {
 	NULL,
 	NOT_NULL,
 	DEFINED,
-	NOT_DEFINED;
+	NOT_DEFINED,
+	RELATIVE;
 
 	private Operator operator;
 

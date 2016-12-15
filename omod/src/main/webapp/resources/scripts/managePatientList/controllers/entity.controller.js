@@ -52,6 +52,17 @@
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
 				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
+				$scope.relativeDates =
+					[
+						{display: 'Yesterday', value: "-1 DAY"},
+						{display: 'Last Week', value: "-1 WEEK"},
+						{display: 'Last Two Weeks', value: "-2 WEEKS"},
+						{display: 'Last Month', value: "-1 MONTH"},
+						{display: 'Last 3 Months', value: "-3 MONTHS"},
+						{display: 'Last Half Year', value: "-6 MONTHS"},
+						{display: 'Last 9 Months', value: "-9 MONTHS"},
+						{display: 'Last Year', value: "-1 YEAR"}
+					];
 				// auto-complete search concept function
 				$scope.searchConcepts = function (search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
@@ -111,6 +122,10 @@
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					}
+					if (listCondition.operator == "RELATIVE"){
+						listCondition.inputType = "dropDownInput";
+						$scope.dropDownEntries = $scope.relativeDates;
+					}
 				};
 				
 				$scope.inputsValueChange = function (listCondition) {
@@ -137,8 +152,14 @@
 							listCondition.inputType = "textInput";
 						}
 					} else if (datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
-						listCondition.inputType = "dateInput";
-						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
+						if (listCondition.operator == "RELATIVE") {
+							listCondition.inputType = "dropDownInput";
+							$scope.dropDownEntries = $scope.relativeDates;
+						} else {
+							listCondition.inputType = "dateInput";
+							PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
+						}
+						
 					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 					} else if (listCondition.field == "p.gender") {
@@ -306,7 +327,12 @@
 			};
 		
 		self.getConceptName = self.getConceptName || function (id, onGetConceptNameSuccessfulCallback) {
+				if (!angular.isString(id)) {
 				PatientListRestfulService.getConceptName(id, onGetConceptNameSuccessfulCallback);
+				} else {
+					
+				}
+				
 			};
 		
 		self.selectLocation = self.selectLocation || function (listCondition) {
@@ -378,9 +404,8 @@
 									}
 								} else {
 									patientListCondition.value = null;
-									
-									console.log("I am here tooo")
 								}
+								
 							} else {
 								patientListCondition.value = null;
 								patientListCondition.operator = null;
