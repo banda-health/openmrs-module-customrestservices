@@ -5,6 +5,7 @@ import org.openmrs.module.openhmis.commons.api.f.Func1;
 
 /**
  * Model class that represents an patient information field.
+ *
  * @param <T> The source object class.
  */
 public class PatientInformationField<T extends OpenmrsData> {
@@ -15,7 +16,7 @@ public class PatientInformationField<T extends OpenmrsData> {
 	private Func1<T, Object> getValueFunc;
 
 	public PatientInformationField(String prefix, String name, Class<?> dataType,
-	    Func1<T, Object> getValueFunc, String mappingFieldName) {
+			Func1<T, Object> getValueFunc, String mappingFieldName) {
 		this.prefix = prefix;
 		this.name = name;
 		this.dataType = dataType;
@@ -23,28 +24,28 @@ public class PatientInformationField<T extends OpenmrsData> {
 		this.mappingFieldName = mappingFieldName;
 	}
 
-	protected void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
 	public String getPrefix() {
 		return prefix;
 	}
 
-	protected void setName(String name) {
-		this.name = name;
+	protected void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	protected void setDataType(Class<?> dataType) {
-		this.dataType = dataType;
+	protected void setName(String name) {
+		this.name = name;
 	}
 
 	public Class<?> getDataType() {
 		return dataType;
+	}
+
+	protected void setDataType(Class<?> dataType) {
+		this.dataType = dataType;
 	}
 
 	protected void setValueFunc(Func1<T, Object> func) {

@@ -8,4 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
  * Interface that represents classes which perform data operations for {@link PatientListOrder}s.
  */
 @Transactional
-public interface IPatientListOrderService extends IMetadataDataService<PatientListOrder> {}
+public interface IPatientListOrderService extends IMetadataDataService<PatientListOrder> {
+}
