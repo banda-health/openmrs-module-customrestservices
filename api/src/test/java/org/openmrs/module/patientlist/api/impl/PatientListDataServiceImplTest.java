@@ -223,7 +223,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet =
-				patientListDataService.getPatientListData(patientList, pagingInfo);
+		        patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(3, patientListDataSet.size());
@@ -312,7 +312,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 		String startDate =
-				new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
+		        new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
 		Assert.assertEquals("2016-06-27", startDate);
 
 		// order by desc
@@ -322,7 +322,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 		startDate =
-				new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
+		        new SimpleDateFormat("yyyy-MM-dd").format(patientListDataSet.get(0).getVisit().getStartDatetime());
 		Assert.assertEquals("2016-11-01", startDate);
 	}
 
@@ -519,46 +519,35 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {
-	}
+	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {}
 }

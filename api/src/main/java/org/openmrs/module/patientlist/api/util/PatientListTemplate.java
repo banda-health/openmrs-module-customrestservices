@@ -18,8 +18,7 @@ public class PatientListTemplate {
 
 	private final Log LOG = LogFactory.getLog(this.getClass());
 
-	private PatientListTemplate() {
-	}
+	private PatientListTemplate() {}
 
 	public static PatientListTemplate getInstance() {
 		return Holder.INSTANCE;

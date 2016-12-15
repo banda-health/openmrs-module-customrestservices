@@ -22,8 +22,7 @@ public enum PatientListOperator {
 
 	private Operator operator;
 
-	private PatientListOperator() {
-	}
+	private PatientListOperator() {}
 
 	private PatientListOperator(Operator operator) {
 		this.operator = operator;

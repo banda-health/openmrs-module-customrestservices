@@ -1,6 +1,16 @@
 package org.openmrs.module.patientlist.api.util;
 
-import org.openmrs.*;
+import org.openmrs.Visit;
+import org.openmrs.Patient;
+import org.openmrs.VisitType;
+import org.openmrs.VisitAttribute;
+import org.openmrs.VisitAttributeType;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.PersonAddress;
+import org.openmrs.PersonName;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.Location;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,8 +26,7 @@ public class DummyPatient extends Patient {
 	private static final String IDENTIFIER = "4564";
 	private static int BIRTH_DATE = 1;
 
-	private DummyPatient() {
-	}
+	private DummyPatient() {}
 
 	public static DummyPatient getInstance() {
 		return Holder.INSTANCE;
