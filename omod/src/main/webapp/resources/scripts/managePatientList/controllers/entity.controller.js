@@ -86,7 +86,8 @@
 				};
 				
 				$scope.patientListCondition = function (listCondition) {
-					if (listCondition.field == "p.hasActiveVisit") {
+					if (listCondition.field == "p.hasActiveVisit" || listCondition.field == "v.hasDiagnosis") {
+						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
@@ -123,14 +124,18 @@
 							$scope.valueInputConditions(datatype, listCondition);
 						}
 					}
-					if (listCondition.field == "p.hasActiveVisit") {
+					if (listCondition.field == "p.hasActiveVisit" || listCondition.field == "v.hasDiagnosis") {
 						$scope.patientListCondition(listCondition);
 					}
 				};
 				
 				$scope.valueInputConditions = function (datatype, listCondition) {
 					if (datatype == "java.lang.String") {
-						listCondition.inputType = "textInput";
+						if (listCondition.field == "v.diagnosis") {
+							listCondition.inputType = "conceptInput";
+						} else {
+							listCondition.inputType = "textInput";
+						}
 					} else if (datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
 						listCondition.inputType = "dateInput";
 						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
@@ -359,7 +364,7 @@
 						} else {
 							var requestCondition = {};
 							
-							if (patientListCondition.field != "p.hasActiveVisit") {
+							if (patientListCondition.field != "p.hasActiveVisit" && patientListCondition.field != "v.hasDiagnosis") {
 								if (patientListCondition.field === "") {
 									emr.errorAlert("Condition field required ");
 									return false;
@@ -379,7 +384,6 @@
 							} else {
 								patientListCondition.value = null;
 								patientListCondition.operator = null;
-								console.log("I am here")
 							}
 							
 							requestCondition['field'] = patientListCondition.field;
