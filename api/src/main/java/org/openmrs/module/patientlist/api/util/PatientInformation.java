@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Date;
 import java.util.Collections;
 import java.util.Collection;
@@ -175,9 +174,10 @@ public class PatientInformation {
 		addField(tempFields, VISIT_PREFIX, "diagnosis", String.class, new Func1<Visit, Object>() {
 			@Override
 			public Object apply(Visit visit) {
-				return visit.getVisitType().getName();
+				// TODO: Return list of diagnosis
+				return "";
 			}
-		}, VISIT_PREFIX + ".visitType.name");
+		}, VISIT_PREFIX + ".diagnosis");
 
 		addField(tempFields, VISIT_PREFIX, "hasDiagnosis", String.class, new Func1<Visit, Object>() {
 			@Override

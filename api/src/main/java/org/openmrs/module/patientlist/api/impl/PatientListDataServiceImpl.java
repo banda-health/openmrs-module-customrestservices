@@ -203,7 +203,7 @@ public class PatientListDataServiceImpl extends
 					hql.append(" ob.concept.conceptClass.uuid = ? ");
 					paramValues.add("8d4918b0-c2cc-11de-8d13-0010c6dffd0f");
 				} else if (StringUtils.contains(condition.getField(), "v.diagnosis")) {
-					hql.append(" ob.concept.conceptId ");
+					hql.append(" ob.valueCoded.conceptId ");
 					hql.append(operator);
 					hql.append(" ? ");
 					paramValues.add(Integer.valueOf(condition.getValue()));
@@ -403,14 +403,6 @@ public class PatientListDataServiceImpl extends
 
 			hql.append(" ");
 		}
-
-		return hql.toString();
-	}
-
-	private String createDiagnosisHql(PatientListCondition condition, List<Object> paramValues) {
-		//diagnosis
-		StringBuilder hql = new StringBuilder();
-		hql.append(" ob.concept.conceptId ? ");
 
 		return hql.toString();
 	}

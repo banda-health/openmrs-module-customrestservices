@@ -477,7 +477,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(7, patientListDataSet.size());
+		Assert.assertEquals(6, patientListDataSet.size());
 	}
 
 	@Test
@@ -510,6 +510,51 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(4, patientListDataSet.size());
+	}
+
+	@Test
+	public void patientList_shouldCheckActiveVisitsHasDiagnosis() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(19);
+		Assert.assertEquals("v.hasDiagnosis", condition.getField());
+
+		PatientListCondition condition2 = conditions.get(17);
+		Assert.assertEquals("p.hasActiveVisit", condition2.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+		patientList.getPatientListConditions().add(condition2);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(1, patientListDataSet.size());
+	}
+
+	@Test
+	public void patientList_shouldCheckActiveVisitsWithADiagnosis() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(18);
+
+		Assert.assertEquals("v.diagnosis", condition.getField());
+
+		PatientListCondition condition2 = conditions.get(17);
+		Assert.assertEquals("p.hasActiveVisit", condition2.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+		patientList.getPatientListConditions().add(condition2);
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
