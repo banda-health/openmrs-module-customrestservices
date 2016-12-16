@@ -111,7 +111,7 @@
 									value="NULL">Null</option>
 							<option value="NOT_NULL">Not Null</option>
 							<option value="DEFINED">Defined</option>
-							<option value="RELATIVE">Relative</option>
+							<option ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
