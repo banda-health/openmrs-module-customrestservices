@@ -52,6 +52,18 @@
 				$scope.removeListCondition = self.removeListCondition;
 				$scope.removeListOrdering = self.removeListOrdering;
 				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
+				$scope.relativeDates =
+					[
+						{display: 'Yesterday', value: "Yesterday"},
+						{display: 'This Week', value: "This Week"},
+						{display: 'Last Week', value: "Last Week"},
+						{display: 'Last Two Weeks', value: "Last Two Weeks"},
+						{display: 'Last Month', value: "Last Month"},
+						{display: 'Last 3 Months', value: "Last 3 Months"},
+						{display: 'Last Half Year', value: "Last Half Year"},
+						{display: 'Last 9 Months', value: "Last 9 Months"},
+						{display: 'Last Year', value: "Last Year"}
+					];
 				// auto-complete search concept function
 				$scope.searchConcepts = function (search) {
 					return PatientListRestfulService.searchConcepts(PATIENT_LIST_MODULE_NAME, search);
@@ -86,7 +98,8 @@
 				};
 				
 				$scope.patientListCondition = function (listCondition) {
-					if (listCondition.field == "p.hasActiveVisit") {
+					if (listCondition.field == "p.hasActiveVisit" || listCondition.field == "v.hasDiagnosis") {
+						listCondition.id = listCondition.field + "_" + listCondition.value;
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
@@ -110,6 +123,10 @@
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					}
+					if (listCondition.operator == "RELATIVE"){
+						listCondition.inputType = "dropDownInput";
+						$scope.dropDownEntries = $scope.relativeDates;
+					}
 				};
 				
 				$scope.inputsValueChange = function (listCondition) {
@@ -123,17 +140,27 @@
 							$scope.valueInputConditions(datatype, listCondition);
 						}
 					}
-					if (listCondition.field == "p.hasActiveVisit") {
+					if (listCondition.field == "p.hasActiveVisit" || listCondition.field == "v.hasDiagnosis") {
 						$scope.patientListCondition(listCondition);
 					}
 				};
 				
 				$scope.valueInputConditions = function (datatype, listCondition) {
 					if (datatype == "java.lang.String") {
-						listCondition.inputType = "textInput";
+						if (listCondition.field == "v.diagnosis") {
+							listCondition.inputType = "conceptInput";
+						} else {
+							listCondition.inputType = "textInput";
+						}
 					} else if (datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
-						listCondition.inputType = "dateInput";
-						PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
+						if (listCondition.operator == "RELATIVE") {
+							listCondition.inputType = "dropDownInput";
+							$scope.dropDownEntries = $scope.relativeDates;
+						} else {
+							listCondition.inputType = "dateInput";
+							PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
+						}
+						
 					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 					} else if (listCondition.field == "p.gender") {
@@ -301,7 +328,12 @@
 			};
 		
 		self.getConceptName = self.getConceptName || function (id, onGetConceptNameSuccessfulCallback) {
+				if (!angular.isString(id)) {
 				PatientListRestfulService.getConceptName(id, onGetConceptNameSuccessfulCallback);
+				} else {
+					
+				}
+				
 			};
 		
 		self.selectLocation = self.selectLocation || function (listCondition) {
@@ -359,7 +391,7 @@
 						} else {
 							var requestCondition = {};
 							
-							if (patientListCondition.field != "p.hasActiveVisit") {
+							if (patientListCondition.field != "p.hasActiveVisit" && patientListCondition.field != "v.hasDiagnosis") {
 								if (patientListCondition.field === "") {
 									emr.errorAlert("Condition field required ");
 									return false;
@@ -373,13 +405,11 @@
 									}
 								} else {
 									patientListCondition.value = null;
-									
-									console.log("I am here tooo")
 								}
+								
 							} else {
 								patientListCondition.value = null;
 								patientListCondition.operator = null;
-								console.log("I am here")
 							}
 							
 							requestCondition['field'] = patientListCondition.field;

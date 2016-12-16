@@ -46,6 +46,9 @@ public class ConvertPatientListOperators {
 			case NOT_DEFINED:
 				literalOperator = "NOT EXISTS";
 				return literalOperator;
+			case RELATIVE:
+				literalOperator = "RELATIVE";
+				return literalOperator;
 			default:
 				throw new IllegalArgumentException("Invalid operator " + operator);
 		}
