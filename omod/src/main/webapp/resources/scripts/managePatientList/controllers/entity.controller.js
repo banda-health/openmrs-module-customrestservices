@@ -54,15 +54,17 @@
 				$scope.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback;
 				$scope.relativeDates =
 					[
-						{display: 'Yesterday', value: "Yesterday"},
-						{display: 'This Week', value: "This Week"},
-						{display: 'Last Week', value: "Last Week"},
-						{display: 'Last Two Weeks', value: "Last Two Weeks"},
-						{display: 'Last Month', value: "Last Month"},
-						{display: 'Last 3 Months', value: "Last 3 Months"},
-						{display: 'Last Half Year', value: "Last Half Year"},
-						{display: 'Last 9 Months', value: "Last 9 Months"},
-						{display: 'Last Year', value: "Last Year"}
+						{display: 'Yesterday', value: "YESTERDAY"},
+						{display: 'This Week', value: "THIS_WEEK"},
+						{display: 'Last Week', value: "LAST_WEEK"},
+						{display: 'Last Two Weeks', value: "LAST_TWO_WEEKS"},
+						{display: 'This Month', value: "THIS_MONTH"},
+						{display: 'Last Month', value: "LAST_MONTH"},
+						{display: 'Last 3 Months', value: "LAST_THREE_MONTHS"},
+						{display: 'Last Half Year', value: "LAST_SIX_MONTHS"},
+						{display: 'Last 9 Months', value: "LAST_NINE_MONTHS"},
+						{display: 'This Year', value: "THIS_YEAR"},
+						{display: 'Last Year', value: "LAST_YEAR"}
 					];
 				// auto-complete search concept function
 				$scope.searchConcepts = function (search) {

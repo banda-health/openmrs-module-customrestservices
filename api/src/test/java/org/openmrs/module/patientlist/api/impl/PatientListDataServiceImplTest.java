@@ -583,6 +583,25 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
+	public void patientList_shouldCheckRelativeOperators() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(21);
+
+		Assert.assertEquals("v.startDate", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		//Assert.assertNotNull(patientListDataSet);
+		//Assert.assertEquals(1, patientListDataSet.size());
+	}
+
+	@Test
 	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}
 
 	@Test
