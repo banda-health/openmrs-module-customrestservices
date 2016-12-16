@@ -92,7 +92,7 @@
 							<div class="col-md-6">
 								<select class="form-control" ng-model="listCondition.operator"
 								        ng-enter="patientListCondition(listCondition)"
-								        ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis'">
+								        ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis'" ng-selected="patientListConditionOperator(listCondition)">
 									<option value="">--Select Operator--</option>
 									<option
 											value="EQUALS">=</option>
@@ -109,14 +109,11 @@
 									<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
 									<option ng-show="listCondition.inputType == 'numberInput'"
 									        value="BETWEEN">Between</option>
-									<option ng-selected="patientListConditionOperator(listCondition)"
+									<option
 									        value="NULL">Null</option>
-									<option ng-selected="patientListConditionOperator(listCondition)"
-									        value="NOT_NULL">Not Null</option>
-									<option ng-show="listCondition.inputType == 'numberInput'"
-									        value="DEFINED">Defined</option>
-									<option ng-selected="patientListConditionOperator(listCondition)" ng-show="listCondition.inputType == 'dateInput'"
-									        value="RELATIVE">Relative</option>
+									<option value="NOT_NULL">Not Null</option>
+									<option value="DEFINED">Defined</option>
+									<option value="RELATIVE">Relative</option>
 								</select>
 							</div>
 						</div>
