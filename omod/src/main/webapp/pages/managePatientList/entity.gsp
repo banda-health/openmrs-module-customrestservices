@@ -67,19 +67,19 @@
 			<table style="margin-bottom:5px;margin-top: 15px" class="manage-entities-table">
 				<thead>
 				<tr>
-					<th style="width:12% "></th>
-					<th style="width:60% ">${ui.message("patientlist.condition.field.label")}</th>
+					<th style="width:10% "></th>
+					<th style="width:40% ">${ui.message("patientlist.condition.field.label")}</th>
 					<th style="width:40% ">${ui.message("patientlist.condition.operator.label")}</th>
 					<th>${ui.message("patientlist.condition.value.label")}</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr  ng-repeat="listCondition in listConditions">
-					<td style="width:12% ">
+					<td style="width:10% ">
 						<input type="image" src="/openmrs/images/trash.gif" tabindex="-1" ng-show="listCondition.selected"
 						       title="${ui.message('patientlist.list.condition.removeTitle')}"
 						       class="remove" ng-click="removeListCondition(listCondition)"></td>
-					<td style="width:80% ">
+					<td style="width:40% ">
 						<select class="form-control" ng-change="inputsValueChange(listCondition)"
 						        ng-enter="patientListCondition(listCondition)" ng-model="listCondition.field">
 							<option value="">--Select Field--</option>
@@ -88,35 +88,31 @@
 						</select>
 					</td>
 					<td style="width:40% ">
-						<div class="row">
-							<div class="col-md-6">
-								<select class="form-control" ng-model="listCondition.operator"
+						<select class="form-control" ng-model="listCondition.operator"
 								        ng-enter="patientListCondition(listCondition)"
 								        ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis'" ng-selected="patientListConditionOperator(listCondition)">
-									<option value="">--Select Operator--</option>
-									<option
-											value="EQUALS">=</option>
-									<option
-											value="NOT_EQUALS">!=</option>
-									<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
-									        value="GT">></option>
-									<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
-									        value="LT"><</option>
-									<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
-									        value="GTE">>=</option>
-									<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
-									        value="LTE"><=</option>
-									<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
-									<option ng-show="listCondition.inputType == 'numberInput'"
-									        value="BETWEEN">Between</option>
-									<option
-									        value="NULL">Null</option>
-									<option value="NOT_NULL">Not Null</option>
-									<option value="DEFINED">Defined</option>
-									<option value="RELATIVE">Relative</option>
-								</select>
-							</div>
-						</div>
+							<option value="">--Select Operator--</option>
+							<option
+									value="EQUALS">=</option>
+							<option
+									value="NOT_EQUALS">!=</option>
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							        value="GT">></option>
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							        value="LT"><</option>
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							        value="GTE">>=</option>
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							        value="LTE"><=</option>
+							<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
+							<option ng-show="listCondition.inputType == 'numberInput'"
+							        value="BETWEEN">Between</option>
+							<option
+									value="NULL">Null</option>
+							<option value="NOT_NULL">Not Null</option>
+							<option value="DEFINED">Defined</option>
+							<option value="RELATIVE">Relative</option>
+						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"

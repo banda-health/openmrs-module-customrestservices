@@ -330,18 +330,14 @@
 			};
 		
 		self.getConceptName = self.getConceptName || function (id, onGetConceptNameSuccessfulCallback) {
-				if (!angular.isString(id)) {
+				if (angular.isNumber(parseInt(id))) {
 				PatientListRestfulService.getConceptName(id, onGetConceptNameSuccessfulCallback);
-				} else {
-					
 				}
-				
 			};
 		
 		self.selectLocation = self.selectLocation || function (listCondition) {
 				PatientListRestfulService.getLocationId(listCondition.value, function (data) {
 					listCondition.valueRef = data["id"];
-					console.log(listCondition.valueRef);
 				});
 			};
 		
@@ -358,7 +354,6 @@
 		self.onListConditionDateSuccessfulCallback = self.onListConditionDateSuccessfulCallback || function (date) {
 				if (date !== undefined) {
 					var listConditionValueDate = PatientListFunctions.formatDate(date);
-					console.log(listConditionValueDate);
 				}
 			};
 		
