@@ -61,7 +61,28 @@
 							$scope.valueInputConditions(datatype, listCondition);
 						}
 					}
-					checks($scope, listCondition, listConditionModel);
+					if (listCondition.dataType == "java.util.Date") {
+						onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
+						
+					} else if (listCondition.inputType == "conceptInput") {
+						$scope.getConceptName(value, function (data) {
+							listConditionModel.setValueRef(value);
+							listConditionModel.setValue(data["name"]);
+						});
+						
+					} else if (listCondition.dataType == "java.lang.Boolean") {
+						if (value == "false") {
+							listConditionModel.setValue(false);
+						} else {
+							listConditionModel.setValue(true);
+						}
+						
+					} else if (listCondition.dataType == "org.openmrs.Location") {
+						$scope.getLocationUuid(value, function (data) {
+							listConditionModel.setValueRef(value);
+							listConditionModel.setValue(data["uuid"]);
+						});
+					}
 					
 					
 					listConditionModel.setInputType(listCondition.inputType);
@@ -73,30 +94,6 @@
 			}
 		}
 		
-		function checks($scope, listCondition, listConditionModel) {
-			if (listCondition.dataType == "java.util.Date") {
-					onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
-				
-			} else if (listCondition.inputType == "conceptInput") {
-				$scope.getConceptName(listCondition.value, function (data) {
-					listConditionModel.setValueRef(value);
-					listConditionModel.setValue(data["name"]);
-				});
-				
-			} else if (listCondition.dataType == "java.lang.Boolean") {
-				if (value == "false") {
-					listConditionModel.setValue(false);
-				} else {
-					listConditionModel.setValue(true);
-				}
-				
-			} else if (listCondition.dataType == "org.openmrs.Location") {
-				$scope.getLocationUuid(value, function (data) {
-					listConditionModel.setValueRef(value);
-					listConditionModel.setValue(data["uuid"]);
-				});
-			}
-		}
 		
 		function populateExistingPatientListOrdering(listOrderings, populatedListOrdering, $scope) {
 			for (var i = 0; i < listOrderings.length; i++) {
