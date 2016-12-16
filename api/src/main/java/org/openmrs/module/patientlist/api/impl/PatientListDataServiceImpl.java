@@ -16,12 +16,13 @@ import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.model.PatientList;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
+import org.openmrs.module.patientlist.api.model.PatientListRelativeDate;
+import org.openmrs.module.patientlist.api.util.PatientListDateUtil;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
 import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
 import org.openmrs.module.patientlist.api.util.PatientInformation;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +36,6 @@ public class PatientListDataServiceImpl extends
         implements IPatientListDataService {
 
 	protected final Log LOG = LogFactory.getLog(this.getClass());
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	protected BasicObjectAuthorizationPrivileges getPrivileges() {
@@ -233,7 +233,8 @@ public class PatientListDataServiceImpl extends
 							int age = Integer.valueOf(condition.getValue());
 							Calendar calendar = Calendar.getInstance();
 							calendar.add(Calendar.YEAR, -age);
-							paramValues.add(sdf.parse(sdf.format(calendar.getTime())));
+							paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+							        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
 						}
 					} catch (ParseException pex) {
 						LOG.error("error parsing date: ", pex);
@@ -246,22 +247,32 @@ public class PatientListDataServiceImpl extends
 
 					hql.append(mappingFieldName);
 					hql.append(" ");
+
+					String value = condition.getValue();
+					if (StringUtils.equalsIgnoreCase(operator, "RELATIVE")) {
+						operator = "BETWEEN";
+						value = PatientListDateUtil.createRelativeDate(
+						        PatientListRelativeDate.valueOf(value));
+					}
+
 					hql.append(operator);
 					hql.append(" ");
-					if (StringUtils.isNotEmpty(condition.getValue())) {
-						String value = condition.getValue();
+					hql.append("?");
+					if (StringUtils.isNotEmpty(value)) {
 						if (!StringUtils.containsIgnoreCase(operator, "null")) {
-							hql.append("?");
 							if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
 								try {
 									// BETWEEN dates should be separated by |
 									if (StringUtils.contains(value, "|")) {
 										String[] dates = StringUtils.split(value, "|");
-										paramValues.add(sdf.parse(dates[0]));
-										paramValues.add(sdf.parse(dates[1]));
+										paramValues.add(
+										        PatientListDateUtil.simpleDateFormat.parse(dates[0]));
 										hql.append(" AND ? ");
+										paramValues.add(
+										        PatientListDateUtil.simpleDateFormat.parse(dates[1]));
 									} else {
-										paramValues.add(sdf.parse(value));
+										paramValues.add(
+										        PatientListDateUtil.simpleDateFormat.parse(value));
 									}
 								} catch (ParseException pex) {
 									paramValues.add(value);
