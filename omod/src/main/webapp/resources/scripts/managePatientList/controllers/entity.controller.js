@@ -154,6 +154,7 @@
 						} else {
 							listCondition.inputType = "textInput";
 						}
+						
 					} else if (datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
 						if (listCondition.operator == "RELATIVE") {
 							listCondition.inputType = "dropDownInput";
@@ -165,17 +166,22 @@
 						
 					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
+						
 					} else if (listCondition.field == "p.gender") {
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
+						
 					} else if (datatype == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 						listCondition.dataType = "org.openmrs.Location";
+						
 					} else if (datatype == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
+						
 					} else if (datatype == "java.lang.Integer") {
 						listCondition.inputType = "numberInput";
+						
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -365,7 +371,7 @@
 		self.validateBeforeSaveOrUpdate = self.validateBeforeSaveOrUpdate || function () {
 				if (!angular.isDefined($scope.entity.name) || $scope.entity.name === '') {
 					$scope.submitted = true;
-					emr.errorAlert('Name required');
+					emr.errorAlert("patientlist.name.error");
 					return false;
 				}
 				
@@ -377,7 +383,7 @@
 				}
 				
 				if ($scope.listConditions.length == 1) {
-					emr.errorAlert('You are required to input at least one patient list condition');
+					emr.errorAlert("patientlist.list.condition.error");
 					return false;
 				} else {
 					var patientListConditions = [];
@@ -390,14 +396,14 @@
 							
 							if (patientListCondition.field != "p.hasActiveVisit" && patientListCondition.field != "v.hasDiagnosis") {
 								if (patientListCondition.field === "") {
-									emr.errorAlert("Condition field required ");
+									emr.errorAlert("patientlist.list.condition.field.error");
 									return false;
 								}
 								
 								if (patientListCondition.operator != "NULL" || patientListCondition.operator != "NOT_NULL"
 									|| patientListCondition.operator != "DEFINED") {
 									if (patientListCondition.operator === "") {
-										emr.errorAlert("Condition operator required ");
+										emr.errorAlert("patientlist.list.condition.operator.error");
 										return false;
 									}
 								} else {
@@ -429,7 +435,7 @@
 						}
 						
 						if ($scope.listOrderings[i].field === "") {
-							emr.errorAlert("Sort Order field required ");
+							emr.errorAlert("patientlist.list.sort.order.field.error");
 							return false;
 						}
 						

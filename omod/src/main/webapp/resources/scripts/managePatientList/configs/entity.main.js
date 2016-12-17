@@ -51,6 +51,11 @@ emr.loadMessages([
 	"openhmis.commons.general.error.retireReason",
 	"patientlist.page",
 	"patientlist.condition.chooseConditionErrorMessage",
-	"patientlist.list.condition.error.invalidCondition"
+	"patientlist.list.condition.error.invalidCondition",
+	"patientlist.name.error",
+	"patientlist.list.condition.error",
+	"patientlist.list.condition.field.error",
+	"patientlist.list.condition.operator.error",
+	"patientlist.list.sort.order.field.error",
 	
 ]);
