@@ -294,11 +294,12 @@ public class PatientInformation {
 				if (foundAttribute == null) {
 					return null;
 				} else {
-					if (foundAttribute.getValueReference() != null) {
+					Object result = foundAttribute.getValue();
+					if (result == null && foundAttribute.getValueReference() != null) {
 						return retrieveValueFromReference(foundAttribute);
-					} else {
-						return foundAttribute.getValue();
 					}
+
+					return result;
 				}
 			}
 		}, mappingFieldName);

@@ -3,6 +3,7 @@ package org.openmrs.module.webservices.rest.web.controller;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.util.DummyPatient;
+import org.openmrs.module.patientlist.api.util.DummyVisit;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class PatientListLivePreviewingController {
 		DummyPatient patient = DummyPatient.getInstance();
 		PatientListData patientList = new PatientListData();
 		patientList.setPatient(patient);
+
+		DummyVisit visit = DummyVisit.getInstance();
+		visit.setPatient(patient);
+		patientList.setVisit(visit);
 
 		// header template
 		String headerContent = patientListDataService.applyTemplate(headerTemplate, patientList);

@@ -1,20 +1,18 @@
 package org.openmrs.module.patientlist.api.util;
 
-import org.openmrs.Visit;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
-import org.openmrs.VisitType;
-import org.openmrs.VisitAttribute;
-import org.openmrs.VisitAttributeType;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonAddress;
 import org.openmrs.PersonName;
 import org.openmrs.PatientIdentifier;
-import org.openmrs.Location;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.patientlist.api.model.PatientInformationField;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -60,26 +58,27 @@ public class DummyPatient extends Patient {
 		dummyPatient.setNames(names);
 
 		// set person attributes
-		PersonAttribute personAttribute = new PersonAttribute();
-		personAttribute.setId(1);
-		personAttribute.setValue("Married");
-
-		PersonAttributeType type = new PersonAttributeType();
-		type.setId(1);
-		type.setName("Civil Status");
-		personAttribute.setAttributeType(type);
+		Map<String, PatientInformationField<?>> fields =
+		        PatientInformation.getInstance().getFields();
+		int count = 0;
 		Set<PersonAttribute> attributes = new HashSet<PersonAttribute>();
-		attributes.add(personAttribute);
+		for (Map.Entry<String, PatientInformationField<?>> field : fields.entrySet()) {
+			String key = field.getKey();
+			if (StringUtils.contains(key, "p.attr")) {
 
-		personAttribute = new PersonAttribute();
-		personAttribute.setId(2);
-		personAttribute.setValue("Cambodia");
+				PersonAttribute personAttribute = new PersonAttribute();
+				personAttribute.setId(count);
+				personAttribute.setValue(field.getValue().getName().toLowerCase() + ":" + count);
 
-		type = new PersonAttributeType();
-		type.setId(2);
-		type.setName("Citizenship");
-		personAttribute.setAttributeType(type);
-		attributes.add(personAttribute);
+				PersonAttributeType type =
+				        Context.getPersonService().getPersonAttributeTypeByName(field.getValue().getName());
+
+				personAttribute.setAttributeType(type);
+
+				attributes.add(personAttribute);
+			}
+			count++;
+		}
 
 		dummyPatient.setAttributes(attributes);
 
@@ -98,43 +97,6 @@ public class DummyPatient extends Patient {
 		Set<PatientIdentifier> identifiers = new HashSet<PatientIdentifier>();
 		identifiers.add(patientIdentifier);
 		dummyPatient.setIdentifiers(identifiers);
-
-		// set visit id
-		Visit visit = new Visit();
-		visit.setVisitId(1);
-
-		// set visit type
-		VisitType visitType = new VisitType();
-		visitType.setId(1);
-		visitType.setName("Outpatient");
-		visit.setVisitType(visitType);
-
-		// set patient
-		visit.setPatient(dummyPatient);
-
-		// set location
-		Location location = new Location();
-		location.setId(1);
-		location.setName("OpenHMIS offices");
-		visit.setLocation(location);
-
-		// set startdatetime
-		cal.setTime(new Date());
-		//cal.add(Calendar.MONTH, -2);
-		visit.setStartDatetime(cal.getTime());
-
-		// set enddatetime -- if required
-
-		// set visit attributes
-		VisitAttribute visitAttribute = new VisitAttribute();
-		visitAttribute.setVisitAttributeId(1);
-		visitAttribute.setVisit(visit);
-
-		VisitAttributeType visitAttributeType = new VisitAttributeType();
-		visitAttributeType.setVisitAttributeTypeId(1);
-		visitAttributeType.setName("ward");
-		visitAttributeType.setDatatypeClassname("");
-		visitAttribute.setAttributeType(visitAttributeType);
 
 		return dummyPatient;
 	}
