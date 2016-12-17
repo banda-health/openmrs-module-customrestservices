@@ -107,11 +107,10 @@
 							<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
 							<option ng-show="listCondition.inputType == 'numberInput'"
 							        value="BETWEEN">Between</option>
-							<option
-									value="NULL">Null</option>
-							<option value="NOT_NULL">Not Null</option>
-							<option value="DEFINED">Defined</option>
-							<option ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NULL">Null</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NOT_NULL">Not Null</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis'" value="DEFINED">Defined</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis'" ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
