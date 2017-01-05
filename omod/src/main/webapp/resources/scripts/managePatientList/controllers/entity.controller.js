@@ -105,6 +105,11 @@
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
+					} else if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
+						listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
+						listCondition.selected = true;
+						console.log(listCondition.dateOne);
+						console.log(listCondition.dateTwo);
 					} else {
 						if (listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
 							listCondition.id = listCondition.field + "_" + listCondition.value;
@@ -151,6 +156,9 @@
 					if (datatype == "java.lang.String") {
 						if (listCondition.field == "v.diagnosis") {
 							listCondition.inputType = "conceptInput";
+						} else if (listCondition.field == "v.visitType") {
+							listCondition.inputType = "dropDownInput";
+							PatientListRestfulService.loadVisitTypes(PATIENT_LIST_MODULE_NAME, self.onLoadVisitTypesSuccessful)
 						} else {
 							listCondition.inputType = "textInput";
 						}
@@ -298,13 +306,11 @@
 				return $sce.trustAsHtml(template);
 			}
 		
-		// call-back functions.
 		self.onLoadFieldsSuccessful = self.onLoadFieldsSuccessful || function (data) {
 				$scope.fields = data.results;
 				$scope.fields = $filter('orderBy')($scope.fields, 'field');
 			};
 		
-		// call-back functions.
 		self.onPreLoadDefaultDisplayTemplateSuccessful = self.onPreLoadDefaultDisplayTemplateSuccessful || function (data) {
 				$scope.entity.headerTemplate = data.headerTemplate;
 				$scope.entity.bodyTemplate = data.bodyTemplate;
@@ -314,13 +320,20 @@
 				self.renderTemplate(data.bodyTemplate);
 			};
 		
-		// call-back functions.
 		self.onLoadLocationsSuccessful = self.onLoadLocationsSuccessful || function (data) {
 				$scope.locations = data.results;
 				for (var i = 0; i < $scope.locations.length; i++) {
 					$scope.locations[i].value = $scope.locations[i].uuid;
 				}
 				$scope.dropDownEntries = $scope.locations;
+			};
+		
+		self.onLoadVisitTypesSuccessful = self.onLoadVisitTypesSuccessful || function (data) {
+				$scope.visitTypes = data.results;
+				for (var i = 0; i < $scope.visitTypes.length; i++) {
+					$scope.visitTypes[i].value = $scope.visitTypes[i].display;
+				}
+				$scope.dropDownEntries = $scope.visitTypes;
 			};
 		
 		/**
