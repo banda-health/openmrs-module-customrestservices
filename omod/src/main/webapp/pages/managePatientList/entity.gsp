@@ -96,21 +96,28 @@
 									value="EQUALS">=</option>
 							<option
 									value="NOT_EQUALS">!=</option>
-							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'
+							|| listCondition.field == 'v.visitType' || listCondition.inputType == 'checkBoxInput'"
 							        value="GT">></option>
-							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'
+							|| listCondition.field == 'v.visitType' || listCondition.inputType == 'checkBoxInput'"
 							        value="LT"><</option>
-							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'
+							|| listCondition.inputType == 'checkBoxInput' || listCondition.field == 'v.visitType'"
 							        value="GTE">>=</option>
-							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'"
+							<option ng-hide="listCondition.inputType == 'textInput' || listCondition.inputType == 'conceptInput'
+							|| listCondition.inputType == 'checkBoxInput' || listCondition.field == 'v.visitType'"
 							        value="LTE"><=</option>
-							<option ng-show="listCondition.inputType == 'textInput'" value="LIKE">Like</option>
-							<option ng-show="listCondition.inputType == 'numberInput'"
+							<option ng-show="listCondition.inputType == 'textInput' || listCondition.field == 'v.visitType'"
+							        value="LIKE">Like</option>
+							<option ng-show="listCondition.inputType == 'numberInput' || listCondition.inputType == 'dateInput'"
 							        value="BETWEEN">Between</option>
 							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NULL">Null</option>
-							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NOT_NULL">Not Null</option>
-							<option ng-hide="listCondition.field == 'v.diagnosis'" value="DEFINED">Defined</option>
-							<option ng-hide="listCondition.field == 'v.diagnosis'" ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis' || listCondition.inputType == 'checkBoxInput'"
+							        value="NOT_NULL">Not Null</option>
+							<option ng-hide="listCondition.field == 'v.diagnosis' || listCondition.inputType == 'checkBoxInput'"
+							        value="DEFINED">Defined</option>
+							<option ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
 						</select>
 					</td>
 					<td ng-show="listCondition.inputType == 'textInput'">
@@ -131,7 +138,7 @@
 							        ng-selected="dropDownEntry.value == listCondition.value">{{dropDownEntry.display}}</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType =='dateInput'"
+					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator != 'BETWEEN'"
 					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
 					     || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'">
 						${ui.includeFragment("uicommons", "field/datetimepicker", [
@@ -140,6 +147,29 @@
 								formFieldName: 'patientConditionDatePicker',
 								model        : 'listConditionValue'
 								])}
+					</td>
+					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator == 'BETWEEN'"
+					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
+					     || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'">
+						<div class="row">
+							<div class="col-md-6">
+								${ui.includeFragment("uicommons", "field/datetimepicker", [
+										label        : "",
+										useTime      : false,
+										formFieldName: 'patientConditionDatePicker',
+										model        : 'dateTwo'
+								])}
+							</div>
+							
+							<div class="col-md-6">
+								${ui.includeFragment("uicommons", "field/datetimepicker", [
+										label        : "",
+										useTime      : false,
+										formFieldName: 'patientConditionDatePicker',
+										model        : 'dateOne'
+								])}
+							</div>
+						</div>
 					</td>
 					<td ng-show="listCondition.inputType == 'numberInput'">
 						<input ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'

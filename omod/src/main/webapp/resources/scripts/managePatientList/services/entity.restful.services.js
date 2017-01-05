@@ -33,7 +33,8 @@
 			getConceptName: getConceptName,
 			getLocationId: getLocationId,
 			getLocationUuid: getLocationUuid,
-			preLoadDefaultDisplayTemplate: preLoadDefaultDisplayTemplate
+			preLoadDefaultDisplayTemplate: preLoadDefaultDisplayTemplate,
+			loadVisitTypes: loadVisitTypes
 		};
 		
 		return service;
@@ -65,6 +66,20 @@
 			EntityRestFactory.setBaseUrl('location', 'v1');
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadLocationsSuccessful, errorCallback);
+			//reset base url..
+			EntityRestFactory.setBaseUrl(module_name);
+		}
+		
+		/**
+		 * @param onLoadVisitTypesSuccessful
+		 * @param module_name
+		 */
+		function loadVisitTypes(module_name,onLoadVisitTypesSuccessful) {
+			var requestParams = [];
+			requestParams['rest_entity_name'] = '';
+			EntityRestFactory.setBaseUrl('visittype', 'v1');
+			EntityRestFactory.loadEntities(requestParams,
+				onLoadVisitTypesSuccessful, errorCallback);
 			//reset base url..
 			EntityRestFactory.setBaseUrl(module_name);
 		}
