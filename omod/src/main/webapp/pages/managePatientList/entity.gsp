@@ -238,8 +238,7 @@
 					<td>
 						<select class="form-control" ng-model="listOrdering.sortOrder"
 						        ng-change="patientListSortOrder(listOrdering)" ng-enter="patientListSortOrder(listOrdering)">
-							<option value="">--Select Sort Order--</option>
-							<option value="asc">Ascending</option>
+							<option ng-selected="listOrdering.sortOrder == 'asc'" value="">Ascending</option>
 							<option value="desc">Descending</option>
 						</select>
 					</td>
