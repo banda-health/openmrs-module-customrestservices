@@ -602,35 +602,194 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition notEqualOperator = new PatientListCondition();
+		notEqualOperator.setField("p.age");
+		notEqualOperator.setOperator(PatientListOperator.NOT_EQUALS);
+		notEqualOperator.setValue("20");
+		notEqualOperator.setConditionOrder(1);
+
+		patientList.addCondition(notEqualOperator);
+
+		patientListService.save(patientList);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.NOT_EQUALS, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition greaterThanOperator = new PatientListCondition();
+		greaterThanOperator.setField("p.age");
+		greaterThanOperator.setOperator(PatientListOperator.GT);
+		greaterThanOperator.setValue("30");
+		greaterThanOperator.setConditionOrder(1);
+
+		patientList.addCondition(greaterThanOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.GT, patientList.getPatientListConditions().get(0).getOperator());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition greaterOrEqualOperator = new PatientListCondition();
+		greaterOrEqualOperator.setField("v.startDate");
+		greaterOrEqualOperator.setOperator(PatientListOperator.GTE);
+		greaterOrEqualOperator.setValue("2016-10-01");
+		greaterOrEqualOperator.setConditionOrder(1);
+
+		patientList.addCondition(greaterOrEqualOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.GTE, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition lessOrEqualOperator = new PatientListCondition();
+		lessOrEqualOperator.setField("v.startDate");
+		lessOrEqualOperator.setOperator(PatientListOperator.LTE);
+		lessOrEqualOperator.setValue("2016-10-01");
+		lessOrEqualOperator.setConditionOrder(1);
+
+		patientList.addCondition(lessOrEqualOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.LTE, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition lessThanEqual = new PatientListCondition();
+		lessThanEqual.setField("v.startDate");
+		lessThanEqual.setOperator(PatientListOperator.LT);
+		lessThanEqual.setValue("2016-10-01");
+		lessThanEqual.setConditionOrder(1);
+
+		patientList.addCondition(lessThanEqual);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.LT, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition likeOperator = new PatientListCondition();
+		likeOperator.setField("p.familyName");
+		likeOperator.setOperator(PatientListOperator.LIKE);
+		likeOperator.setValue("Doe");
+		likeOperator.setConditionOrder(1);
+
+		patientList.addCondition(likeOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.LIKE, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition betweenOperator = new PatientListCondition();
+		betweenOperator.setField("p.age");
+		betweenOperator.setOperator(PatientListOperator.BETWEEN);
+		betweenOperator.setValue("20 | 30");
+		betweenOperator.setConditionOrder(1);
+
+		patientList.addCondition(betweenOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.BETWEEN, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition nullOperator = new PatientListCondition();
+		nullOperator.setField("p.familyName");
+		nullOperator.setOperator(PatientListOperator.NULL);
+		nullOperator.setValue(null);
+		nullOperator.setConditionOrder(1);
+
+		patientList.addCondition(nullOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.NULL, patientList.getPatientListConditions().get(0).getOperator());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition notNullOperator = new PatientListCondition();
+		notNullOperator.setField("p.familyName");
+		notNullOperator.setOperator(PatientListOperator.NOT_NULL);
+		notNullOperator.setValue("Doe");
+		notNullOperator.setConditionOrder(1);
+
+		patientList.addCondition(notNullOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.NOT_NULL, patientList.getPatientListConditions().get(0).getOperator());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition definedOperator = new PatientListCondition();
+		definedOperator.setField("p.attr.Race");
+		definedOperator.setOperator(PatientListOperator.DEFINED);
+		definedOperator.setValue("");
+		definedOperator.setConditionOrder(1);
+
+		patientList.addCondition(definedOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertNotNull(patientList.getPatientListConditions().get(0).getField());
+		Assert.assertEquals(PatientListOperator.DEFINED, patientList.getPatientListConditions().get(0).getOperator());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {
+		PatientList patientList = patientListDataServiceTest.createEntity(true);
+
+		PatientListCondition notDefinedOperator = new PatientListCondition();
+		notDefinedOperator.setOperator(PatientListOperator.NOT_DEFINED);
+		notDefinedOperator.setValue("");
+		notDefinedOperator.setConditionOrder(1);
+
+		patientList.addCondition(notDefinedOperator);
+		Context.flushSession();
+
+		Assert.assertNotNull(patientList);
+		Assert.assertEquals(PatientListOperator.NOT_DEFINED, patientList.getPatientListConditions().get(0).getOperator());
+	}
 }
