@@ -154,19 +154,21 @@
 						<div class="row">
 							<div class="col-md-6">
 								${ui.includeFragment("uicommons", "field/datetimepicker", [
-										label        : "",
+										id           : "betweenDateOne",
+										label        : "betweenDateOne",
 										useTime      : false,
 										formFieldName: 'patientConditionDatePicker',
-										model        : 'dateTwo'
+										model        : 'dateOne'
 								])}
 							</div>
 							
 							<div class="col-md-6">
 								${ui.includeFragment("uicommons", "field/datetimepicker", [
-										label        : "",
+										id           : "betweenDateTwo",
+										label        : "betweenDateTwo",
 										useTime      : false,
 										formFieldName: 'patientConditionDatePicker',
-										model        : 'dateOne'
+										model        : 'dateTwo'
 								])}
 							</div>
 						</div>
