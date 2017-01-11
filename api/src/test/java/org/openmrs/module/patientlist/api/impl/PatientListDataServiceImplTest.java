@@ -769,54 +769,60 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 	@Test
 	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {
-		PatientList patientList = patientListDataServiceTest.createEntity(true);
+		PatientList patientList = patientListService.getById(0);
 
-		PatientListCondition notNullOperator = new PatientListCondition();
-		notNullOperator.setField("p.familyName");
-		notNullOperator.setOperator(PatientListOperator.NOT_NULL);
-		notNullOperator.setValue("Doe");
-		notNullOperator.setConditionOrder(1);
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(27);
 
-		patientList.addCondition(notNullOperator);
-		Context.flushSession();
+		Assert.assertEquals("NOT_NULL", condition.getOperator().toString());
 
-		Assert.assertNotNull(patientList);
-		Assert.assertEquals(PatientListOperator.NOT_NULL, patientList.getPatientListConditions().get(0).getOperator());
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(6, patientListDataSet.size());
 
 	}
 
 	@Test
 	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {
-		PatientList patientList = patientListDataServiceTest.createEntity(true);
+		PatientList patientList = patientListService.getById(0);
 
-		PatientListCondition definedOperator = new PatientListCondition();
-		definedOperator.setField("p.attr.Race");
-		definedOperator.setOperator(PatientListOperator.DEFINED);
-		definedOperator.setValue("");
-		definedOperator.setConditionOrder(1);
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(28);
 
-		patientList.addCondition(definedOperator);
-		Context.flushSession();
+		Assert.assertEquals("DEFINED", condition.getOperator().toString());
 
-		Assert.assertNotNull(patientList);
-		Assert.assertNotNull(patientList.getPatientListConditions().get(0).getField());
-		Assert.assertEquals(PatientListOperator.DEFINED, patientList.getPatientListConditions().get(0).getOperator());
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
 
 	}
 
 	@Test
 	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {
-		PatientList patientList = patientListDataServiceTest.createEntity(true);
+		PatientList patientList = patientListService.getById(0);
 
-		PatientListCondition notDefinedOperator = new PatientListCondition();
-		notDefinedOperator.setOperator(PatientListOperator.NOT_DEFINED);
-		notDefinedOperator.setValue("");
-		notDefinedOperator.setConditionOrder(1);
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(29);
 
-		patientList.addCondition(notDefinedOperator);
-		Context.flushSession();
+		Assert.assertEquals("NOT_DEFINED", condition.getOperator().toString());
 
-		Assert.assertNotNull(patientList);
-		Assert.assertEquals(PatientListOperator.NOT_DEFINED, patientList.getPatientListConditions().get(0).getOperator());
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(0, patientListDataSet.size());
 	}
 }

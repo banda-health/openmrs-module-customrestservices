@@ -70,5 +70,14 @@
 	<patient_list_condition patient_list_condition_id="26" patient_list_id="0" field="v.endDate"
 	                        condition_order="26" operator="NULL" value=""
 	                        uuid="4028814B39B565A20139B95FB3440030"/>
+	<patient_list_condition patient_list_condition_id="27" patient_list_id="0" field="p.age"
+	                        condition_order="27" operator="NOT_NULL" value=""
+	                        uuid="4028814B39B565A20139B95FB3440031"/>
+	<patient_list_condition patient_list_condition_id="28" patient_list_id="0" field="v.attr.First Visit"
+	                        condition_order="28" operator="DEFINED" value=""
+	                        uuid="4028814B39B565A20139B95FB3440032"/>
+	<patient_list_condition patient_list_condition_id="29" patient_list_id="0" field="v.attr.Bed"
+	                        condition_order="29" operator="NOT_DEFINED" value=""
+	                        uuid="4028814B39B565A20139B95FB3440033"/>
 
 </dataset>
