@@ -1,10 +1,13 @@
 package org.openmrs.module.patientlist.api;
 
+import org.junit.runner.RunWith;
 import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.patientlist.api.model.PatientList;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
 public class IPatientListDataServiceTest extends IMetadataDataServiceTest<IPatientListService, PatientList> {
-	public static final String PATIENT_LIST_DATASET = TestConstants.BASE_DATASET_DIR + "PatientListTest.xml";
+	private static final String PATIENT_LIST_DATASET = TestConstants.BASE_DATASET_DIR + "PatientListTest.xml";
 
 	@Override
 	public void before() throws Exception {

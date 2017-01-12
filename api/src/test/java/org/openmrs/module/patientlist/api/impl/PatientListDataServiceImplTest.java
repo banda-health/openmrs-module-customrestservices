@@ -3,6 +3,7 @@ package org.openmrs.module.patientlist.api.impl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
@@ -11,10 +12,20 @@ import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ Calendar.class, Context.class })
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
 
 	private IPatientListService patientListService;
@@ -22,6 +33,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	private IPatientListDataServiceTest patientListDataServiceTest;
 	private PatientService patientService;
 	private VisitService visitService;
+	private Calendar calendar;
 
 	@Before
 	public void before() throws Exception {
@@ -32,6 +44,10 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientListDataService = Context.getService(IPatientListDataService.class);
 		patientService = Context.getPatientService();
 		visitService = Context.getVisitService();
+
+		mockStatic(Calendar.class);
+		calendar = mock(Calendar.class);
+		when(Calendar.getInstance()).thenReturn(calendar);
 	}
 
 	@Override
@@ -584,34 +600,24 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 	@Test
 	public void patientList_shouldCheckRelativeOperators() throws Exception {
-		/*PatientList patientList = patientListDataServiceTest.createEntity(true);
-
-		PatientListCondition patientListCondition = Mockito.mock(PatientListCondition.class);
-		patientListCondition.setField("p.age");
-		patientListCondition.setOperator(PatientListOperator.RELATIVE);
-		patientListCondition.setValue("");
-		patientListCondition.setConditionOrder(1);
-
-		patientList.addCondition(patientListCondition);
-		Context.flushSession();
-
-		Assert.assertNotNull(patientList);*/
-
-		/*PatientList patientList = patientListService.getById(0);
+		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
 		PatientListCondition condition = conditions.get(21);
 
-		Assert.assertEquals("v.startDate", condition.getField());
+		Assert.assertEquals("RELATIVE", condition.getOperator().toString());
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
 
-		PagingInfo pagingInfo = new PagingInfo();
-		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);*/
+		Date date = new Date(2000, 0, 1);
+		when(calendar.getTime()).thenReturn(date);
 
-		//Assert.assertNotNull(patientListDataSet);
-		//Assert.assertEquals(1, patientListDataSet.size());
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+
 	}
 
 	@Test
