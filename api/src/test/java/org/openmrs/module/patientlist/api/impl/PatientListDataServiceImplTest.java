@@ -1,9 +1,6 @@
 package org.openmrs.module.patientlist.api.impl;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
@@ -13,20 +10,28 @@ import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.agent.PowerMockAgent;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Calendar.class, Context.class })
+@PrepareForTest(Calendar.class)
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
+
+	@Rule
+	public PowerMockRule rule = new PowerMockRule();
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		PowerMockAgent.initializeIfNeeded();
+	}
 
 	private IPatientListService patientListService;
 	private IPatientListDataService patientListDataService;
@@ -610,13 +615,15 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
 
-		Date date = new Date(2000, 0, 1);
-		when(calendar.getTime()).thenReturn(date);
+		Date date = new Date(2014, 0, 1);
+		when(calendar.getTimeInMillis()).thenReturn(date.getTime());
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(1, patientListDataSet.size());
+		Assert.assertEquals(1, patientListDataSet.get(0).getVisit().getId().intValue());
 
 	}
 
