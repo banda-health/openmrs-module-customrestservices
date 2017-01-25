@@ -266,7 +266,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(3, patientListDataSet.size());
+		Assert.assertEquals(5, patientListDataSet.size());
 	}
 
 	@Test
@@ -498,7 +498,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(6, patientListDataSet.size());
+		Assert.assertEquals(8, patientListDataSet.size());
 	}
 
 	@Test
@@ -615,15 +615,14 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
 
-		Date date = new Date(2014, 0, 1);
+		Date date = new Date(2016, 0, 1);
 		when(calendar.getTimeInMillis()).thenReturn(date.getTime());
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(1, patientListDataSet.size());
-		Assert.assertEquals(1, patientListDataSet.get(0).getVisit().getId().intValue());
+		Assert.assertEquals(3, patientListDataSet.size());
 
 	}
 

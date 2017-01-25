@@ -53,7 +53,7 @@
 							condition_order="20" operator="EQUALS" value="malaria"
 							uuid="4028814B39B565A20139B95FB3440024"/>
 	<patient_list_condition patient_list_condition_id="21" patient_list_id="0" field="v.startDate"
-							condition_order="21" operator="RELATIVE" value="LAST_MONTH"
+							condition_order="21" operator="RELATIVE" value="LAST_THREE_MONTHS"
 							uuid="4028814B39B565A20139B95FB3440025"/>
 	<patient_list_condition patient_list_condition_id="22" patient_list_id="0" field="p.age"
 	                        condition_order="22" operator="NOT_EQUALS" value="20"

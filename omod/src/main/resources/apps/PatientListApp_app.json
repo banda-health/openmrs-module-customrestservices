@@ -18,7 +18,7 @@
 				"id": "${project.parent.groupId}.${project.parent.artifactId}.PatientListLink",
 				"extensionPointId": "org.openmrs.referenceapplication.homepageLink",
 				"type": "link",
-				"label": "Internal Medicine Patient List",
+				"label": "Patient List",
 				"url": "${project.parent.artifactId}/view/entities.page",
 				"requiredPrivilege": "Task: View Patient List",
 				"icon": "icon-list",

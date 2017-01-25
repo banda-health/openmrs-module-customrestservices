@@ -6,7 +6,7 @@
 			link: '${ui.pageLink("coreapps", "systemadministration/systemAdministration")}'
 		},
 		{
-			label: "${ ui.message("patientlist.page")}",
+			label: "${ ui.message("patientlist.manage.label")}",
 			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page##/'
 		},
 		{label: "${ ui.message("patientlist.define.label")}"}
