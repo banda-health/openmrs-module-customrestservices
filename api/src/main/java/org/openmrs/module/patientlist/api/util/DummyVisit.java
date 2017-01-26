@@ -63,9 +63,9 @@ public class DummyVisit extends Visit {
 			String key = field.getKey();
 			if (StringUtils.contains(key, "v.attr")) {
 				VisitAttribute visitAttribute = new VisitAttribute();
-				visitAttribute.setVisitAttributeId(count);
+				visitAttribute.setVisitAttributeId(count++);
 				visitAttribute.setVisit(dummyVisit);
-				visitAttribute.setValue(field.getValue().getName().toLowerCase() + ":" + count);
+				visitAttribute.setValue("TEST " + field.getValue().getName().toUpperCase());
 
 				for (VisitAttributeType type : types) {
 					if (type.getName().equalsIgnoreCase(field.getValue().getName())) {
@@ -75,7 +75,6 @@ public class DummyVisit extends Visit {
 
 				dummyVisit.setAttribute(visitAttribute);
 			}
-			count++;
 		}
 
 		return dummyVisit;

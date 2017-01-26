@@ -65,19 +65,16 @@ public class DummyPatient extends Patient {
 		for (Map.Entry<String, PatientInformationField<?>> field : fields.entrySet()) {
 			String key = field.getKey();
 			if (StringUtils.contains(key, "p.attr")) {
-
 				PersonAttribute personAttribute = new PersonAttribute();
-				personAttribute.setId(count);
-				personAttribute.setValue(field.getValue().getName().toLowerCase() + ":" + count);
+				personAttribute.setId(count++);
+				personAttribute.setValue("TEST " + field.getValue().getName().toUpperCase());
 
 				PersonAttributeType type =
 				        Context.getPersonService().getPersonAttributeTypeByName(field.getValue().getName());
 
 				personAttribute.setAttributeType(type);
-
 				attributes.add(personAttribute);
 			}
-			count++;
 		}
 
 		dummyPatient.setAttributes(attributes);
