@@ -5,10 +5,6 @@
 			label: "${ ui.message("coreapps.app.systemAdministration.label")}",
 			link: '${ui.pageLink("coreapps", "systemadministration/systemAdministration")}'
 		},
-		{
-			label: "${ ui.message("patientlist.page")}",
-			link: '/' + OPENMRS_CONTEXT_PATH + '/patientlist/managePatientList/entities.page#/'
-		},
 		{label: "${ ui.message("patientlist.manage.label")}"}
 	];
 	

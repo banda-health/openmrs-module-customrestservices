@@ -1,8 +1,6 @@
 package org.openmrs.module.patientlist.api.impl;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
@@ -11,17 +9,36 @@ import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.agent.PowerMockAgent;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+@PrepareForTest(Calendar.class)
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
+
+	@Rule
+	public PowerMockRule rule = new PowerMockRule();
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		PowerMockAgent.initializeIfNeeded();
+	}
 
 	private IPatientListService patientListService;
 	private IPatientListDataService patientListDataService;
 	private IPatientListDataServiceTest patientListDataServiceTest;
 	private PatientService patientService;
 	private VisitService visitService;
+	private Calendar calendar;
 
 	@Before
 	public void before() throws Exception {
@@ -32,6 +49,10 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientListDataService = Context.getService(IPatientListDataService.class);
 		patientService = Context.getPatientService();
 		visitService = Context.getVisitService();
+
+		mockStatic(Calendar.class);
+		calendar = mock(Calendar.class);
+		when(Calendar.getInstance()).thenReturn(calendar);
 	}
 
 	@Override
@@ -245,7 +266,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(3, patientListDataSet.size());
+		Assert.assertEquals(5, patientListDataSet.size());
 	}
 
 	@Test
@@ -477,7 +498,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(6, patientListDataSet.size());
+		Assert.assertEquals(8, patientListDataSet.size());
 	}
 
 	@Test
@@ -589,7 +610,30 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
 		PatientListCondition condition = conditions.get(21);
 
-		Assert.assertEquals("v.startDate", condition.getField());
+		Assert.assertEquals("RELATIVE", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		Date date = new Date(2016, 0, 1);
+		when(calendar.getTimeInMillis()).thenReturn(date.getTime());
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+
+	}
+
+	@Test
+	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(22);
+
+		Assert.assertEquals("NOT_EQUALS", condition.getOperator().toString());
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
@@ -597,40 +641,200 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
-		//Assert.assertNotNull(patientListDataSet);
-		//Assert.assertEquals(1, patientListDataSet.size());
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(6, patientListDataSet.size());
 	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(23);
+
+		Assert.assertEquals("GT", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(16);
+
+		Assert.assertEquals("GTE", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithGreaterThanEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(25);
+
+		Assert.assertEquals("LT", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(24);
+
+		Assert.assertEquals("LTE", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(0, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLesserThanEqualOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(0);
+
+		Assert.assertEquals("LIKE", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(2, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithLikeOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(6);
+
+		Assert.assertEquals("BETWEEN", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(6, patientListDataSet.size());
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithBetweenOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(26);
+
+		Assert.assertEquals("NULL", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(0, patientListDataSet.size()); //check on this doesn't seem right.
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNullOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(27);
+
+		Assert.assertEquals("NOT_NULL", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(6, patientListDataSet.size());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithNotNullOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(28);
+
+		Assert.assertEquals("DEFINED", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(3, patientListDataSet.size());
+
+	}
 
 	@Test
-	public void patientList_shouldCreatePatientListWithDefinedOperator() throws Exception {}
+	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {
+		PatientList patientList = patientListService.getById(0);
 
-	@Test
-	public void patientList_shouldCreatePatientListWithNotDefinedOperator() throws Exception {}
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(29);
+
+		Assert.assertEquals("NOT_DEFINED", condition.getOperator().toString());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(0, patientListDataSet.size());
+	}
 }

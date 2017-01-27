@@ -4,7 +4,7 @@ import org.openmrs.module.openhmis.commons.api.entity.IMetadataDataServiceTest;
 import org.openmrs.module.patientlist.api.model.PatientList;
 
 public class IPatientListDataServiceTest extends IMetadataDataServiceTest<IPatientListService, PatientList> {
-	public static final String PATIENT_LIST_DATASET = TestConstants.BASE_DATASET_DIR + "PatientListTest.xml";
+	private static final String PATIENT_LIST_DATASET = TestConstants.BASE_DATASET_DIR + "PatientListTest.xml";
 
 	@Override
 	public void before() throws Exception {

@@ -180,6 +180,13 @@
 	<visit visit_id="10" patient_id="1" visit_type_id="2" creator="1" date_created="2005-01-01 00:00:00.0"
 	       date_started="2013-03-07 00:00:00.0" date_stopped="2013-05-07 00:00:00.0" voided="false"
 	       uuid="ef8081813DD43016013DD43016B11121"/>
+	<visit visit_id="11" patient_id="2" visit_type_id="1" creator="1" date_created="2005-01-01 00:00:00.0"
+	       date_started="2015-12-01 00:00:00.0" date_stopped="2015-12-02 00:00:00.0" voided="false"
+	       uuid="ef8081813DD43016013DD43016B11122"/>
+	<visit visit_id="12" patient_id="1" visit_type_id="0" creator="1" date_created="2005-01-01 00:00:00.0"
+	       date_started="2016-12-01 00:00:00.0" voided="false" uuid="ef8081813DD43016013DD43016B11123"/>
+	<visit visit_id="13" patient_id="1" visit_type_id="0" creator="1" date_created="2005-01-01 00:00:00.0"
+	       date_started="2016-12-08 00:00:00.0" voided="false" uuid="ef8081813DD43016013DD43016B11124"/>
 
 	<visit_attribute_type visit_attribute_type_id="0" name="First Visit" min_occurs="0"
 	                      datatype="org.openmrs.customdatatype.BooleanDatatype" creator="1"
