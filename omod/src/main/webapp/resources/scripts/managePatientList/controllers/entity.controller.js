@@ -106,14 +106,20 @@
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					} else if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
-						listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
-						listCondition.selected = true;
-						console.log(listCondition.dateOne);
-						console.log(listCondition.dateTwo);
+						console.log("Inside here.........");
+						if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
+							listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
+							//listCondition.selected = true;
+							console.log(listCondition.dateOne + "Date One");
+							console.log(listCondition.dateTwo + "Date Two");
+						}
 					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
 						if ((listCondition.numberOne != undefined && listCondition.numberTwo != undefined) && (listCondition.numberOne != "" && listCondition.numberTwo != "")) {
-							console.log(listCondition.numberOne);
-							console.log(listCondition.numberTwo);
+							listCondition.id = listCondition.field + "_" + listCondition.numberOne + "_" + listCondition.numberTwo;
+							listCondition.selected = true;
+							listCondition.value = listCondition.numberOne + "|" + listCondition.numberTwo;
+							self.getNewPatientListCondition(listCondition);
+							self.addListCondition();
 						}
 					} else {
 						if (listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
