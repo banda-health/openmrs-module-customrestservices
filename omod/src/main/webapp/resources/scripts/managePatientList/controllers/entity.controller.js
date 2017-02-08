@@ -110,6 +110,11 @@
 						listCondition.selected = true;
 						console.log(listCondition.dateOne);
 						console.log(listCondition.dateTwo);
+					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
+						if ((listCondition.numberOne != undefined && listCondition.numberTwo != undefined) && (listCondition.numberOne != "" && listCondition.numberTwo != "")) {
+							console.log(listCondition.numberOne);
+							console.log(listCondition.numberTwo);
+						}
 					} else {
 						if (listCondition.field != "" && listCondition.operator != "" && listCondition.value != "") {
 							listCondition.id = listCondition.field + "_" + listCondition.value;
