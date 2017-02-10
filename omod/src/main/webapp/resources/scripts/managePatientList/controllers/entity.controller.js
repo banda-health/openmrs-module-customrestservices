@@ -105,14 +105,6 @@
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
-					} else if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
-						console.log("Inside here.........");
-						if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
-							listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
-							//listCondition.selected = true;
-							console.log(listCondition.dateOne + "Date One");
-							console.log(listCondition.dateTwo + "Date Two");
-						}
 					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
 						if ((listCondition.numberOne != undefined && listCondition.numberTwo != undefined) && (listCondition.numberOne != "" && listCondition.numberTwo != "")) {
 							listCondition.id = listCondition.field + "_" + listCondition.numberOne + "_" + listCondition.numberTwo;
@@ -144,6 +136,15 @@
 					if (listCondition.operator == "RELATIVE"){
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = $scope.relativeDates;
+					}
+					if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
+						if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
+							listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
+							listCondition.selected = true;
+							listCondition.value = PatientListFunctions.formatDate(listCondition.dateOne) + "|" + PatientListFunctions.formatDate(listCondition.dateTwo);
+							self.getNewPatientListCondition(listCondition);
+							self.addListCondition();
+						}
 					}
 				};
 				
