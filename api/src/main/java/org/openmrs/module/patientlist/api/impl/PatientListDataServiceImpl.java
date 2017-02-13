@@ -227,9 +227,43 @@ public class PatientListDataServiceImpl extends
 						}
 
 						hql.append(operator);
+						hql.append("");
+						hql.append(" ? ");
+						/*if (StringUtils.isNotEmpty(condition.getValue())) {
+							if (!StringUtils.containsIgnoreCase(operator, "null")) {
+								if (patientInformationField.getDataType().isAssignableFrom(Integer.class)) {
+									try {
+										// BETWEEN numbers should be separated by |
+										if (StringUtils.contains(condition.getValue(), "|")) {
+											String[] numbers = StringUtils.split(condition.getValue(), "|");
+											int ageOne = Integer.valueOf(numbers[0]);
+											int ageTwo = Integer.valueOf(numbers[1]);
+											Calendar calendar = Calendar.getInstance();
+											calendar.add(Calendar.YEAR, -ageOne);
+											paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+											        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+											hql.append(" AND ? ");
+											Calendar calendar1 = Calendar.getInstance();
+											calendar1.add(Calendar.YEAR, -ageTwo);
+											paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+											        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
+										} else {
+											paramValues.add(condition.getValue());
+										}
+									} catch (Exception ex) {
+										paramValues.add(condition.getValue());
+									}
+								} else {
+									int age = Integer.valueOf(condition.getValue());
+									Calendar calendar = Calendar.getInstance();
+									calendar.add(Calendar.YEAR, -age);
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+								}
+							}
+						}*/
 
 						if (!StringUtils.containsIgnoreCase(operator, "null")) {
-							hql.append(" ? ");
 							int age = Integer.valueOf(condition.getValue());
 							Calendar calendar = Calendar.getInstance();
 							calendar.add(Calendar.YEAR, -age);

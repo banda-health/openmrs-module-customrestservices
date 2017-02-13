@@ -137,6 +137,7 @@
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = $scope.relativeDates;
 					}
+					//Adding the functionality for the between dates saving.
 					if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
 						if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
 							listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
