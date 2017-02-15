@@ -157,7 +157,7 @@
 										id           : "betweenDateOne",
 										label        : "",
 										useTime      : false,
-										size         : '13%',
+										size         : '11%',
 										formFieldName: 'patientConditionDatePicker',
 										ngModel      : 'listCondition.dateOne',
 										class        : "form-control"
@@ -169,7 +169,7 @@
 										id           : "betweenDateTwo",
 										label        : "",
 										useTime      : false,
-										size         : '13%',
+										size         : '11%',
 										formFieldName: 'patientConditionDatePicker',
 										ngModel      : 'listCondition.dateTwo'
 								])}

@@ -18,9 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @PrepareForTest(Calendar.class)
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
@@ -836,5 +834,25 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(0, patientListDataSet.size());
+	}
+
+	@Test
+	public void patient_shouldCreatePatientListWithBetweenOperatorAndAgeField() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(30);
+
+		Assert.assertEquals("BETWEEN", condition.getOperator().toString());
+		Assert.assertEquals("p.age", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(6, patientListDataSet.size());
 	}
 }
