@@ -853,6 +853,26 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(6, patientListDataSet.size());
+		Assert.assertEquals(5, patientListDataSet.size());
+	}
+
+	@Test
+	public void patient_shouldCreatePatientLIstWithBetweenForAttributes() throws Exception {
+		PatientList patientList = patientListService.getById(0);
+
+		List<PatientListCondition> conditions = patientList.getPatientListConditions();
+		PatientListCondition condition = conditions.get(31);
+
+		Assert.assertEquals("BETWEEN", condition.getOperator().toString());
+		Assert.assertEquals("v.attr.Bed", condition.getField());
+
+		patientList.getPatientListConditions().clear();
+		patientList.getPatientListConditions().add(condition);
+
+		PagingInfo pagingInfo = new PagingInfo();
+		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
+
+		Assert.assertNotNull(patientListDataSet);
+		Assert.assertEquals(0, patientListDataSet.size());
 	}
 }

@@ -105,7 +105,7 @@
 						listCondition.selected = true;
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
-					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
+					} else if ((listCondition.inputType == "numberInput" || listCondition.inputType == "textInput") && listCondition.operator == "BETWEEN") {
 						if ((listCondition.numberOne != undefined && listCondition.numberTwo != undefined) && (listCondition.numberOne != "" && listCondition.numberTwo != "")) {
 							listCondition.id = listCondition.field + "_" + listCondition.numberOne + "_" + listCondition.numberTwo;
 							listCondition.selected = true;
@@ -128,24 +128,25 @@
 				
 				$scope.patientListConditionOperator = function (listCondition) {
 					if (listCondition.field != "" && listCondition.operator != "") {
-						listCondition.id = listCondition.field + "_" + listCondition.value;
-						listCondition.selected = true;
-						self.getNewPatientListCondition(listCondition);
-						self.addListCondition();
+						//Adding the functionality for the between dates saving.
+						if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
+							if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
+								listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
+								listCondition.selected = true;
+								listCondition.value = PatientListFunctions.formatDate(listCondition.dateOne) + "|" + PatientListFunctions.formatDate(listCondition.dateTwo);
+								self.getNewPatientListCondition(listCondition);
+								self.addListCondition();
+							}
+						} else {
+							listCondition.id = listCondition.field + "_" + listCondition.value;
+							listCondition.selected = true;
+							self.getNewPatientListCondition(listCondition);
+							self.addListCondition();
+						}
 					}
 					if (listCondition.operator == "RELATIVE"){
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = $scope.relativeDates;
-					}
-					//Adding the functionality for the between dates saving.
-					if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
-						if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
-							listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
-							listCondition.selected = true;
-							listCondition.value = PatientListFunctions.formatDate(listCondition.dateOne) + "|" + PatientListFunctions.formatDate(listCondition.dateTwo);
-							self.getNewPatientListCondition(listCondition);
-							self.addListCondition();
-						}
 					}
 				};
 				

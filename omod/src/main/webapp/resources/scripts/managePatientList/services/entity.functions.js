@@ -82,6 +82,9 @@
 							listConditionModel.setValueRef(value);
 							listConditionModel.setValue(data["uuid"]);
 						});
+					} else if(listCondition.dataType == "java.util.Date" && listCondition.operator == "Bewteen") {
+						console.log("Herer i am dealing you " +
+							"")
 					}
 					
 					

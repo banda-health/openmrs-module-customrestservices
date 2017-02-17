@@ -110,8 +110,7 @@
 							        value="LTE"><=</option>
 							<option ng-show="listCondition.inputType == 'textInput' || listCondition.field == 'v.visitType'"
 							        value="LIKE">Like</option>
-							<option ng-show="listCondition.inputType == 'numberInput' || listCondition.inputType == 'dateInput'"
-							        value="BETWEEN">Between</option>
+							<option value="BETWEEN">Between</option>
 							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NULL">Null</option>
 							<option ng-hide="listCondition.field == 'v.diagnosis' || listCondition.inputType == 'checkBoxInput'"
 							        value="NOT_NULL">Not Null</option>
@@ -120,7 +119,7 @@
 							<option ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType == 'textInput'">
+					<td ng-show="listCondition.inputType == 'textInput' && listCondition.operator != 'BETWEEN'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-enter="patientListCondition(listCondition)"
@@ -183,7 +182,7 @@
 						       class="form-control input-md" type="text" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)"
 						       ng-blur="patientListCondition(listCondition)"/>
 					</td>
-					<td ng-show="listCondition.inputType == 'numberInput' && listCondition.operator == 'BETWEEN'">
+					<td ng-show="(listCondition.inputType == 'numberInput' || listCondition.inputType == 'textInput') && listCondition.operator == 'BETWEEN'">
 						<div class="row">
 							<div class="col-md-6">
 								<input ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'

@@ -250,7 +250,6 @@ public class PatientListDataServiceImpl extends
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
 									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
 									hql.append(" AND ? ");
-									System.out.println(hql + "This the the sql by now");
 									Calendar calendar1 = Calendar.getInstance();
 									calendar1.add(Calendar.YEAR, -ageOne);
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(

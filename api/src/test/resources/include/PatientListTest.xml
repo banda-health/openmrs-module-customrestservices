@@ -80,7 +80,10 @@
 	                        condition_order="29" operator="NOT_DEFINED" value=""
 	                        uuid="4028814B39B565A20139B95FB3440033"/>
 	<patient_list_condition patient_list_condition_id="30" patient_list_id="0" field="p.age"
-	                        condition_order="30" operator="BETWEEN" value="10|40"
+	                        condition_order="30" operator="BETWEEN" value="5|70"
 	                        uuid="4028814B39B565A20139B95FB3440034"/>
+	<patient_list_condition patient_list_condition_id="31" patient_list_id="0" field="v.attr.Bed"
+	                        condition_order="31" operator="BETWEEN" value="0|10"
+	                        uuid="4028814B39B565A20139B95FB3440035"/>
 
 </dataset>
