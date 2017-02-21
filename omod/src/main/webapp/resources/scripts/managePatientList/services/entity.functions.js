@@ -63,7 +63,6 @@
 					}
 					if (listCondition.dataType == "java.util.Date") {
 						onChangeDatePicker($scope.onListConditionDateSuccessfulCallback, undefined, listCondition);
-						
 					} else if (listCondition.inputType == "conceptInput") {
 						$scope.getConceptName(value, function (data) {
 							listConditionModel.setValueRef(value);
@@ -85,9 +84,9 @@
 					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
 						var values = value.split("|");
 						listConditionModel.setBetweenValues(values);
-						
-						//listConditionModel.setNumberOne(values[0]);
-						//listConditionModel.setNumberTwo(values[1]);
+					} else if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
+						var dates = value.split("|");
+						listConditionModel.setBetweenValues(dates);
 					}
 					
 					listConditionModel.setInputType(listCondition.inputType);

@@ -106,10 +106,10 @@
 						self.getNewPatientListCondition(listCondition);
 						self.addListCondition();
 					} else if ((listCondition.inputType == "numberInput" || listCondition.inputType == "textInput") && listCondition.operator == "BETWEEN") {
-						if ((listCondition.numberOne != undefined && listCondition.numberTwo != undefined) && (listCondition.numberOne != "" && listCondition.numberTwo != "")) {
-							listCondition.id = listCondition.field + "_" + listCondition.numberOne + "_" + listCondition.numberTwo;
+						if ((listCondition.betweenValues[0] != undefined && listCondition.betweenValues[1] != undefined) && (listCondition.betweenValues[0] != "" && listCondition.betweenValues[1] != "")) {
+							listCondition.id = listCondition.field + "_" + listCondition.betweenValues[0] + "_" + listCondition.betweenValues[1];
 							listCondition.selected = true;
-							listCondition.value = listCondition.numberOne + "|" + listCondition.numberTwo;
+							listCondition.value = listCondition.betweenValues[0] + "|" + listCondition.betweenValues[1];
 							self.getNewPatientListCondition(listCondition);
 							self.addListCondition();
 						}
@@ -129,19 +129,22 @@
 				$scope.patientListConditionOperator = function (listCondition) {
 					if (listCondition.field != "" && listCondition.operator != "") {
 						//Adding the functionality for the between dates saving.
-						if (listCondition.inputType == "dateInput" && listCondition.operator == "BETWEEN") {
-							if ((listCondition.dateOne != undefined && listCondition.dateTwo != undefined) && (listCondition.dateOne != "" && listCondition.dateTwo != "")) {
-								listCondition.id = listCondition.field + "_" + listCondition.dateOne + "_" + listCondition.dateTwo;
+						if (listCondition.inputType == "dateInput") {
+							if (listCondition.operator == "BETWEEN") {
+								if ((listCondition.betweenValues[0] != undefined || listCondition.betweenValues[0] != "") && (listCondition.betweenValues[1] != undefined || listCondition.betweenValues[1] != "")) {
+									listCondition.id = listCondition.field + "_" + listCondition.betweenValues[0] + "_" + listCondition.betweenValues[1];
+									listCondition.selected = true;
+									listCondition.value = PatientListFunctions.formatDate(listCondition.betweenValues[0]) + "|" + PatientListFunctions.formatDate(listCondition.betweenValues[1]);
+									console.log(listCondition);
+									//self.getNewPatientListCondition(listCondition);
+									self.addListCondition();
+								}
+							} else {
+								listCondition.id = listCondition.field + "_" + listCondition.value;
 								listCondition.selected = true;
-								listCondition.value = PatientListFunctions.formatDate(listCondition.dateOne) + "|" + PatientListFunctions.formatDate(listCondition.dateTwo);
 								self.getNewPatientListCondition(listCondition);
 								self.addListCondition();
 							}
-						} else {
-							listCondition.id = listCondition.field + "_" + listCondition.value;
-							listCondition.selected = true;
-							self.getNewPatientListCondition(listCondition);
-							self.addListCondition();
 						}
 					}
 					if (listCondition.operator == "RELATIVE"){
