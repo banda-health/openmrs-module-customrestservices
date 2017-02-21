@@ -189,7 +189,7 @@
 						 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
 								       name="conditionValue"
 								       placeholder="${ui.message("patientlist.condition.value.label")}"
-								       class="form-control input-md" type="text" ng-model="listCondition.numberOne"
+								       class="form-control input-md" type="text" ng-model="listCondition.betweenValues[0]"
 								       ng-enter="patientListCondition(listCondition)"
 								       ng-blur="patientListCondition(listCondition)"
 								       id="numberOne"/>
@@ -200,7 +200,7 @@
 						 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
 								       name="conditionValue"
 								       placeholder="${ui.message("patientlist.condition.value.label")}"
-								       class="form-control input-md" type="text" ng-model="listCondition.numberTwo"
+								       class="form-control input-md" type="text" ng-model="listCondition.betweenValues[1]"
 								       ng-enter="patientListCondition(listCondition)"
 								       ng-blur="patientListCondition(listCondition)"
 								       id="numberTwo"/>

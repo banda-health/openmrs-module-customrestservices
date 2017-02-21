@@ -82,11 +82,13 @@
 							listConditionModel.setValueRef(value);
 							listConditionModel.setValue(data["uuid"]);
 						});
-					} else if(listCondition.dataType == "java.util.Date" && listCondition.operator == "Bewteen") {
-						console.log("Herer i am dealing you " +
-							"")
+					} else if (listCondition.inputType == "numberInput" && listCondition.operator == "BETWEEN") {
+						var values = value.split("|");
+						listConditionModel.setBetweenValues(values);
+						
+						//listConditionModel.setNumberOne(values[0]);
+						//listConditionModel.setNumberTwo(values[1]);
 					}
-					
 					
 					listConditionModel.setInputType(listCondition.inputType);
 					listConditionModel.setId(listCondition.field + "_" + listCondition.value);
