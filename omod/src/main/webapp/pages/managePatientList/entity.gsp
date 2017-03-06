@@ -20,7 +20,7 @@
 				autoclose: true,
 				pickerPosition: "bottom-left",
 				todayHighlight: false,
-				format: "dd M yyyy"
+				format: "yyyy-mm-dd"
 			});
 		});
 	});
