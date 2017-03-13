@@ -77,18 +77,23 @@ li.no-height{
     border-radius: 4px;}
 
 .header_template{
-  width:99%;
-  font-weight:bold;
   padding: 8px;
   margin-left:5px;
-  background-color:#dddddd;
 }
 .body_template{
-  padding: 10px;
+    margin: 5px 15px 5px 10px;
 }
-
-.clickable-tr:hover {
-    background-color: white !important;
+.patient-list-header{
+    width:99%;
+    margin-left:5px;
+    background-color:#dddddd;
+}
+.patient-list-header a:hover{
+    background: none;
+}
+.patient-list-header-links{
+    float: right;
+    margin: -30px 0 10px 0;
 }
 .conceptSearch {
     width: 355px;
