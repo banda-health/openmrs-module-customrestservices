@@ -30,5 +30,4 @@ public interface IPatientListDataService extends IObjectDataService<PatientListD
 	@Transactional(readOnly = true)
 	List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo);
 
-	String applyTemplate(String template, PatientListData patientListData);
 }

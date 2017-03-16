@@ -24,16 +24,18 @@ import org.openmrs.Visit;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.openhmis.commons.api.entity.impl.BaseObjectDataServiceImpl;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
-import org.openmrs.module.patientlist.api.model.PatientInformationField;
-import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.model.PatientList;
+import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.model.PatientListCondition;
 import org.openmrs.module.patientlist.api.model.PatientListOrder;
+import org.openmrs.module.patientlist.api.model.PatientInformationField;
+import org.openmrs.module.patientlist.api.model.IBasePatientList;
 import org.openmrs.module.patientlist.api.model.PatientListRelativeDate;
 import org.openmrs.module.patientlist.api.util.PatientListDateUtil;
 import org.openmrs.module.patientlist.api.security.BasicObjectAuthorizationPrivileges;
 import org.openmrs.module.patientlist.api.util.ConvertPatientListOperators;
 import org.openmrs.module.patientlist.api.util.PatientInformation;
+import org.openmrs.module.patientlist.api.util.PatientListTemplateUtil;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -64,26 +66,19 @@ public class PatientListDataServiceImpl extends
 	public List<PatientListData> getPatientListData(PatientList patientList, PagingInfo pagingInfo) {
 		List<PatientListData> patientListDataSet = new ArrayList<PatientListData>();
 		try {
-			List<Object> paramValues = new ArrayList<Object>();
-			// Create query
-			Query query = getRepository().createQuery(constructHqlQuery(patientList, paramValues));
-			// set parameters with actual values
-			if (paramValues.size() > 0) {
-				int index = 0;
-				for (Object value : paramValues) {
-					query.setParameter(index++, value);
-				}
-			}
+			// get record count
+			Query countQuery = createQuery(patientList, true);
 
 			// set paging params
-			Integer count = query.list().size();
-			pagingInfo.setTotalRecordCount(count.longValue());
+			Long count = (Long)countQuery.uniqueResult();
+			pagingInfo.setTotalRecordCount(count);
 			pagingInfo.setLoadRecordCount(false);
 
+			// retrieve actual objects
+			Query query = createQuery(patientList, false);
 			query = this.createPagingQuery(pagingInfo, query);
 			List results = query.list();
-			count = results.size();
-			if (count > 0) {
+			if (results.size() > 0) {
 				for (Object result : results) {
 					Patient patient;
 					Visit visit = null;
@@ -95,7 +90,20 @@ public class PatientListDataServiceImpl extends
 					}
 
 					PatientListData patientListData = new PatientListData(patient, visit, patientList);
-					applyTemplates(patientListData);
+					// apply header template.
+					if (patientListData.getPatientList().getHeaderTemplate() != null) {
+						patientListData.setHeaderContent(
+						        PatientListTemplateUtil.applyTemplate(
+						            patientListData.getPatientList().getHeaderTemplate(), patientListData));
+					}
+
+					// apply body template
+					if (patientListData.getPatientList().getBodyTemplate() != null) {
+						patientListData.setBodyContent(
+						        PatientListTemplateUtil.applyTemplate(
+						            patientListData.getPatientList().getBodyTemplate(), patientListData));
+					}
+
 					patientListDataSet.add(patientListData);
 				}
 			}
@@ -106,60 +114,83 @@ public class PatientListDataServiceImpl extends
 		return patientListDataSet;
 	}
 
+	private Query createQuery(PatientList patientList, boolean countQuery) {
+		List<Object> paramValues = new ArrayList<Object>();
+		Query query = getRepository().createQuery(constructHqlQuery(patientList, paramValues, countQuery));
+		// set parameters with actual values
+		if (paramValues.size() > 0) {
+			int index = 0;
+			for (Object value : paramValues) {
+				query.setParameter(index++, value);
+			}
+		}
+
+		return query;
+	}
+
 	/**
 	 * Constructs a patient list with given conditions (and ordering)
 	 * @param patientList
 	 * @param paramValues
 	 * @return
 	 */
-	private String constructHqlQuery(PatientList patientList, List<Object> paramValues) {
+	private String constructHqlQuery(
+	        PatientList patientList, List<Object> paramValues, boolean countQuery) {
 		StringBuilder hql = new StringBuilder();
 		if (patientList != null && patientList.getPatientListConditions() != null) {
-			if (searchField(patientList.getPatientListConditions(), "v.")
-			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit")
-			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
+			if (searchField(patientList.getPatientListConditions(), "v.", false)
+			        || searchField(patientList.getPatientListConditions(), "hasActiveVisit", false)
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis", false)) {
 				// join visit and patient tables
-				hql.append("select v from Visit v inner join v.patient as p ");
+				if (countQuery) {
+					hql.append("select count(v) from Visit v inner join v.patient as p ");
+				} else {
+					hql.append("select v from Visit v inner join v.patient as p ");
+				}
 			} else {
 				// use only the patient table
-				hql.append("select p from Patient p ");
+				if (countQuery) {
+					hql.append("select count(p) from Patient p ");
+				} else {
+					hql.append("select p from Patient p ");
+				}
 			}
 
 			// only join person attributes and attribute types if required to
-			if (searchField(patientList.getPatientListConditions(), "p.attr")
-			        || searchField(patientList.getOrdering(), "p.attr")) {
+			if (searchField(patientList.getPatientListConditions(), "p.attr", false)
+			        || searchField(patientList.getOrdering(), "p.attr", false)) {
 				hql.append("inner join p.attributes as attr ");
 				hql.append("inner join attr.attributeType as attrType ");
 			}
 
 			// only join visit attributes and attribute types if required to
-			if (searchField(patientList.getPatientListConditions(), "v.attr")
-			        || searchField(patientList.getOrdering(), "v.attr")) {
+			if (searchField(patientList.getPatientListConditions(), "v.attr", false)
+			        || searchField(patientList.getOrdering(), "v.attr", false)) {
 				hql.append("inner join v.attributes as vattr ");
 				hql.append("inner join vattr.attributeType as vattrType ");
 			}
 
-			if (searchField(patientList.getPatientListConditions(), "v.diagnosis")
-			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis")) {
+			if (searchField(patientList.getPatientListConditions(), "v.diagnosis", false)
+			        || searchField(patientList.getPatientListConditions(), "hasDiagnosis", false)) {
 				hql.append("inner join v.encounters as encounter ");
 				hql.append("inner join encounter.obs as ob ");
 			}
 
 			// only join names if required
-			if (searchMappingField(patientList.getPatientListConditions(), "p.names")
-			        || searchMappingField(patientList.getOrdering(), "p.names")) {
+			if (searchField(patientList.getPatientListConditions(), "p.names", true)
+			        || searchField(patientList.getOrdering(), "p.names", true)) {
 				hql.append("inner join p.names as pnames ");
 			}
 
 			// only join addresses if required
-			if (searchMappingField(patientList.getPatientListConditions(), "p.addresses")
-			        || searchMappingField(patientList.getOrdering(), "p.addresses")) {
+			if (searchField(patientList.getPatientListConditions(), "p.addresses", true)
+			        || searchField(patientList.getOrdering(), "p.addresses", true)) {
 				hql.append("inner join p.addresses as paddresses ");
 			}
 
 			// only join identifiers if required
-			if (searchMappingField(patientList.getPatientListConditions(), "p.identifiers")
-			        || searchMappingField(patientList.getOrdering(), "p.identifiers")) {
+			if (searchField(patientList.getPatientListConditions(), "p.identifiers", true)
+			        || searchField(patientList.getOrdering(), "p.identifiers", true)) {
 				hql.append("inner join p.identifiers as pidentifiers ");
 			}
 		}
@@ -173,7 +204,9 @@ public class PatientListDataServiceImpl extends
 		hql.append(")");
 
 		//apply ordering if any
-		hql.append(applyPatientListOrdering(patientList.getOrdering()));
+		if (!countQuery) {
+			hql.append(applyPatientListOrdering(patientList.getOrdering()));
+		}
 
 		return hql.toString();
 	}
@@ -527,105 +560,35 @@ public class PatientListDataServiceImpl extends
 	 * @param search
 	 * @return
 	 */
-	private <T> boolean searchField(List<T> list, String search) {
+	private <T extends IBasePatientList> boolean searchField(
+	        List<T> list, String search, boolean mappingField) {
 		for (T t : list) {
 			if (t == null) {
 				continue;
 			}
 
-			String field = null;
-			if (t instanceof PatientListCondition) {
-				field = ((PatientListCondition)t).getField();
-			} else if (t instanceof PatientListOrder) {
-				field = ((PatientListOrder)t).getField();
-			}
+			String field = t.getField();
 
 			if (field == null) {
 				continue;
 			}
 
-			if (StringUtils.contains(field, search)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private <T> boolean searchMappingField(List<T> list, String search) {
-		for (T t : list) {
-			if (t == null) {
-				continue;
-			}
-
-			String field = null;
-			if (t instanceof PatientListCondition) {
-				field = ((PatientListCondition)t).getField();
-			} else if (t instanceof PatientListOrder) {
-				field = ((PatientListOrder)t).getField();
-			}
-
-			if (field == null) {
-				continue;
-			}
-
-			PatientInformationField patientInformationField =
-			        PatientInformation.getInstance().getField(field);
-			if (patientInformationField == null) {
-				continue;
-			}
-
-			String matchField = patientInformationField.getMappingFieldName();
-			if (StringUtils.contains(matchField, search)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Apply header and body templates on patient list data
-	 * @param patientListData
-	 */
-	private void applyTemplates(PatientListData patientListData) {
-		// apply header template.
-		if (patientListData.getPatientList().getHeaderTemplate() != null) {
-			patientListData.setHeaderContent(
-			        applyTemplate(patientListData.getPatientList().getHeaderTemplate(), patientListData));
-		}
-
-		// apply body template
-		if (patientListData.getPatientList().getBodyTemplate() != null) {
-			patientListData.setBodyContent(
-			        applyTemplate(patientListData.getPatientList().getBodyTemplate(), patientListData));
-		}
-	}
-
-	@Override
-	public String applyTemplate(String template, PatientListData patientListData) {
-		String[] fields = StringUtils.substringsBetween(template, "{", "}");
-		if (fields != null) {
-			for (String field : fields) {
-				Object value = null;
+			if (mappingField) {
 				PatientInformationField patientInformationField =
 				        PatientInformation.getInstance().getField(field);
-				if (patientInformationField != null) {
-					if (patientListData.getPatient() != null && StringUtils.contains(field, "p.")) {
-						value = patientInformationField.getValue(patientListData.getPatient());
-					} else if (patientListData.getVisit() != null && StringUtils.contains(field, "v.")) {
-						value = patientInformationField.getValue(patientListData.getVisit());
-					}
+				if (patientInformationField == null) {
+					continue;
 				}
 
-				if (value != null) {
-					template = StringUtils.replace(template, "{" + field + "}", value.toString());
-				} else {
-					template = StringUtils.replace(template, "{" + field + "}", "");
+				String matchField = patientInformationField.getMappingFieldName();
+				if (StringUtils.contains(matchField, search)) {
+					return true;
 				}
+			} else if (StringUtils.contains(field, search)) {
+				return true;
 			}
 		}
 
-		return template;
+		return false;
 	}
 }

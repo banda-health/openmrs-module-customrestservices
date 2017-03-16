@@ -13,13 +13,12 @@
  */
 package org.openmrs.module.webservices.rest.web.controller;
 
-import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.model.PatientListData;
 import org.openmrs.module.patientlist.api.util.DummyPatient;
 import org.openmrs.module.patientlist.api.util.DummyVisit;
+import org.openmrs.module.patientlist.api.util.PatientListTemplateUtil;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,9 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/rest/" + ModuleRestConstants.PATIENT_LIST_LIVE_PREVIEWING_RESOURCE)
 public class PatientListLivePreviewingController {
-
-	@Autowired
-	private IPatientListDataService patientListDataService;
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET)
@@ -52,11 +48,11 @@ public class PatientListLivePreviewingController {
 		patientList.setVisit(visit);
 
 		// header template
-		String headerContent = patientListDataService.applyTemplate(headerTemplate, patientList);
+		String headerContent = PatientListTemplateUtil.applyTemplate(headerTemplate, patientList);
 		results.put("headerContent", headerContent);
 
 		// body template
-		String bodyContent = patientListDataService.applyTemplate(bodyTemplate, patientList);
+		String bodyContent = PatientListTemplateUtil.applyTemplate(bodyTemplate, patientList);
 		results.put("bodyContent", bodyContent);
 
 		return results;
