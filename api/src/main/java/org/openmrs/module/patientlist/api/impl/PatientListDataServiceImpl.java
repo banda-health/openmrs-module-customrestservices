@@ -227,10 +227,9 @@ public class PatientListDataServiceImpl extends
 						}
 
 						hql.append(operator);
-						hql.append("");
-						hql.append(" ? ");
 						if (!StringUtils.containsIgnoreCase(operator, "null") && !StringUtils
 						        .containsIgnoreCase(operator, "BETWEEN")) {
+							hql.append(" ? ");
 							if (StringUtils.isNumeric(condition.getValue())) {
 								int age = Integer.valueOf(condition.getValue());
 								Calendar calendar = Calendar.getInstance();
@@ -241,6 +240,8 @@ public class PatientListDataServiceImpl extends
 						} else {
 							try {
 								// BETWEEN age should be separated by |
+								hql.append("");
+								hql.append(" ? ");
 								if (StringUtils.contains(condition.getValue(), "|")) {
 									String[] numbers = StringUtils.split(condition.getValue(), "|");
 									int ageOne = Integer.valueOf(numbers[0]);
