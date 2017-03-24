@@ -188,15 +188,15 @@ public class PatientListDataServiceImpl extends
 				}
 
 				PatientInformationField patientInformationField =
-				        PatientInformation.getInstance().getField(condition.getField());
+						PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
 				if (StringUtils.contains(condition.getField(), "p.attr.")
-				        || StringUtils.contains(condition.getField(), "v.attr.")) {
+						|| StringUtils.contains(condition.getField(), "v.attr.")) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
 					join = " OR ";
 				} else if (StringUtils.contains(mappingFieldName, "p.names.")
-				        || StringUtils.contains(mappingFieldName, "p.addresses.")
-				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {
+						|| StringUtils.contains(mappingFieldName, "p.addresses.")
+						|| StringUtils.contains(mappingFieldName, "p.identifiers.")) {
 					hql.append(createAliasesSubQueries(condition, mappingFieldName, paramValues));
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
@@ -227,7 +227,7 @@ public class PatientListDataServiceImpl extends
 						}
 
 						if (!StringUtils.containsIgnoreCase(operator, "null") && !StringUtils
-						        .containsIgnoreCase(operator, "BETWEEN")) {
+								.containsIgnoreCase(operator, "BETWEEN")) {
 							if (StringUtils.equals(operator, "=")) {
 								operator = StringUtils.replace(operator, "=", "BETWEEN");
 								hql.append(" ");
@@ -241,10 +241,10 @@ public class PatientListDataServiceImpl extends
 									Calendar calendar1 = Calendar.getInstance();
 									calendar1.add(Calendar.YEAR, -(age + 1));
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-									        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
+											PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
 									hql.append(" AND ? ");
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+											PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
 								}
 							} else {
 								hql.append(" ");
@@ -253,16 +253,13 @@ public class PatientListDataServiceImpl extends
 								if (StringUtils.isNumeric(condition.getValue())) {
 									int age = Integer.valueOf(condition.getValue());
 									Calendar calendar = Calendar.getInstance();
-									if (StringUtils.equals(operator, ">=")) {
+									if (StringUtils.equals(operator, ">=") || StringUtils.equals(operator, "<")) {
 										calendar.add(Calendar.YEAR, -(age + 1));
-									} else if (StringUtils.equals(operator, "<")) {
-										calendar.add(Calendar.YEAR, -(age + 1));
-									}
-									else {
+									} else {
 										calendar.add(Calendar.YEAR, -age);
 									}
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+											PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
 								}
 							}
 						} else {
@@ -278,12 +275,12 @@ public class PatientListDataServiceImpl extends
 									Calendar calendar = Calendar.getInstance();
 									calendar.add(Calendar.YEAR, -ageTwo);
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+											PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
 									hql.append(" AND ? ");
 									Calendar calendar1 = Calendar.getInstance();
 									calendar1.add(Calendar.YEAR, -ageOne);
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-									        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
+											PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
 								} else {
 									paramValues.add(condition.getValue());
 								}
@@ -308,7 +305,7 @@ public class PatientListDataServiceImpl extends
 					if (StringUtils.equalsIgnoreCase(operator, "RELATIVE")) {
 						operator = "BETWEEN";
 						value = PatientListDateUtil.createRelativeDate(
-						        PatientListRelativeDate.valueOf(value));
+								PatientListRelativeDate.valueOf(value));
 					}
 
 					hql.append(operator);
@@ -322,13 +319,13 @@ public class PatientListDataServiceImpl extends
 									if (StringUtils.contains(value, "|")) {
 										String[] dates = StringUtils.split(value, "|");
 										paramValues.add(
-										        PatientListDateUtil.simpleDateFormat.parse(dates[0]));
+												PatientListDateUtil.simpleDateFormat.parse(dates[0]));
 										hql.append(" AND ? ");
 										paramValues.add(
-										        PatientListDateUtil.simpleDateFormat.parse(dates[1]));
+												PatientListDateUtil.simpleDateFormat.parse(dates[1]));
 									} else {
 										paramValues.add(
-										        PatientListDateUtil.simpleDateFormat.parse(value));
+												PatientListDateUtil.simpleDateFormat.parse(value));
 									}
 								} catch (ParseException pex) {
 									paramValues.add(value);
