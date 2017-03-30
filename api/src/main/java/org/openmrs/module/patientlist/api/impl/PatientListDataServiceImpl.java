@@ -271,7 +271,7 @@ public class PatientListDataServiceImpl extends
 								if (StringUtils.contains(condition.getValue(), "|")) {
 									String[] numbers = StringUtils.split(condition.getValue(), "|");
 									int ageOne = Integer.valueOf(numbers[0]);
-									int ageTwo = Integer.valueOf(numbers[1]);
+									int ageTwo = Integer.valueOf(numbers[1]) + 1;
 									Calendar calendar = Calendar.getInstance();
 									calendar.add(Calendar.YEAR, -ageTwo);
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
