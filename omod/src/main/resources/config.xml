@@ -33,12 +33,6 @@
 	<activator>org.openmrs.module.patientlist.PatientListModuleActivator</activator>
 
 
-	<!-- Adds link to admin page -->
-	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.patientlist.extension.html.AdminList</class>
-	</extension>
-
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		PatientList.hbm.xml
