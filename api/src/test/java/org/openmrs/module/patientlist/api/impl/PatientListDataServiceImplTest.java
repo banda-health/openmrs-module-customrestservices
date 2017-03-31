@@ -1,3 +1,16 @@
+/*
+ * The contents of this file are subject to the OpenMRS Public License
+ * Version 2.0 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://license.openmrs.org
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+ * the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * Copyright (C) OpenHMIS.  All Rights Reserved.
+ */
 package org.openmrs.module.patientlist.api.impl;
 
 import org.junit.*;
@@ -9,18 +22,18 @@ import org.openmrs.module.patientlist.api.IPatientListDataService;
 import org.openmrs.module.patientlist.api.IPatientListDataServiceTest;
 import org.openmrs.module.patientlist.api.IPatientListService;
 import org.openmrs.module.patientlist.api.model.*;
+import org.openmrs.module.patientlist.api.util.PatientListDateUtil;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@PrepareForTest(Calendar.class)
+@PrepareForTest(PatientListDateUtil.class)
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
 
 	@Rule
@@ -48,9 +61,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientService = Context.getPatientService();
 		visitService = Context.getVisitService();
 
-		mockStatic(Calendar.class);
-		calendar = mock(Calendar.class);
-		when(Calendar.getInstance()).thenReturn(calendar);
+		mockStatic(PatientListDateUtil.class);
 	}
 
 	@Override
@@ -612,9 +623,8 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
-
-		Date date = new Date(2016, 0, 1);
-		when(calendar.getTimeInMillis()).thenReturn(date.getTime());
+		when(PatientListDateUtil.createRelativeDate(
+			PatientListRelativeDate.LAST_THREE_MONTHS)).thenReturn("2015-10-01|2015-12-31");
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
@@ -825,46 +835,6 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		PatientListCondition condition = conditions.get(29);
 
 		Assert.assertEquals("NOT_DEFINED", condition.getOperator().toString());
-
-		patientList.getPatientListConditions().clear();
-		patientList.getPatientListConditions().add(condition);
-
-		PagingInfo pagingInfo = new PagingInfo();
-		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
-
-		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(0, patientListDataSet.size());
-	}
-
-	@Test
-	public void patient_shouldCreatePatientListWithBetweenOperatorAndAgeField() throws Exception {
-		PatientList patientList = patientListService.getById(0);
-
-		List<PatientListCondition> conditions = patientList.getPatientListConditions();
-		PatientListCondition condition = conditions.get(30);
-
-		Assert.assertEquals("BETWEEN", condition.getOperator().toString());
-		Assert.assertEquals("p.age", condition.getField());
-
-		patientList.getPatientListConditions().clear();
-		patientList.getPatientListConditions().add(condition);
-
-		PagingInfo pagingInfo = new PagingInfo();
-		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
-
-		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(5, patientListDataSet.size());
-	}
-
-	@Test
-	public void patient_shouldCreatePatientLIstWithBetweenForAttributes() throws Exception {
-		PatientList patientList = patientListService.getById(0);
-
-		List<PatientListCondition> conditions = patientList.getPatientListConditions();
-		PatientListCondition condition = conditions.get(31);
-
-		Assert.assertEquals("BETWEEN", condition.getOperator().toString());
-		Assert.assertEquals("v.attr.Bed", condition.getField());
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
