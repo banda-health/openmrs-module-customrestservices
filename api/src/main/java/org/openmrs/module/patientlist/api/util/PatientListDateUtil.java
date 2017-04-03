@@ -28,14 +28,9 @@ public class PatientListDateUtil {
 
 	private static final int DAYS_IN_WEEK = 7;
 	private static final int DAYS_IN_TWO_WEEKS = 14;
-	private static final int DAYS_IN_MONTH = 30;
-	private static final int DAYS_IN_THREE_MONTHS = 90;
-	private static final int DAYS_IN_SIX_MONTHS = 180;
-	private static final int DAYS_IN_NINE_MONTHS = 270;
-	private static final int DAYS_IN_YEAR = 365;
-	private static Date startDate;
-	private static Date endDate;
-	private static Calendar calendar = Calendar.getInstance();
+	private static final int THREE_MONTHS = 3;
+	private static final int SIX_MONTHS = 6;
+	private static final int NINE_MONTHS = 9;
 
 	/**
 	 * Dynamically calculate start and end days for the given time interval
@@ -43,67 +38,133 @@ public class PatientListDateUtil {
 	 * @return
 	 */
 	public static String createRelativeDate(PatientListRelativeDate relativeDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
 		int days;
-		int interval;
 
 		switch (relativeDate) {
 			case YESTERDAY:
 				calendar.add(Calendar.DATE, -1);
-				return dateFormatting(calendar, 1);
+				Date startDate = createDate(null, -1);
+				Date endDate = createDate(startDate, 1);
+				return formatStartAndEndDates(startDate, endDate);
 			case THIS_WEEK:
-				interval = calendar.get(Calendar.DAY_OF_WEEK) - calendar.getFirstDayOfWeek();
-				calendar.add(Calendar.DATE, -interval);
-				return dateFormatting(calendar, interval);
+				days = calendar.get(Calendar.DAY_OF_WEEK) - calendar.getFirstDayOfWeek();
+				startDate = createDate(null, -days);
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_WEEK:
 				days = calendar.get(Calendar.DAY_OF_WEEK) - calendar.getFirstDayOfWeek();
-				calendar.add(Calendar.DATE, -days - DAYS_IN_WEEK);
-				return dateFormatting(calendar, DAYS_IN_WEEK);
+				startDate = createDate(null, -days - DAYS_IN_WEEK);
+				endDate = createDate(startDate, DAYS_IN_WEEK);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_TWO_WEEKS:
 				days = calendar.get(Calendar.DAY_OF_WEEK) - calendar.getFirstDayOfWeek();
-				calendar.add(Calendar.DATE, -days - DAYS_IN_TWO_WEEKS);
-				return dateFormatting(calendar, DAYS_IN_TWO_WEEKS);
+				startDate = createDate(null, -days - DAYS_IN_TWO_WEEKS);
+				endDate = createDate(startDate, DAYS_IN_TWO_WEEKS);
+				return formatStartAndEndDates(startDate, endDate);
 			case THIS_MONTH:
-				interval = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-				calendar.add(Calendar.DATE, -interval);
-				return dateFormatting(calendar, interval);
+				days = calendar.get(Calendar.DAY_OF_MONTH) - 1;
+				calendar.add(Calendar.DATE, -days);
+				startDate = createDate(null, -days);
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_MONTH:
-				days = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-				calendar.add(Calendar.DAY_OF_MONTH, -days - DAYS_IN_MONTH);
-				return dateFormatting(calendar, DAYS_IN_MONTH);
+				// get month -1
+				int month = calendar.get(Calendar.MONTH) - 1;
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, month);
+				startDate = calendar.getTime();
+				// compute no of days in the month
+				days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+				// less 1 day since start date has been set to 1 (i.e end date = startDate + days)
+				days--;
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_THREE_MONTHS:
-				days = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-				calendar.add(Calendar.DAY_OF_MONTH, -days - DAYS_IN_THREE_MONTHS);
-				return dateFormatting(calendar, DAYS_IN_THREE_MONTHS);
+				// get month - 3
+				month = calendar.get(Calendar.MONTH) - THREE_MONTHS;
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, month);
+				startDate = calendar.getTime();
+				// compute no of days in the three month window
+				days = calculateDaysBetweenDates(calendar, THREE_MONTHS);
+				// less 1 day
+				days--;
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_SIX_MONTHS:
-				days = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-				calendar.add(Calendar.DAY_OF_MONTH, -days - DAYS_IN_SIX_MONTHS);
-				return dateFormatting(calendar, DAYS_IN_SIX_MONTHS);
+				month = calendar.get(Calendar.MONTH) - SIX_MONTHS;
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, month);
+				startDate = calendar.getTime();
+				// compute no of days in the six month period
+				days = calculateDaysBetweenDates(calendar, SIX_MONTHS);
+				// less 1 day
+				days--;
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case LAST_NINE_MONTHS:
-				days = calendar.get(Calendar.DAY_OF_MONTH) - 1;
-				calendar.add(Calendar.DAY_OF_MONTH, -days - DAYS_IN_NINE_MONTHS);
-				return dateFormatting(calendar, DAYS_IN_NINE_MONTHS);
+				month = calendar.get(Calendar.MONTH) - NINE_MONTHS;
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, month);
+				startDate = calendar.getTime();
+				// compute no of days in the nine month period
+				days = calculateDaysBetweenDates(calendar, NINE_MONTHS);
+				// less 1 day
+				days--;
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			case THIS_YEAR:
-				interval = calendar.get(Calendar.DAY_OF_YEAR) - 1;
-				calendar.add(Calendar.DATE, -interval);
-				return dateFormatting(calendar, interval);
-			case LAST_YEAR:
 				days = calendar.get(Calendar.DAY_OF_YEAR) - 1;
-				calendar.add(Calendar.DAY_OF_YEAR, -days - DAYS_IN_YEAR);
-				return dateFormatting(calendar, DAYS_IN_YEAR);
+				calendar.add(Calendar.DATE, -days);
+				startDate = calendar.getTime();
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
+			case LAST_YEAR:
+				calendar.add(Calendar.YEAR, -1);
+				calendar.set(Calendar.DAY_OF_MONTH, 1);
+				calendar.set(Calendar.MONTH, 0);
+				startDate = calendar.getTime();
+				days = calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
+				days--;
+				endDate = createDate(startDate, days);
+				return formatStartAndEndDates(startDate, endDate);
 			default:
 				throw new IllegalArgumentException("Invalid relative date " + relativeDate);
 		}
 	}
 
-	private static String dateFormatting(Calendar calendar, int addDays) {
-		startDate = calendar.getTime();
-		calendar.add(Calendar.DATE, addDays);
+	private static Date createDate(Date startDate, int addDays) {
+		Calendar calendar = Calendar.getInstance();
+		if (startDate == null) {
+			startDate = new Date();
+		}
 
-		endDate = calendar.getTime();
-		return formatDates(startDate, endDate);
+		calendar.setTime(startDate);
+		calendar.add(Calendar.DATE, addDays);
+		return calendar.getTime();
 	}
 
-	private static String formatDates(Date startDate, Date endDate) {
+	private static String formatStartAndEndDates(Date startDate, Date endDate) {
 		return simpleDateFormat.format(startDate) + "|" + simpleDateFormat.format(endDate);
+	}
+
+	/**
+	 * Calculate number of days between dates.
+	 * @param calendar
+	 * @param numberOfMonths
+	 * @return
+	 */
+	private static int calculateDaysBetweenDates(Calendar calendar, int numberOfMonths) {
+		int days;
+		days = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		for (int i = 1; i < numberOfMonths; i++) {
+			// get days of next month
+			calendar.add(Calendar.MONTH, 1);
+			days += calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		}
+
+		return days;
 	}
 }
