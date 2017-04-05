@@ -26,14 +26,13 @@ import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Date;
 import java.util.List;
 
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-@PrepareForTest(PatientListDateUtil.class)
+@PrepareForTest({ PatientListDateUtil.class })
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
 
 	@Rule
@@ -783,7 +782,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(0, patientListDataSet.size()); //check on this doesn't seem right.
+		Assert.assertEquals(8, patientListDataSet.size()); //check on this doesn't seem right.
 	}
 
 	@Test

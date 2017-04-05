@@ -137,15 +137,20 @@
 							        ng-selected="dropDownEntry.value == listCondition.value">{{dropDownEntry.display}}</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator != 'BETWEEN'"
-					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
+					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator != 'BETWEEN'">
+						<div class="row">
+							<div class="col-lg-12"  ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
 					     || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'">
-						${ui.includeFragment("uicommons", "field/datetimepicker", [
-								label        : "",
-								useTime      : false,
-								formFieldName: 'patientConditionDatePicker',
-								ngModel      : 'listCondition.value'
+								${ui.includeFragment("uicommons", "field/datetimepicker", [
+										label        : "",
+										useTime      : false,
+										size         : '37%',
+										formFieldName: 'patientConditionDatePicker',
+										ngModel      : 'listCondition.value',
+										class        : "form-control"
 								])}
+							</div>
+						</div>
 					</td>
 					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator == 'BETWEEN'"
 					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'

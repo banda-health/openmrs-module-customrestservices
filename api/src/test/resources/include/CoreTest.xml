@@ -201,7 +201,6 @@
 	                      datatype="org.openmrs.customdatatype.datatype.FreeTextDatatype" creator="1"
 	                      date_created="2005-01-01 00:00:00.0" retired="0" uuid="ef8081813DD43016013DD43016B11125"/>
 
-
 	<visit_attribute visit_attribute_id="0" visit_id="0" attribute_type_id="0" value_reference="true" creator="1"
 	                 date_created="2005-01-01 00:00:00.0" uuid="ef8081813DD43016013DD43016B11126" voided="false"/>
 	<visit_attribute visit_attribute_id="1" visit_id="1" attribute_type_id="1" value_reference="2016-10-01" creator="1"
@@ -226,10 +225,6 @@
 	                 date_created="2005-01-01 00:00:00.0" uuid="ef8081813DD43016013DD43016B11136" voided="false"/>
 	<visit_attribute visit_attribute_id="11" visit_id="10" attribute_type_id="2" value_reference="Female" creator="1"
 	                 date_created="2005-01-01 00:00:00.0" uuid="ef8081813DD43016013DD43016B11137" voided="false"/>
-	<visit_attribute visit_attribute_id="12" visit_id="11" attribute_type_id="3" value_reference="5" creator="1"
-	                 date_created="2005-01-01 00:00:00.0" uuid="ef8081813DD43016013DD43016B11138" voided="false"/>
-	<visit_attribute visit_attribute_id="12" visit_id="12" attribute_type_id="3" value_reference="8" creator="1"
-	                 date_created="2005-01-01 00:00:00.0" uuid="ef8081813DD43016013DD43016B11139" voided="false"/>
 
 	<encounter_type encounter_type_id="0" name="Observation" creator="1" date_created="2005-01-01 00:00:00.0" retired="0"
 	                uuid="ff9081813DD43016013DD43016B11138"/>
@@ -295,7 +290,7 @@
 	<obs obs_id="8" person_id="1" concept_id="1" encounter_id="1" obs_datetime="2016-12-31 00:00:00.0" creator="1"
 	     date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD43016B19140"/>
 	<obs obs_id="9" person_id="1" concept_id="0" value_text="malaria" encounter_id="1" obs_datetime="2016-12-31 00:00:00.0" creator="1"
-		 date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD53016B19140"/>
+	     date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD53016B19140"/>
 
 	<concept_name concept_name_id="0" concept_id="0" name="1" locale="en" locale_preferred="false" voided="0" creator="1"
 	              date_created="2005-01-01 00:00:00.0" uuid="ef8081813ee43016013DD43016B19141"/>

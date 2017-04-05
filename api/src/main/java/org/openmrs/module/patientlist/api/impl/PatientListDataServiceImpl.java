@@ -312,9 +312,9 @@ public class PatientListDataServiceImpl extends
 							try {
 								// BETWEEN age should be separated by |
 								hql.append(operator);
-								hql.append("");
-								hql.append(" ? ");
+								hql.append(" ");
 								if (StringUtils.contains(condition.getValue(), "|")) {
+									hql.append(" ? ");
 									String[] numbers = StringUtils.split(condition.getValue(), "|");
 									int ageOne = Integer.valueOf(numbers[0]);
 									int ageTwo = Integer.valueOf(numbers[1]) + 1;
@@ -328,7 +328,11 @@ public class PatientListDataServiceImpl extends
 									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
 									        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
 								} else {
-									paramValues.add(condition.getValue());
+									if (!StringUtils.containsIgnoreCase(operator, "IS NOT NULL")) {
+										hql.append(" ? ");
+										paramValues.add(condition.getValue());
+									}
+
 								}
 							} catch (ParseException pex) {
 								paramValues.add(condition.getValue());
@@ -356,9 +360,9 @@ public class PatientListDataServiceImpl extends
 
 					hql.append(operator);
 					hql.append(" ");
-					hql.append("?");
 					if (StringUtils.isNotEmpty(value)) {
 						if (!StringUtils.containsIgnoreCase(operator, "null")) {
+							hql.append("?");
 							if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
 								try {
 									// BETWEEN dates should be separated by |
