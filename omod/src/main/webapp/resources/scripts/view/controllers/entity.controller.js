@@ -119,8 +119,9 @@
 		self.onLoadPatientListsSuccessful = self.onLoadPatientListsSuccessful || function(data) {
 				$scope.patientLists = data.results;
 				if($scope.loadFirstPatientList === true && $scope.patientLists.length > 0) {
-					var patientList = data.results[0];
-					self.getPatientListData(patientList, patientList.currentPage, $scope.limit, true);
+					//var patientList = data.results[0];
+					//self.getPatientListData(patientList, patientList.currentPage, $scope.limit, true);
+					$scope.loadPatientListData = false;
 				}
 
 				$scope.loadFirstPatientList = false;
@@ -131,6 +132,7 @@
 				$scope.loaded=true;
 				$scope.totalNumOfResults = data.length;
 				$scope.patientList.showSpinner = false;
+				$scope.loadPatientListData = true;
 			}
 
 		// @Override

@@ -11,17 +11,19 @@
  *
  * Copyright (C) OpenHMIS.  All Rights Reserved.
  */
-package org.openmrs.module.patientlist.uiframework;
 
-import org.openmrs.module.openhmis.commons.uiframework.UiConfigurationFactory;
+package org.openmrs.module.patientlist.api.model;
 
 /**
- * The OpenMRS UI Framework configuration settings.
+ * Base {@link IBasePatientList} methods
  */
-public class UiConfigurationPatientList extends UiConfigurationFactory {
+public interface IBasePatientList {
 
-	@Override
-	public String getModuleId() {
-		return "patientlist";
-	}
+	PatientList getPatientList();
+
+	void setPatientList(PatientList patientList);
+
+	String getField();
+
+	void setField(String field);
 }

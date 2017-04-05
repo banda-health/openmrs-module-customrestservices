@@ -14,8 +14,6 @@
 package org.openmrs.module.patientlist.api.impl;
 
 import org.junit.*;
-import org.openmrs.api.PatientService;
-import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.openhmis.commons.api.PagingInfo;
 import org.openmrs.module.patientlist.api.IPatientListDataService;
@@ -28,10 +26,12 @@ import org.powermock.modules.agent.PowerMockAgent;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.List;
+import java.util.Date;
 import java.util.List;
 
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @PrepareForTest(PatientListDateUtil.class)
 public class PatientListDataServiceImplTest extends IPatientListDataServiceTest {
@@ -47,9 +47,6 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 	private IPatientListService patientListService;
 	private IPatientListDataService patientListDataService;
 	private IPatientListDataServiceTest patientListDataServiceTest;
-	private PatientService patientService;
-	private VisitService visitService;
-	private Calendar calendar;
 
 	@Before
 	public void before() throws Exception {
@@ -58,8 +55,6 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		patientListService = createService();
 		patientListDataServiceTest = new IPatientListDataServiceTest();
 		patientListDataService = Context.getService(IPatientListDataService.class);
-		patientService = Context.getPatientService();
-		visitService = Context.getVisitService();
 
 		mockStatic(PatientListDateUtil.class);
 	}
@@ -358,6 +353,8 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 	@Test
 	public void patientList_shouldCreatePatientListWithMultipleConditionsSingleSortOrder() throws Exception {
+		Date mockDate = new Date(117, 1, 31);
+
 		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
@@ -384,7 +381,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 
-		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 
 		// change ordering
 		patientList.getOrdering().get(0).setSortOrder("desc");
@@ -393,12 +390,14 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 
-		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 
 	}
 
 	@Test
 	public void patientList_shouldCreatePatientListWithSingleConditionMultipleSortOrder() throws Exception {
+		Date mockDate = new Date(117, 1, 31);
+
 		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
@@ -429,7 +428,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(3, patientListDataSet.size());
 
-		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 
 		patientList.getOrdering().get(1).setSortOrder("asc");
 		patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
@@ -437,12 +436,12 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(3, patientListDataSet.size());
 
-		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
-
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 	}
 
 	@Test
 	public void patientList_shouldCreatePatientListWithMultipleConditionsMultipleSortOrder() throws Exception {
+		Date mockDate = new Date(117, 1, 31);
 		PatientList patientList = patientListService.getById(0);
 
 		List<PatientListCondition> conditions = patientList.getPatientListConditions();
@@ -476,7 +475,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 
-		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("66", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 		Assert.assertEquals("Mike", patientListDataSet.get(0).getPatient().getGivenName());
 
 		// change ordering
@@ -486,9 +485,8 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		Assert.assertNotNull(patientListDataSet);
 		Assert.assertEquals(2, patientListDataSet.size());
 
-		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge().toString());
+		Assert.assertEquals("46", patientListDataSet.get(0).getPatient().getAge(mockDate).toString());
 		Assert.assertEquals("Jennifer", patientListDataSet.get(0).getPatient().getGivenName());
-
 	}
 
 	@Test
@@ -623,8 +621,9 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 
 		patientList.getPatientListConditions().clear();
 		patientList.getPatientListConditions().add(condition);
+
 		when(PatientListDateUtil.createRelativeDate(
-			PatientListRelativeDate.LAST_THREE_MONTHS)).thenReturn("2015-10-01|2015-12-31");
+		        PatientListRelativeDate.LAST_THREE_MONTHS)).thenReturn("2015-10-01|2015-12-31");
 
 		PagingInfo pagingInfo = new PagingInfo();
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);

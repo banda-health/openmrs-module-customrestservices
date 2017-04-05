@@ -34,45 +34,37 @@
             ${ui.message('patientlist.list.empty')}
         </div>
 
+        <div ng-show="patientLists.length > 0 && loadPatientListData == false" class="empty-patient-list">
+            ${ui.message('Select a patient list on the left tab')}
+        </div>
+
         <table class="manage-entities-table" ng-show="fetchedEntities.length > 0">
-            <tr class="clickable-tr" pagination-id="__patientListData"
+            <tr  pagination-id="__patientListData"
                 dir-paginate="entity in fetchedEntities | itemsPerPage: limit"
                 total-items="totalNumOfResults" current-page="patientList.currentPage">
-
                 <td>
                     <div class="row" >
-                        <span ng-bind-html="renderTemplate(entity.headerContent)"></span>
+                        <span class='col-sm-10 patient-list-header'>
+                            <span ng-bind-html="renderTemplate(entity.headerContent)"></span>
+                            <span class="patient-list-header-links">
+                                <a class="right clickable-tr disable-hover"
+                                   href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">
+                                    ${ui.message('patientlist.view.patientDetails')}</a>
+                                <span ng-show="entity.visit.stopDatetime === null"  class="right"> | </span>
+
+                                <a class="right clickable-tr disable-hover" ng-show="entity.visit.stopDatetime === null"
+                                   href="/${ ui.contextPath() }/coreapps/patientdashboard/patientDashboard.page?patientId={{entity.patient.uuid}}">
+                                    ${ui.message('coreapps.patientDashBoard.visitDetails')}</a>
+                                <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
+
+                                <a class="right clickable-tr disable-hover" ng-show="entity.visit.stopDatetime === null"
+                                   ng-click="endVisitDialog(entity.visit.uuid)">${ ui.message("coreapps.task.endVisit.label") }</a>
+                            </span>
+                        </span>
                     </div>
 
                     <div class="row" >
                         <span ng-bind-html="renderTemplate(entity.bodyContent)"></span>
-                    </div>
-
-                    <div class="row">
-                        <div class="status-container">
-                            <span ng-show="entity.visit.stopDatetime === null">
-                                <span class="status active"></span>
-                                ${ ui.message("coreapps.activeVisit") }
-                            </span>
-
-                            <a class="right"
-                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">
-                                ${ui.message('patientlist.view.patientDetails')}</a>
-                            <span class="right"> | </span>
-
-                            <a class="right" ng-show="entity.visit.stopDatetime === null"
-                               href="/${ ui.contextPath() }/coreapps/patientdashboard/patientDashboard.page?patientId={{entity.patient.uuid}}">
-                                ${ui.message('coreapps.patientDashBoard.visitDetails')}</a>
-                            <span ng-show="entity.visit.stopDatetime === null" class="right"> | </span>
-
-                            <a class="right"
-                               ng-show="entity.visit.stopDatetime !== null"
-                               href="/${ ui.contextPath() }/coreapps/clinicianfacing/patient.page?patientId={{entity.patient.uuid}}">
-                                ${ ui.message("coreapps.task.startVisit.label") }
-                            </a>
-                            <a class="right" ng-show="entity.visit.stopDatetime === null"
-                               ng-click="endVisitDialog(entity.visit.uuid)">${ ui.message("coreapps.task.endVisit.label") }</a>
-                        </div>
                     </div>
                 </td>
             </tr>
