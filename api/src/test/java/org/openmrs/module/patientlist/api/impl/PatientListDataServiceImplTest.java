@@ -782,7 +782,7 @@ public class PatientListDataServiceImplTest extends IPatientListDataServiceTest 
 		List<PatientListData> patientListDataSet = patientListDataService.getPatientListData(patientList, pagingInfo);
 
 		Assert.assertNotNull(patientListDataSet);
-		Assert.assertEquals(0, patientListDataSet.size()); //check on this doesn't seem right.
+		Assert.assertEquals(8, patientListDataSet.size()); //check on this doesn't seem right.
 	}
 
 	@Test

@@ -20,7 +20,7 @@
 				autoclose: true,
 				pickerPosition: "bottom-left",
 				todayHighlight: false,
-				format: "dd M yyyy"
+				format: "yyyy-mm-dd"
 			});
 		});
 	});
@@ -110,8 +110,7 @@
 							        value="LTE"><=</option>
 							<option ng-show="listCondition.inputType == 'textInput' || listCondition.field == 'v.visitType'"
 							        value="LIKE">Like</option>
-							<option ng-show="listCondition.inputType == 'numberInput' || listCondition.inputType == 'dateInput'"
-							        value="BETWEEN">Between</option>
+							<option value="BETWEEN">Between</option>
 							<option ng-hide="listCondition.field == 'v.diagnosis'" value="NULL">Null</option>
 							<option ng-hide="listCondition.field == 'v.diagnosis' || listCondition.inputType == 'checkBoxInput'"
 							        value="NOT_NULL">Not Null</option>
@@ -120,7 +119,7 @@
 							<option ng-show="listCondition.inputType == 'dateInput'" value="RELATIVE">Relative</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType == 'textInput'">
+					<td ng-show="listCondition.inputType == 'textInput' && listCondition.operator != 'BETWEEN'">
 						<input name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value"
 						       ng-enter="patientListCondition(listCondition)"
@@ -138,15 +137,20 @@
 							        ng-selected="dropDownEntry.value == listCondition.value">{{dropDownEntry.display}}</option>
 						</select>
 					</td>
-					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator != 'BETWEEN'"
-					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
+					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator != 'BETWEEN'">
+						<div class="row">
+							<div class="col-lg-12"  ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
 					     || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'">
-						${ui.includeFragment("uicommons", "field/datetimepicker", [
-								label        : "",
-								useTime      : false,
-								formFieldName: 'patientConditionDatePicker',
-								model        : 'listConditionValue'
+								${ui.includeFragment("uicommons", "field/datetimepicker", [
+										label        : "",
+										useTime      : false,
+										size         : '37%',
+										formFieldName: 'patientConditionDatePicker',
+										ngModel      : 'listCondition.value',
+										class        : "form-control"
 								])}
+							</div>
+						</div>
 					</td>
 					<td ng-show="listCondition.inputType =='dateInput' && listCondition.operator == 'BETWEEN'"
 					    ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
@@ -155,30 +159,58 @@
 							<div class="col-md-6">
 								${ui.includeFragment("uicommons", "field/datetimepicker", [
 										id           : "betweenDateOne",
-										label        : "betweenDateOne",
+										label        : "",
 										useTime      : false,
+										size         : '11%',
 										formFieldName: 'patientConditionDatePicker',
-										model        : 'dateOne'
+										ngModel      : 'listCondition.betweenValues[0]',
+										class        : "form-control"
 								])}
 							</div>
 							
 							<div class="col-md-6">
 								${ui.includeFragment("uicommons", "field/datetimepicker", [
 										id           : "betweenDateTwo",
-										label        : "betweenDateTwo",
+										label        : "",
 										useTime      : false,
+										size         : '11%',
 										formFieldName: 'patientConditionDatePicker',
-										model        : 'dateTwo'
+										ngModel      : 'listCondition.betweenValues[1]'
 								])}
 							</div>
 						</div>
 					</td>
-					<td ng-show="listCondition.inputType == 'numberInput'">
+					<td ng-show="listCondition.inputType == 'numberInput' && listCondition.operator != 'BETWEEN'">
 						<input ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
 						 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
 						       name="conditionValue" placeholder="${ui.message("patientlist.condition.value.label")}"
 						       class="form-control input-md" type="text" ng-model="listCondition.value" ng-enter="patientListCondition(listCondition)"
 						       ng-blur="patientListCondition(listCondition)"/>
+					</td>
+					<td ng-show="(listCondition.inputType == 'numberInput' || listCondition.inputType == 'textInput') && listCondition.operator == 'BETWEEN'">
+						<div class="row">
+							<div class="col-md-6">
+								<input ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
+						 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
+								       name="conditionValue"
+								       placeholder="${ui.message("patientlist.condition.value.label")}"
+								       class="form-control input-md" type="text" ng-model="listCondition.betweenValues[0]"
+								       ng-enter="patientListCondition(listCondition)"
+								       ng-blur="patientListCondition(listCondition)"
+								       id="numberOne"/>
+							</div>
+							
+							<div class="col-md-6">
+								<input ng-disabled="listCondition.field == 'p.hasActiveVisit' || listCondition.field == 'v.hasDiagnosis' || listCondition.operator == 'NULL'
+						 || listCondition.operator == 'NOT_NULL' || listCondition.operator == 'DEFINED'"
+								       name="conditionValue"
+								       placeholder="${ui.message("patientlist.condition.value.label")}"
+								       class="form-control input-md" type="text" ng-model="listCondition.betweenValues[1]"
+								       ng-enter="patientListCondition(listCondition)"
+								       ng-blur="patientListCondition(listCondition)"
+								       id="numberTwo"/>
+							</div>
+						</div>
 					</td>
 					<td ng-show="listCondition.inputType == 'checkBoxInput'">
 						<label class="checkbox-inline">

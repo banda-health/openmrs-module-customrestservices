@@ -272,16 +272,73 @@ public class PatientListDataServiceImpl extends
 							operator = StringUtils.replace(operator, ">", "<");
 						}
 
-						hql.append(operator);
+						if (!StringUtils.containsIgnoreCase(operator, "null") && !StringUtils
+						        .containsIgnoreCase(operator, "BETWEEN")) {
+							if (StringUtils.equals(operator, "=")) {
+								operator = StringUtils.replace(operator, "=", "BETWEEN");
+								hql.append(" ");
+								hql.append(operator);
+								hql.append(" ");
+								hql.append(" ? ");
+								if (StringUtils.isNumeric(condition.getValue())) {
+									int age = Integer.valueOf(condition.getValue());
+									Calendar calendar = Calendar.getInstance();
+									calendar.add(Calendar.YEAR, -age);
+									Calendar calendar1 = Calendar.getInstance();
+									calendar1.add(Calendar.YEAR, -(age + 1));
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
+									hql.append(" AND ? ");
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+								}
+							} else {
+								hql.append(" ");
+								hql.append(operator);
+								hql.append(" ? ");
+								if (StringUtils.isNumeric(condition.getValue())) {
+									int age = Integer.valueOf(condition.getValue());
+									Calendar calendar = Calendar.getInstance();
+									if (StringUtils.equals(operator, ">=") || StringUtils.equals(operator, "<")) {
+										calendar.add(Calendar.YEAR, -(age + 1));
+									} else {
+										calendar.add(Calendar.YEAR, -age);
+									}
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+								}
+							}
+						} else {
+							try {
+								// BETWEEN age should be separated by |
+								hql.append(operator);
+								hql.append(" ");
+								if (StringUtils.contains(condition.getValue(), "|")) {
+									hql.append(" ? ");
+									String[] numbers = StringUtils.split(condition.getValue(), "|");
+									int ageOne = Integer.valueOf(numbers[0]);
+									int ageTwo = Integer.valueOf(numbers[1]) + 1;
+									Calendar calendar = Calendar.getInstance();
+									calendar.add(Calendar.YEAR, -ageTwo);
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+									hql.append(" AND ? ");
+									Calendar calendar1 = Calendar.getInstance();
+									calendar1.add(Calendar.YEAR, -ageOne);
+									paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
+									        PatientListDateUtil.simpleDateFormat.format(calendar1.getTime())));
+								} else {
+									if (!StringUtils.containsIgnoreCase(operator, "IS NOT NULL")) {
+										hql.append(" ? ");
+										paramValues.add(condition.getValue());
+									}
 
-						if (!StringUtils.containsIgnoreCase(operator, "null")) {
-							hql.append(" ? ");
-							int age = Integer.valueOf(condition.getValue());
-							Calendar calendar = Calendar.getInstance();
-							calendar.add(Calendar.YEAR, -age);
-							paramValues.add(PatientListDateUtil.simpleDateFormat.parse(
-							        PatientListDateUtil.simpleDateFormat.format(calendar.getTime())));
+								}
+							} catch (ParseException pex) {
+								paramValues.add(condition.getValue());
+							}
 						}
+
 					} catch (ParseException pex) {
 						LOG.error("error parsing date: ", pex);
 					}
@@ -303,9 +360,9 @@ public class PatientListDataServiceImpl extends
 
 					hql.append(operator);
 					hql.append(" ");
-					hql.append("?");
 					if (StringUtils.isNotEmpty(value)) {
 						if (!StringUtils.containsIgnoreCase(operator, "null")) {
+							hql.append("?");
 							if (patientInformationField.getDataType().isAssignableFrom(Date.class)) {
 								try {
 									// BETWEEN dates should be separated by |

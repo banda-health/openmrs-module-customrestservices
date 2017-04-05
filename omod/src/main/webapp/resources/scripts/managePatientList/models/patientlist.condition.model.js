@@ -20,7 +20,7 @@
 
 	function PatientListConditionModel() {
 
-		function PatientListConditionModel(field, operator, value, inputType, conditionOrder,id, valueRef, dataType) {
+		function PatientListConditionModel(field, operator, value, inputType, conditionOrder,id, valueRef, dataType, betweenValues) {
 			this.field = field;
 			this.operator = operator;
 			this.value = value;
@@ -30,6 +30,7 @@
 			this.id = id;
 			this.valueRef = valueRef;
 			this.dataType = dataType;
+			this.betweenValues = betweenValues;
 		}
 
 		PatientListConditionModel.prototype = {
@@ -104,7 +105,15 @@
 			
 			isSelected: function() {
 				return this.selected;
-			}
+			},
+			
+			getBetweenValues: function() {
+				return this.betweenValues;
+			},
+			
+			setBetweenValues: function(betweenValues) {
+				this.betweenValues = betweenValues;
+			},
 			
 		};
 

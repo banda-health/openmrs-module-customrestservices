@@ -290,7 +290,7 @@
 	<obs obs_id="8" person_id="1" concept_id="1" encounter_id="1" obs_datetime="2016-12-31 00:00:00.0" creator="1"
 	     date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD43016B19140"/>
 	<obs obs_id="9" person_id="1" concept_id="0" value_text="malaria" encounter_id="1" obs_datetime="2016-12-31 00:00:00.0" creator="1"
-		 date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD53016B19140"/>
+	     date_created="2005-01-01 00:00:00.0" voided="0" uuid="ef8081813DD43016013DD53016B19140"/>
 
 	<concept_name concept_name_id="0" concept_id="0" name="1" locale="en" locale_preferred="false" voided="0" creator="1"
 	              date_created="2005-01-01 00:00:00.0" uuid="ef8081813ee43016013DD43016B19141"/>

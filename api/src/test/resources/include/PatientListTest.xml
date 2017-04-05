@@ -50,11 +50,11 @@
 	<patient_list_condition patient_list_condition_id="19" patient_list_id="0" field="v.hasDiagnosis" condition_order="19"
 	                        uuid="4028814B39B565A20139B95FB3440023"/>
 	<patient_list_condition patient_list_condition_id="20" patient_list_id="0" field="v.diagnosis"
-							condition_order="20" operator="EQUALS" value="malaria"
-							uuid="4028814B39B565A20139B95FB3440024"/>
+	                        condition_order="20" operator="EQUALS" value="malaria"
+	                        uuid="4028814B39B565A20139B95FB3440024"/>
 	<patient_list_condition patient_list_condition_id="21" patient_list_id="0" field="v.startDate"
-							condition_order="21" operator="RELATIVE" value="LAST_THREE_MONTHS"
-							uuid="4028814B39B565A20139B95FB3440025"/>
+	                        condition_order="21" operator="RELATIVE" value="LAST_THREE_MONTHS"
+	                        uuid="4028814B39B565A20139B95FB3440025"/>
 	<patient_list_condition patient_list_condition_id="22" patient_list_id="0" field="p.age"
 	                        condition_order="22" operator="NOT_EQUALS" value="20"
 	                        uuid="4028814B39B565A20139B95FB3440026"/>
