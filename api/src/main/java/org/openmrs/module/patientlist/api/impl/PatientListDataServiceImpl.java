@@ -247,18 +247,18 @@ public class PatientListDataServiceImpl extends
 				} else if (StringUtils.contains(condition.getField(), "p.hasActiveVisit")) {
 					hql.append(" v.startDatetime IS NOT NULL AND v.stopDatetime is NULL ");
 				} else if (StringUtils.contains(condition.getField(), "v.hasDiagnosis")) {
-					hql.append(" (ob.valueCoded.conceptClass.uuid = ? or ob.valueText != '')");
+					hql.append("(ob.voided != true AND (ob.valueCoded.conceptClass.uuid = ? or ob.valueText != ''))");
 					paramValues.add("8d4918b0-c2cc-11de-8d13-0010c6dffd0f");
 				} else if (StringUtils.contains(condition.getField(), "v.diagnosis")) {
 					// coded diagnosis
 					if (NumberUtils.isDigits(condition.getValue())) {
-						hql.append(" ob.valueCoded.conceptId ");
+						hql.append(" ob.voided != true AND ob.valueCoded.conceptId ");
 						hql.append(operator);
 						hql.append(" ? ");
 						paramValues.add(Integer.valueOf(condition.getValue()));
 					} else {
 						// un-coded diagnosis
-						hql.append(" ob.valueText ");
+						hql.append(" ob.voided != true AND ob.valueText ");
 						hql.append(operator);
 						hql.append(" ? ");
 						paramValues.add(condition.getValue());
@@ -414,8 +414,7 @@ public class PatientListDataServiceImpl extends
 		String value = condition.getValue();
 
 		if (StringUtils.contains(condition.getField(), "p.attr.")) {
-			hql.append("(attrType.name = ?");
-			hql.append(" AND ");
+			hql.append("(attrType.name = ? AND attr.voided != true AND ");
 			if (StringUtils.equalsIgnoreCase(operator, "exists")) {
 				hql.append("attr is not null");
 			} else if (StringUtils.equalsIgnoreCase(operator, "not exists")) {
@@ -425,8 +424,7 @@ public class PatientListDataServiceImpl extends
 				hql.append(operator);
 			}
 		} else if (StringUtils.contains(condition.getField(), "v.attr.")) {
-			hql.append("(vattrType.name = ?");
-			hql.append(" AND ");
+			hql.append("(vattrType.name = ? AND vattr.voided != true AND ");
 			if (StringUtils.equalsIgnoreCase(operator, "exists")) {
 				hql.append("vattr is not null");
 			} else if (StringUtils.equalsIgnoreCase(operator, "not exists")) {
