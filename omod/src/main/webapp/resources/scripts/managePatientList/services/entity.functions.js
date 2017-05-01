@@ -53,12 +53,9 @@
 					listConditionModel.setSelected(true);
 					
 					for (var r = 0; r < $scope.fields.length; r++) {
-						var datatype = null;
 						if ($scope.fields[r].field == listCondition.field) {
-							
-							datatype = $scope.fields[r].desc.dataType;
-							listConditionModel.setDataType(datatype);
-							$scope.valueInputConditions(datatype, listCondition);
+							listConditionModel.setDataType($scope.fields[r].desc.datatype);
+							$scope.valueInputConditions($scope.fields[r].desc, listCondition);
 						}
 					}
 					if (listCondition.dataType == "java.util.Date") {

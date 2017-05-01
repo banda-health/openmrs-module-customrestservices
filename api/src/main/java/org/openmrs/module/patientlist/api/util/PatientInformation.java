@@ -248,12 +248,19 @@ public class PatientInformation {
 		fields = tempFields;
 	}
 
-	private <T extends OpenmrsData> void addField(Map<String, PatientInformationField<?>> map, String prefix, String name,
-	        Class<?> dataType, Func1<T, Object> getValueFunc, String mappingFieldName) {
+	private <T extends OpenmrsData> void addField(Map<String, PatientInformationField<?>> map,
+	        String prefix, String name, Class<?> dataType,
+	        Func1<T, Object> getValueFunc,
+	        String mappingFieldName, String config) {
 		PatientInformationField field = new PatientInformationField<T>(
-		        prefix, name, dataType, getValueFunc, mappingFieldName);
-
+		        prefix, name, dataType, getValueFunc, mappingFieldName, config);
 		map.put(prefix + "." + name, field);
+	}
+
+	private <T extends OpenmrsData> void addField(Map<String, PatientInformationField<?>> map,
+	        String prefix, String name,
+	        Class<?> dataType, Func1<T, Object> getValueFunc, String mappingFieldName) {
+		addField(map, prefix, name, dataType, getValueFunc, mappingFieldName, null);
 	}
 
 	private <T extends OpenmrsData> void addPatientAttributeField(Map<String, PatientInformationField<?>> map,
@@ -315,7 +322,7 @@ public class PatientInformation {
 					return result;
 				}
 			}
-		}, mappingFieldName);
+		}, mappingFieldName, attributeType.getDatatypeConfig());
 	}
 
 	/**

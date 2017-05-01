@@ -26,14 +26,16 @@ public class PatientInformationField<T extends OpenmrsData> {
 	private String mappingFieldName;
 	private Class<?> dataType;
 	private Func1<T, Object> getValueFunc;
+	private String attributeTypeConfig;
 
 	public PatientInformationField(String prefix, String name, Class<?> dataType,
-	    Func1<T, Object> getValueFunc, String mappingFieldName) {
+	    Func1<T, Object> getValueFunc, String mappingFieldName, String attributeTypeConfig) {
 		this.prefix = prefix;
 		this.name = name;
 		this.dataType = dataType;
 		this.getValueFunc = getValueFunc;
 		this.mappingFieldName = mappingFieldName;
+		this.attributeTypeConfig = attributeTypeConfig;
 	}
 
 	public String getPrefix() {
@@ -74,5 +76,13 @@ public class PatientInformationField<T extends OpenmrsData> {
 
 	public void setMappingFieldName(String mappingFieldName) {
 		this.mappingFieldName = mappingFieldName;
+	}
+
+	public String getAttributeTypeConfig() {
+		return attributeTypeConfig;
+	}
+
+	public void setAttributeTypeConfig(String attributeTypeConfig) {
+		this.attributeTypeConfig = attributeTypeConfig;
 	}
 }
