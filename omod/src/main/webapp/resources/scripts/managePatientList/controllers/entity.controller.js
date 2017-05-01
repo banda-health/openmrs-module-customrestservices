@@ -128,7 +128,7 @@
 				
 				$scope.patientListConditionOperator = function (listCondition) {
 					if (listCondition.field != "" && listCondition.operator != "") {
-						if (listCondition.operator != "BETWEEN" && listCondition.value.indexOf("|") != -1) {
+						if (listCondition.operator != "BETWEEN" && listCondition.value != null && listCondition.value.indexOf("|") != -1) {
 							listCondition.value = null;
 						} else {
 							//Adding the functionality for the between dates saving.
@@ -161,10 +161,8 @@
 						$scope.resetValue(listCondition);
 					}
 					for (var i = 0; i < $scope.fields.length; i++) {
-						var datatype = null;
 						if ($scope.fields[i].field == listCondition.field) {
-							datatype = $scope.fields[i].desc.dataType;
-							$scope.valueInputConditions(datatype, listCondition);
+							$scope.valueInputConditions($scope.fields[i].desc, listCondition);
 						}
 					}
 					if (listCondition.field == "p.hasActiveVisit" || listCondition.field == "v.hasDiagnosis") {
@@ -172,8 +170,8 @@
 					}
 				};
 				
-				$scope.valueInputConditions = function (datatype, listCondition) {
-					if (datatype == "java.lang.String") {
+				$scope.valueInputConditions = function (fieldDescription, listCondition) {
+					if (fieldDescription.dataType == "java.lang.String") {
 						if (listCondition.field == "v.diagnosis") {
 							listCondition.inputType = "conceptInput";
 						} else if (listCondition.field == "v.visitType") {
@@ -183,7 +181,8 @@
 							listCondition.inputType = "textInput";
 						}
 						
-					} else if (datatype == "java.util.Date" || datatype == "org.openmrs.customdatatype.datatype.DateDatatype") {
+					} else if (fieldDescription.dataType == "java.util.Date"
+						|| fieldDescription.dataType == "org.openmrs.customdatatype.datatype.DateDatatype") {
 						if (listCondition.operator == "RELATIVE") {
 							listCondition.inputType = "dropDownInput";
 							$scope.dropDownEntries = $scope.relativeDates;
@@ -192,24 +191,29 @@
 							PatientListFunctions.onChangeDatePicker(self.onListConditionDateSuccessfulCallback, undefined, listCondition);
 						}
 						
-					} else if (datatype == "java.lang.Boolean" || datatype == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
+					} else if (fieldDescription.dataType == "java.lang.Boolean"
+						|| fieldDescription.dataType == "org.openmrs.customdatatype.datatype.BooleanDatatype") {
 						listCondition.inputType = "checkBoxInput"
 						
 					} else if (listCondition.field == "p.gender") {
 						listCondition.inputType = "dropDownInput";
 						$scope.dropDownEntries = [{display: 'Female', value: "F"}, {display: 'Male', value: "M"}];
 						
-					} else if (datatype == "org.openmrs.Location") {
+					} else if (fieldDescription.dataType == "org.openmrs.Location") {
 						listCondition.inputType = "dropDownInput";
 						PatientListRestfulService.loadLocations(PATIENT_LIST_MODULE_NAME, self.onLoadLocationsSuccessful);
 						listCondition.dataType = "org.openmrs.Location";
 						
-					} else if (datatype == "org.openmrs.Concept") {
+					} else if (fieldDescription.dataType == "org.openmrs.Concept") {
 						listCondition.inputType = "conceptInput";
 						
-					} else if (datatype == "java.lang.Integer") {
+					} else if (fieldDescription.dataType == "java.lang.Integer") {
 						listCondition.inputType = "numberInput";
 						
+					} else if (fieldDescription.dataType == "org.openmrs.module.coreapps.customdatatype.CodedConceptDatatype"
+						|| fieldDescription.attributeTypeConfig != null){
+						PatientListRestfulService.loadConceptAnswers(fieldDescription.attributeTypeConfig, self.onLoadConceptAnswersSuccessful);
+						listCondition.inputType = "dropDownInput";
 					} else {
 						listCondition.inputType = "textInput";
 					}
@@ -347,6 +351,15 @@
 				}
 				$scope.dropDownEntries = $scope.locations;
 			};
+
+		self.onLoadConceptAnswersSuccessful = self.onLoadConceptAnswersSuccessful || function (data) {
+				var conceptAnswers = data.results;
+				for (var i = 0; i < conceptAnswers.length; i++) {
+					conceptAnswers[i].value = conceptAnswers[i].uuid;
+					conceptAnswers[i].display = conceptAnswers[i].name;
+				}
+				$scope.dropDownEntries = conceptAnswers;
+			}
 		
 		self.onLoadVisitTypesSuccessful = self.onLoadVisitTypesSuccessful || function (data) {
 				$scope.visitTypes = data.results;

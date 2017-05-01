@@ -236,10 +236,12 @@ public class PatientListDataServiceImpl extends
 				PatientInformationField patientInformationField =
 				        PatientInformation.getInstance().getField(condition.getField());
 				String mappingFieldName = patientInformationField.getMappingFieldName();
-				if (StringUtils.contains(condition.getField(), "p.attr.")
-				        || StringUtils.contains(condition.getField(), "v.attr.")) {
+				if ((StringUtils.contains(condition.getField(), "p.attr.")
+				|| StringUtils.contains(condition.getField(), "v.attr."))) {
 					hql.append(createAttributeSubQueries(condition, paramValues));
-					join = " OR ";
+					if (!searchField(patientListConditions, "p.hasActiveVisit", false)) {
+						join = " OR ";
+					}
 				} else if (StringUtils.contains(mappingFieldName, "p.names.")
 				        || StringUtils.contains(mappingFieldName, "p.addresses.")
 				        || StringUtils.contains(mappingFieldName, "p.identifiers.")) {

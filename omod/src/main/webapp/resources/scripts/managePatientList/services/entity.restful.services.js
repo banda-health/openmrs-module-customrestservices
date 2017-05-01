@@ -40,20 +40,16 @@
 		return service;
 		
 		/**
-		 * @param limit
 		 * @param onLoadConceptAnswersSuccessful
 		 * @param module_name
 		 * @param uuid
 		 */
-		function loadConceptAnswers(module_name, limit, uuid, onLoadConceptAnswersSuccessful) {
+		function loadConceptAnswers(uuid, onLoadConceptAnswersSuccessful) {
 			var requestParams = [];
-			requestParams['rest_entity_name'] = '';
-			requestParams['limit'] = limit;
-			EntityRestFactory.setBaseUrl('concept/' + uuid, 'v1');
+			requestParams['rest_entity_name'] = 'conceptname';
+			requestParams['conceptUuid'] = uuid;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptAnswersSuccessful, errorCallback);
-			//reset base url..
-			EntityRestFactory.setBaseUrl(module_name);
 		}
 		
 		/**
