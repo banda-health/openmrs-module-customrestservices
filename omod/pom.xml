@@ -97,6 +97,14 @@
 
 		<!-- End OpenMRS core -->
 
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>visitdocumentsui-omod</artifactId>
+			<version>1.3-SNAPSHOT</version>
+			<scope>provided</scope>
+			<type>jar</type>
+		</dependency>
+
 	</dependencies>
 
 	<build>
