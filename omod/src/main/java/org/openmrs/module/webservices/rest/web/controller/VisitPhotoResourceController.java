@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Handle Patient List Imaging
  */
@@ -42,6 +44,17 @@ public class VisitPhotoResourceController {
 
 		results.put("results", controller.uploadDocuments(
 		    patient, visit, provider, fileCaption, instructions, request));
+
+		return results;
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public SimpleObject downloadDocument(
+	        @RequestParam("obs") String obsUuid,
+	        @RequestParam(value = "view", required = false) String view,
+	        HttpServletResponse response) {
+		SimpleObject results = new SimpleObject();
+		controller.downloadDocument(obsUuid, view, response);
 
 		return results;
 	}
