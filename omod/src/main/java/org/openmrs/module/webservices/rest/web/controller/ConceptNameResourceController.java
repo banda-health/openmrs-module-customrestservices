@@ -36,6 +36,7 @@ public class ConceptNameResourceController {
 				SimpleObject result = new SimpleObject();
 				result.put("uuid", conceptAnswer.getUuid());
 				result.put("name", conceptAnswer.getAnswerConcept().getName().getName());
+				result.put("answer_concept", conceptAnswer.getAnswerConcept().getId());
 				values.add(result);
 			}
 
