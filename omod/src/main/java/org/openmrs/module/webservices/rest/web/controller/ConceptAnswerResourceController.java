@@ -20,8 +20,8 @@ import java.util.List;
  * REST controller for returning concept name
  */
 @Controller
-@RequestMapping("/rest/" + ModuleRestConstants.PATIENT_LIST_CONCEPT_NAME_RESOURCE)
-public class ConceptNameResourceController {
+@RequestMapping("/rest/" + ModuleRestConstants.PATIENT_LIST_CONCEPT_ANSWER_RESOURCE)
+public class ConceptAnswerResourceController {
 
 	private final Log LOG = LogFactory.getLog(this.getClass());
 
@@ -34,9 +34,8 @@ public class ConceptNameResourceController {
 			List<SimpleObject> values = new LinkedList<SimpleObject>();
 			for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
 				SimpleObject result = new SimpleObject();
-				result.put("uuid", conceptAnswer.getUuid());
+				result.put("uuid", conceptAnswer.getAnswerConcept().getUuid());
 				result.put("name", conceptAnswer.getAnswerConcept().getName().getName());
-				result.put("answer_concept", conceptAnswer.getAnswerConcept().getId());
 				values.add(result);
 			}
 
