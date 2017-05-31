@@ -34,8 +34,8 @@ public class ConceptAnswerResourceController {
 			List<SimpleObject> values = new LinkedList<SimpleObject>();
 			for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
 				SimpleObject result = new SimpleObject();
-				result.put("uuid", conceptAnswer.getAnswerConcept().getUuid());
-				result.put("name", conceptAnswer.getAnswerConcept().getName().getName());
+				result.put("uuid", conceptAnswer.getUuid());
+				result.put("display", String.valueOf(conceptAnswer.getAnswerConcept().getName().getName()));
 				values.add(result);
 			}
 

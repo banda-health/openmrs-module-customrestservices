@@ -63,7 +63,7 @@
 					} else if (listCondition.inputType == "conceptInput") {
 						$scope.getConceptName(value, function (data) {
 							listConditionModel.setValueRef(value);
-							listConditionModel.setValue(data["name"]);
+							listConditionModel.setValue(data["display"]);
 						});
 						
 					} else if (listCondition.dataType == "java.lang.Boolean") {
