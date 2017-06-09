@@ -46,7 +46,7 @@
 		 */
 		function loadConceptAnswers(uuid, onLoadConceptAnswersSuccessful) {
 			var requestParams = [];
-			requestParams['rest_entity_name'] = 'conceptname';
+			requestParams['rest_entity_name'] = 'conceptanswer';
 			requestParams['conceptUuid'] = uuid;
 			EntityRestFactory.loadEntities(requestParams,
 				onLoadConceptAnswersSuccessful, errorCallback);
