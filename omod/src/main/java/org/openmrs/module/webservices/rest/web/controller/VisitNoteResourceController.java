@@ -6,15 +6,17 @@ import org.openmrs.Visit;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
 import org.openmrs.module.appframework.feature.FeatureToggleProperties;
 import org.openmrs.module.appui.UiSessionContext;
-import org.openmrs.module.emrapi.EmrApiProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentryui.fragment.controller.htmlform.EnterHtmlFormFragmentController;
 import org.openmrs.module.patientlist.web.ModuleRestConstants;
 import org.openmrs.ui.framework.SimpleObject;
+import org.openmrs.ui.framework.formatter.FormatterService;
+import org.openmrs.ui.framework.fragment.FragmentActionUiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,9 @@ public class VisitNoteResourceController {
 	@Autowired
 	private FeatureToggleProperties featureToggles;
 
+	@Autowired
+	private FormatterService formatterService;
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST)
 	public SimpleObject save(
@@ -43,8 +48,9 @@ public class VisitNoteResourceController {
 	        @RequestParam(value = "visitId", required = false) Visit visit,
 	        @RequestParam(value = "createVisit", required = false) Boolean createVisit,
 	        @RequestParam(value = "returnUrl", required = false) String returnUrl,
-	        HttpServletRequest request) throws Exception {
+	        HttpServletRequest request) {
 
+		SimpleObject result;
 		HtmlForm hf = null;
 		if (htmlFormId != null) {
 			HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
@@ -61,9 +67,19 @@ public class VisitNoteResourceController {
 
 		UiSessionContext sessionContext = new UiSessionContext(locationService, providerService, request);
 
+		FragmentActionUiUtils uiUtils = new FragmentActionUiUtils(
+		        new MutableResourceBundleMessageSource(), null, null, formatterService);
+
 		EnterHtmlFormFragmentController controller = new EnterHtmlFormFragmentController();
-		return controller.submit(
-		    sessionContext, patient, hf, encounter, visit, createVisit, returnUrl,
-		    adtService, featureToggles, null, request);
+
+		try {
+			result = controller.submit(
+			    sessionContext, patient, hf, encounter, visit, createVisit, returnUrl,
+			    adtService, featureToggles, uiUtils, request);
+		} catch (Exception ex) {
+			result = SimpleObject.create("error", ex.getMessage());
+		}
+
+		return result;
 	}
 }
