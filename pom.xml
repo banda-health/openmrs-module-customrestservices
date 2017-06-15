@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.openmrs.module</groupId>
-	<artifactId>patientlist</artifactId>
+	<artifactId>customrestservices</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Patient List</name>
-	<description>Module that provides dynamic patient list functionality.</description>
+	<name>Custom REST services</name>
+	<description>The OpenHMIS Custom REST Services module.</description>
 
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
@@ -25,9 +25,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-patient-list.git</connection>
-		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-patient-list.git</developerConnection>
-		<url>https://github.com/OpenHMIS/openmrs-module-patient-list/</url>
+		<connection>scm:git:git@github.com:OpenHMIS/openmrs-module-customrestservices.git</connection>
+		<developerConnection>scm:git:git@github.com:OpenHMIS/openmrs-module-customrestservices.git</developerConnection>
+		<url>https://github.com/OpenHMIS/openmrs-module-customrestservices/</url>
 	</scm>
 
 	<modules>

@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientlist.web.ModuleRestConstants;
+import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import java.util.List;
  * REST controller for returning concept name
  */
 @Controller
-@RequestMapping("/rest/" + ModuleRestConstants.PATIENT_LIST_CONCEPT_ANSWER_RESOURCE)
+@RequestMapping("/rest/" + ModuleRestConstants.CONCEPT_ANSWER_RESOURCE)
 public class ConceptAnswerResourceController {
 
 	private final Log LOG = LogFactory.getLog(this.getClass());
@@ -35,7 +35,7 @@ public class ConceptAnswerResourceController {
 			for (ConceptAnswer conceptAnswer : concept.getAnswers()) {
 				SimpleObject result = new SimpleObject();
 				result.put("uuid", conceptAnswer.getUuid());
-				result.put("display", String.valueOf(conceptAnswer.getAnswerConcept().getName().getName()));
+				result.put("display", conceptAnswer.getAnswerConcept().getName().getName());
 				values.add(result);
 			}
 

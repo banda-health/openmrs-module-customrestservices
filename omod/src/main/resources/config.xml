@@ -30,17 +30,15 @@
 		<require_module version="3.0">org.openmrs.module.openhmis.commons</require_module>
 		<require_module version="1.11.1">org.openmrs.module.emrapi</require_module>
 		<require_module version="2.3">org.openmrs.module.referenceapplication</require_module>
-		<require_module version="1.0">org.openmrs.module.appui</require_module>
+		<require_module version="1.4">org.openmrs.module.appui</require_module>
+		<require_module version="1.7">org.openmrs.module.coreapps</require_module>
 	</require_modules>
 
 	<!-- Module Activator -->
-	<activator>org.openmrs.module.patientlist.PatientListModuleActivator</activator>
+	<activator>org.openmrs.module.customrestservices.CustomRESTModuleActivator</activator>
 
 
 	<!-- Maps hibernate file's, if present -->
-	<mappingFiles>
-		PatientList.hbm.xml
-	</mappingFiles>
 
 	<!-- Internationalization -->
 	<!-- All message codes should start with ${project.parent.artifactId}. -->
@@ -62,16 +60,8 @@
 	<!-- App privileges for OpenMRS 2.x -->
 
 	<privilege>
-		<name>Task: Manage Patient List Metadata</name>
-		<description>Able to see and manage the patient lists</description>
-	</privilege>
-	<privilege>
-		<name>App: View Patient List App</name>
-		<description>Able to access the patient list module</description>
-	</privilege>
-	<privilege>
-		<name>Task: View Patient List</name>
-		<description>Able to view patient lists</description>
+		<name>App: View Custom REST App</name>
+		<description>Able to access the Custom REST module</description>
 	</privilege>
 </module>
 

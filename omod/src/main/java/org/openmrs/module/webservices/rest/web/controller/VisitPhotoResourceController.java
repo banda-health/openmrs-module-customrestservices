@@ -4,7 +4,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientlist.web.ModuleRestConstants;
+import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.visitdocumentsui.web.controller.VisitDocumentsController;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * Handle Patient List Imaging
  */
 @Controller
-@RequestMapping("/rest/" + ModuleRestConstants.PATIENT_LIST_PHOTOS_RESOURCE)
+@RequestMapping("/rest/" + ModuleRestConstants.PHOTOS_RESOURCE)
 public class VisitPhotoResourceController {
 	@Autowired
 	private VisitDocumentsController controller;

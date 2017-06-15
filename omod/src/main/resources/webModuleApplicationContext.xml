@@ -20,8 +20,8 @@
   		    http://www.springframework.org/schema/util
   		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<bean class="org.openmrs.module.patientlist.uiframework.UiConfigurationPatientList"/>
+	<bean class="org.openmrs.module.customrestservices.uiframework.UiConfigurationCustomREST"/>
 
-	<context:component-scan base-package="org.openmrs.module.patientlist.web" />
+	<context:component-scan base-package="org.openmrs.module.customrestservices.web" />
 
 </beans>
