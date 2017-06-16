@@ -1,15 +1,16 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.openmrs.Concept;
 import org.openmrs.ConceptSearchResult;
 import org.openmrs.ConceptSource;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
-import org.openmrs.module.coreapps.fragment.controller.DiagnosesFragmentController;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.emrapi.EmrApiProperties;
 import org.openmrs.module.emrapi.concept.EmrConceptService;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.formatter.FormatterService;
 import org.openmrs.ui.framework.fragment.FragmentActionUiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,6 @@ public class DiagnosesResourceController {
 	public SimpleObject search(@RequestParam("term") String query,
 	        @RequestParam(value = "limit", required = false) Integer limit) {
 		SimpleObject results = new SimpleObject();
-		DiagnosesFragmentController controller = new DiagnosesFragmentController();
-
 		EmrConceptService emrConceptService = Context.getService(EmrConceptService.class);
 
 		FragmentActionUiUtils uiUtils = new FragmentActionUiUtils(
@@ -53,7 +52,7 @@ public class DiagnosesResourceController {
 			    null, diagnosisSets, sources, limit);
 			List values = new LinkedList();
 			for (ConceptSearchResult hit : hits) {
-				values.add(controller.simplify(hit, uiUtils, Context.getLocale()));
+				values.add(simplify(hit, uiUtils));
 			}
 
 			results.put("results", values);
@@ -62,5 +61,22 @@ public class DiagnosesResourceController {
 		}
 
 		return results;
+	}
+
+	private org.openmrs.ui.framework.SimpleObject simplify(ConceptSearchResult result, UiUtils ui)
+	        throws Exception {
+		org.openmrs.ui.framework.SimpleObject simple =
+		        org.openmrs.ui.framework.SimpleObject.fromObject(
+		            result, ui,
+		            new String[] {
+		                    "conceptName.uuid",
+		                    "conceptName.conceptNameType", "conceptName.name",
+		                    "concept.uuid",
+		                    "concept.conceptMappings.conceptMapType",
+		                    "concept.conceptMappings.conceptReferenceTerm.code",
+		                    "concept.conceptMappings.conceptReferenceTerm.name",
+		                    "concept.conceptMappings.conceptReferenceTerm.conceptSource.name" });
+		PropertyUtils.setProperty(simple, "value", "ConceptName:" + result.getConceptName().getId());
+		return simple;
 	}
 }
