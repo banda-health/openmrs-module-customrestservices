@@ -3,12 +3,9 @@ package org.openmrs.module.webservices.rest.web.controller;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
-import org.openmrs.api.LocationService;
-import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
 import org.openmrs.module.appframework.feature.FeatureToggleProperties;
-import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.htmlformentry.HtmlForm;
@@ -62,19 +59,11 @@ public class VisitNoteResourceController {
 		}
 
 		AdtService adtService = Context.getService(AdtService.class);
-		LocationService locationService = Context.getLocationService();
-		ProviderService providerService = Context.getProviderService();
-
-		UiSessionContext sessionContext = new UiSessionContext(locationService, providerService, request);
-
 		FragmentActionUiUtils uiUtils = new FragmentActionUiUtils(
 		        new MutableResourceBundleMessageSource(), null, null, formatterService);
-
-		EnterHtmlFormFragmentController controller = new EnterHtmlFormFragmentController();
-
 		try {
-			result = controller.submit(
-			    sessionContext, patient, hf, encounter, visit, createVisit, returnUrl,
+			result = new EnterHtmlFormFragmentController().submit(
+			    null, patient, hf, encounter, visit, createVisit, returnUrl,
 			    adtService, featureToggles, uiUtils, request);
 		} catch (Exception ex) {
 			result = SimpleObject.create("error", ex.getMessage());
