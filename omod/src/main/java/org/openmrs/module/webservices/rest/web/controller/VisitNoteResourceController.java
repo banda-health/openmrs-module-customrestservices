@@ -1,5 +1,7 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
@@ -30,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/rest/" + ModuleRestConstants.VISIT_NOTE_RESOURCE)
 public class VisitNoteResourceController {
 
+	private final Log LOG = LogFactory.getLog(this.getClass());
+
 	@Autowired
 	private FeatureToggleProperties featureToggles;
 
@@ -47,7 +51,7 @@ public class VisitNoteResourceController {
 	        @RequestParam(value = "returnUrl", required = false) String returnUrl,
 	        HttpServletRequest request) {
 
-		SimpleObject result;
+		SimpleObject result = new SimpleObject();
 		HtmlForm hf = null;
 		if (htmlFormId != null) {
 			HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
@@ -62,11 +66,19 @@ public class VisitNoteResourceController {
 		FragmentActionUiUtils uiUtils = new FragmentActionUiUtils(
 		        new MutableResourceBundleMessageSource(), null, null, formatterService);
 		try {
-			result = new EnterHtmlFormFragmentController().submit(
+			new EnterHtmlFormFragmentController().submit(
 			    null, patient, hf, encounter, visit, createVisit, returnUrl,
 			    adtService, featureToggles, uiUtils, request);
 		} catch (Exception ex) {
-			result = SimpleObject.create("error", ex.getMessage());
+			LOG.warn(ex.getMessage());
+		}
+
+		for (Encounter updatedEncounter : visit.getEncounters()) {
+			if (updatedEncounter.getEncounterType().getUuid().equalsIgnoreCase(
+			    encounter.getEncounterType().getUuid())) {
+				result = SimpleObject.create("success", true, "encounterId", updatedEncounter.getUuid());
+				break;
+			}
 		}
 
 		return result;
