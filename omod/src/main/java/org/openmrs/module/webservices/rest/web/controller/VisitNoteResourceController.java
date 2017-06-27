@@ -73,9 +73,10 @@ public class VisitNoteResourceController {
 			LOG.warn(ex.getMessage());
 		}
 
-		for (Encounter updatedEncounter : visit.getEncounters()) {
-			if (updatedEncounter.getEncounterType().getUuid().equalsIgnoreCase(
-			    encounter.getEncounterType().getUuid())) {
+		Visit updatedVisit = Context.getVisitService().getVisitByUuid(visit.getUuid());
+		for (Encounter updatedEncounter : updatedVisit.getEncounters()) {
+			String encounterTypeName = updatedEncounter.getEncounterType().getName();
+			if (encounterTypeName.equalsIgnoreCase("Visit Note")) {
 				result = SimpleObject.create("success", true, "encounterId", updatedEncounter.getUuid());
 				break;
 			}

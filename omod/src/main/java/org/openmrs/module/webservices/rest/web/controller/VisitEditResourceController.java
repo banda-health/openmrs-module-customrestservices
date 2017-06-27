@@ -1,6 +1,5 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
-import org.openmrs.Encounter;
 import org.openmrs.Visit;
 import org.openmrs.VisitType;
 import org.openmrs.VisitAttribute;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.ArrayList;
 
 /**
@@ -59,23 +57,20 @@ public class VisitEditResourceController {
 		for (VisitAttribute vatt : attrs) {
 			VisitAttribute existingAttr = searchAttributeByType(existingVisit, vatt.getAttributeType().getUuid());
 			if (existingAttr != null) {
-				if (existingAttr.getValueReference().equalsIgnoreCase((String)vatt.getValue())) {
+				if (existingAttr.getValueReference().equalsIgnoreCase(vatt.getValue().toString())) {
 					continue;
 				} else {
 					existingAttr.setVoided(true);
-					existingVisit.addAttribute(existingAttr);
+					existingVisit.setAttribute(existingAttr);
 				}
 			}
 
-			existingVisit.addAttribute(vatt);
+			existingVisit.setAttribute(vatt);
 		}
 
-		Set<Encounter> encounters = existingVisit.getEncounters();
-		existingVisit.getEncounters().clear();
-		existingVisit.setEncounters(encounters);
-
 		existingVisit = Context.getVisitService().saveVisit(existingVisit);
-		results.put("results", existingVisit);
+		results.put("results", "successful updated visit - " + existingVisit.getUuid());
+
 		return results;
 	}
 
@@ -85,7 +80,6 @@ public class VisitEditResourceController {
 				return attribute;
 			}
 		}
-
 		return null;
 	}
 }
