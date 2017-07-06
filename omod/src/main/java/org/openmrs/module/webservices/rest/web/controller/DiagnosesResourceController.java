@@ -1,9 +1,8 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.openmrs.Concept;
+import org.openmrs.ConceptClass;
 import org.openmrs.ConceptSearchResult;
-import org.openmrs.ConceptSource;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
@@ -20,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Search diagnoses
@@ -32,8 +32,6 @@ import java.util.List;
 public class DiagnosesResourceController {
 
 	@Autowired
-	private EmrApiProperties emrApiProperties;
-	@Autowired
 	private FormatterService formatterService;
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -41,15 +39,19 @@ public class DiagnosesResourceController {
 	public SimpleObject search(@RequestParam("term") String query,
 	        @RequestParam(value = "limit", required = false) Integer limit) {
 		SimpleObject results = new SimpleObject();
-		EmrConceptService emrConceptService = Context.getService(EmrConceptService.class);
 
 		FragmentActionUiUtils uiUtils = new FragmentActionUiUtils(
 		        new MutableResourceBundleMessageSource(), null, null, formatterService);
 		try {
-			Collection<Concept> diagnosisSets = emrApiProperties.getDiagnosisSets();
-			List<ConceptSource> sources = emrApiProperties.getConceptSourcesForDiagnosisSearch();
-			List<ConceptSearchResult> hits = emrConceptService.conceptSearch(query, Context.getLocale(),
-			    null, diagnosisSets, sources, limit);
+
+			List<ConceptClass> conceptClasses = new ArrayList<ConceptClass>();
+			conceptClasses.add(Context.getConceptService().getConceptClassByName("Diagnosis"));
+
+			List<Locale> locales = new ArrayList<Locale>();
+			locales.add(Context.getLocale());
+
+			List<ConceptSearchResult> hits = Context.getConceptService().getConcepts(query, locales,
+			    false, conceptClasses, null, null, null, null, 1, limit);
 			List values = new LinkedList();
 			for (ConceptSearchResult hit : hits) {
 				values.add(simplify(hit, uiUtils));
