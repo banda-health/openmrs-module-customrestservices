@@ -53,9 +53,12 @@ public class VisitNoteResourceController {
 
 		SimpleObject result = new SimpleObject();
 		HtmlForm hf = null;
-		if (htmlFormId != null) {
-			HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
-			hf = service.getHtmlForm(htmlFormId);
+
+		HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
+		for (HtmlForm htmlForm : service.getAllHtmlForms()) {
+			if (htmlForm.getName().equalsIgnoreCase("visit note 2")) {
+				hf = htmlForm;
+			}
 		}
 
 		if (encounter != null) {
