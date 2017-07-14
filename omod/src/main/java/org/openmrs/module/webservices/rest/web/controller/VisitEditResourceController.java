@@ -1,5 +1,7 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Visit;
 import org.openmrs.VisitType;
 import org.openmrs.VisitAttribute;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Edit visit functionality
@@ -27,16 +32,26 @@ import java.util.ArrayList;
 @RequestMapping("/rest/" + ModuleRestConstants.VISIT_EDIT_RESOURCE)
 public class VisitEditResourceController {
 
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private Log LOG = LogFactory.getLog(VisitEditResourceController.class);
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST,
 	        consumes = MediaType.APPLICATION_JSON_VALUE)
 	public SimpleObject post(
 	        @RequestParam(value = "visit") Visit existingVisit,
 	        @RequestParam(value = "visitType") VisitType visitType,
+	        @RequestParam(value = "startTime") String startTime,
 	        @RequestBody List<LinkedHashMap<String, String>> attributes) {
 		SimpleObject results = new SimpleObject();
 
 		existingVisit.setVisitType(visitType);
+		try {
+			Date date = sdf.parse(startTime);
+			existingVisit.setStartDatetime(date);
+		} catch (ParseException ex) {
+			LOG.error(ex);
+		}
 
 		List<VisitAttribute> attrs = new ArrayList<VisitAttribute>();
 		for (LinkedHashMap<String, String> attribute : attributes) {
