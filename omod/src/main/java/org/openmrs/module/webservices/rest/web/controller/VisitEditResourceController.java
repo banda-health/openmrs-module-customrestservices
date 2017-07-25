@@ -42,6 +42,7 @@ public class VisitEditResourceController {
 	        @RequestParam(value = "visit") Visit existingVisit,
 	        @RequestParam(value = "visitType") VisitType visitType,
 	        @RequestParam(value = "startTime") String startTime,
+	        @RequestParam(value = "stopTime") String stopTime,
 	        @RequestBody List<LinkedHashMap<String, String>> attributes) {
 		SimpleObject results = new SimpleObject();
 
@@ -49,6 +50,10 @@ public class VisitEditResourceController {
 		try {
 			Date date = sdf.parse(startTime);
 			existingVisit.setStartDatetime(date);
+
+			if (stopTime != null) {
+				existingVisit.setStopDatetime((sdf.parse(stopTime)));
+			}
 		} catch (ParseException ex) {
 			LOG.error(ex);
 		}
