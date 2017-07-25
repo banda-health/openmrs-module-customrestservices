@@ -3,6 +3,9 @@ package org.openmrs.module.customrestservices.api.util;
 import org.openmrs.module.openhmis.commons.api.entity.security.IObjectAuthorizationPrivileges;
 import org.openmrs.util.PrivilegeConstants;
 
+/**
+ * OpenMRS Object Authorization Privileges
+ */
 public class BasicObjectAuthorizationPrivileges implements IObjectAuthorizationPrivileges {
 	@Override
 	public String getSavePrivilege() {
