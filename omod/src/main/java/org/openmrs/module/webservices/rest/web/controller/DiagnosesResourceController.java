@@ -1,7 +1,9 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.openmrs.Concept;
 import org.openmrs.ConceptClass;
+import org.openmrs.ConceptName;
 import org.openmrs.ConceptSearchResult;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
@@ -67,13 +69,22 @@ public class DiagnosesResourceController {
 
 	private org.openmrs.ui.framework.SimpleObject simplify(ConceptSearchResult result, UiUtils ui)
 	        throws Exception {
+		List<ConceptName> conceptName = new ArrayList<ConceptName>();
+		conceptName.add(result.getConceptName());
+
+		result.getConcept().getNames().clear();
+		result.getConcept().setNames(conceptName);
 		org.openmrs.ui.framework.SimpleObject simple =
 		        org.openmrs.ui.framework.SimpleObject.fromObject(
 		            result, ui,
 		            new String[] {
-		                    "conceptName.uuid",
-		                    "conceptName.conceptNameType", "conceptName.name",
+		                    "concept.names.uuid",
+		                    "concept.names.name",
+		                    "concept.names.conceptNameType",
 		                    "concept.uuid",
+		                    "concept.creator",
+		                    "concept.conceptClass",
+		                    "concept.datatype",
 		                    "concept.conceptMappings.conceptMapType",
 		                    "concept.conceptMappings.conceptReferenceTerm.code",
 		                    "concept.conceptMappings.conceptReferenceTerm.name",
