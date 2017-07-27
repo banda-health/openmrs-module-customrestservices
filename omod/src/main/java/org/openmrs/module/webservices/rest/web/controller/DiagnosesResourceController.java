@@ -52,17 +52,17 @@ public class DiagnosesResourceController {
 			List<Locale> locales = new ArrayList<Locale>();
 			locales.add(Context.getLocale());
 
-			List<org.openmrs.ui.framework.SimpleObject > values;
+			List<org.openmrs.ui.framework.SimpleObject> values;
 			if (StringUtils.isNotEmpty(query)) {
 				List<ConceptSearchResult> hits = Context.getConceptService().getConcepts(query, locales,
-						false, conceptClasses, null, null, null, null, 1, limit);
+				    false, conceptClasses, null, null, null, null, 1, limit);
 				values = new ArrayList<>(hits.size());
 				for (ConceptSearchResult hit : hits) {
 					values.add(simplify(hit, uiUtils));
 				}
 			} else {
 				ConceptDataService dataService = Context.getService(ConceptDataService.class);
-				List<Concept> concepts = dataService.getAllByClass(diagnosisClass);
+				List<Concept> concepts = dataService.getAllByClass(diagnosisClass, null);
 
 				values = new ArrayList<>(concepts.size());
 				for (Concept concept : concepts) {
