@@ -346,6 +346,11 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>openhmis-release-repo</id>
+			<name>OpenHMIS Modules</name>
+			<url>http://mavenrepo.openhmisafrica.org/content/repositories/releases/</url>
+		</repository>
+		<repository>
 			<id>openhmis-repo</id>
 			<name>OpenHMIS Nexus Repository</name>
 			<snapshots>
