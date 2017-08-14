@@ -41,7 +41,7 @@ public class ConceptSetSearchHandler implements SearchHandler {
 	private final SearchConfig searchConfig = new SearchConfig("bySet", RestConstants.VERSION_1 + "/concept",
 	        Arrays.asList("1.9.*", "1.10.*", "1.11.*", "1.12.*", "2.0.*"),
 	        new SearchQuery.Builder(
-	                "Search to find concepts which are members of the specified concept set (by uuid.")
+	                "Search to find concepts which are members of the specified concept set (by uuid).")
 	                .withRequiredParameters(SET_PARAMETER)
 	                .withOptionalParameters(INCLUDE_SET_CONCEPTS_PARAMETER)
 	                .build());
