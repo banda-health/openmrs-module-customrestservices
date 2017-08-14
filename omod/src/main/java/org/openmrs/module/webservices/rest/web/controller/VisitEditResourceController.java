@@ -42,7 +42,7 @@ public class VisitEditResourceController {
 	        @RequestParam(value = "visit") Visit existingVisit,
 	        @RequestParam(value = "visitType") VisitType visitType,
 	        @RequestParam(value = "startTime") String startTime,
-	        @RequestParam(value = "stopTime") String stopTime,
+	        @RequestParam(value = "stopTime", required = false) String stopTime,
 	        @RequestBody List<LinkedHashMap<String, String>> attributes) {
 		SimpleObject results = new SimpleObject();
 
