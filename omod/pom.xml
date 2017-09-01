@@ -146,10 +146,11 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
 		<dependency>
-			<groupId>com.sksamuel.diff</groupId>
-			<artifactId>diff</artifactId>
-			<version>1.1.11</version>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>4.0.0.201506020755-rc3</version>
 		</dependency>
 
 	</dependencies>
