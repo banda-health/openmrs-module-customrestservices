@@ -43,11 +43,22 @@ import java.util.Date;
 @Controller
 @RequestMapping("/rest/" + ModuleRestConstants.VISIT_NOTE_RESOURCE)
 public class VisitNoteResourceController {
+	private static final String TAG = VisitNoteResourceController.class.getSimpleName();
+
+	private static final String NO_NEWLINE_AT_END_OF_FILE = "\\ No newline at end of file";
+	private static final String ESCAPE_BACK_SLASH_CHAR = "\\\\";
+	private static final String ESCAPE_PLUS_CHAR = "\\+";
+	private static final String MINUS_CHAR = "-";
+	private static final String EMPTY_STRING = "";
+	private static final String VISIT_NOTE_2 = "visit note 2";
+	private static final String VISIT_NOTE = "Visit Note";
+	private static final String TEXT_OF_ENCOUNTER_NOTE = "text of encounter note";
+	private static final String VOID_PATIENT_SUMMARY_MESSAGE = "void patient summary obs";
+	private static final String CREATE_PATIENT_SUMMARY_MESSAGE = "create merged patient summary obs";
 
 	private final SimpleDateFormat patientSummaryDateFormat =
 	        new SimpleDateFormat("dd/MM/yyyy hh:mm");
 	private final Log LOG = LogFactory.getLog(this.getClass());
-	private static final String NO_NEWLINE_AT_END_OF_FILE = "\\ No newline at end of file";
 
 	@Autowired
 	private FeatureToggleProperties featureToggles;
@@ -103,7 +114,7 @@ public class VisitNoteResourceController {
 
 		HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
 		for (HtmlForm htmlForm : service.getAllHtmlForms()) {
-			if (htmlForm.getName().equalsIgnoreCase("visit note 2")) {
+			if (htmlForm.getName().equalsIgnoreCase(VISIT_NOTE_2)) {
 				hf = htmlForm;
 			}
 		}
@@ -127,9 +138,9 @@ public class VisitNoteResourceController {
 		Obs createdObs = null;
 		for (Encounter updatedEncounter : updatedVisit.getEncounters()) {
 			String encounterTypeName = updatedEncounter.getEncounterType().getName();
-			if (encounterTypeName.equalsIgnoreCase("Visit Note")) {
+			if (encounterTypeName.equalsIgnoreCase(VISIT_NOTE)) {
 				for (Obs obs : encounter.getAllObs()) {
-					if (obs.getConcept().getName().getName().equalsIgnoreCase("text of encounter note")) {
+					if (obs.getConcept().getName().getName().equalsIgnoreCase(TEXT_OF_ENCOUNTER_NOTE)) {
 						createdObs = obs;
 						break;
 					}
@@ -161,10 +172,10 @@ public class VisitNoteResourceController {
 			        mergeTextAndShowConflicts(existingObs, updatedObs, request));
 		}
 
-		obsService.voidObs(existingObs, "void patient summary obs");
+		obsService.voidObs(existingObs, VOID_PATIENT_SUMMARY_MESSAGE);
 		Obs mergedObs = Obs.newInstance(updatedObs);
 		mergedObs.setVoided(false);
-		Obs createdObs = obsService.saveObs(mergedObs, "create merged patient summary obs");
+		Obs createdObs = obsService.saveObs(mergedObs, CREATE_PATIENT_SUMMARY_MESSAGE);
 
 		return SimpleObject.create(
 		    "success", true,
@@ -186,13 +197,17 @@ public class VisitNoteResourceController {
 	private String mergeTextAndShowConflicts(Obs existingObs, Obs updatedObs, HttpServletRequest request) {
 		StringBuilder mergedText = new StringBuilder();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		String existingPatientSummary = existingObs.getValueText();
+		String updatedPatientSummary = request.getParameter("w12");
 		try {
-			RawText rawText1 = new RawText(existingObs.getValueText().getBytes());
-			RawText rawText2 = new RawText(request.getParameter("w12").getBytes());
+			RawText rawText1 = new RawText(existingPatientSummary.getBytes());
+			RawText rawText2 = new RawText(updatedPatientSummary.getBytes());
 			EditList diffList = new EditList();
 			diffList.addAll(new HistogramDiff().diff(RawTextComparator.DEFAULT, rawText1, rawText2));
 			new DiffFormatter(out).format(diffList, rawText1, rawText2);
 		} catch (IOException ex) {
+			LOG.error(TAG + ": error generating diffs between '" + existingPatientSummary + "' and '"
+			        + updatedPatientSummary + "'");
 			out = null;
 		}
 
@@ -209,16 +224,16 @@ public class VisitNoteResourceController {
 			for (String text : mergedTxts) {
 				// replace first occurrence of NO_NEWLINE_AT_END_OF_FILE with updated Metadata.
 				if (!firstOccurenceNewLine && text.contains(NO_NEWLINE_AT_END_OF_FILE)) {
-					text = text.
-					        replaceFirst(NO_NEWLINE_AT_END_OF_FILE, insertMetadata(updatedBy, updatedOn));
+					text = text.replaceFirst(
+					    NO_NEWLINE_AT_END_OF_FILE, insertMetadata(updatedBy, updatedOn));
 					firstOccurenceNewLine = true;
 				}
 
-				mergedText.append(text
-				        .replaceAll(NO_NEWLINE_AT_END_OF_FILE, "")
-				        .replaceAll("\\\\", "")
-				        .replaceAll("\\+", "")
-				        .replaceAll("-", ""));
+				mergedText.append(
+				        StringUtils.replaceEachRepeatedly(text,
+				            new String[] { NO_NEWLINE_AT_END_OF_FILE, ESCAPE_BACK_SLASH_CHAR, ESCAPE_PLUS_CHAR,
+				                    MINUS_CHAR }, new String[] { EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING })
+				                .trim());
 			}
 		}
 
