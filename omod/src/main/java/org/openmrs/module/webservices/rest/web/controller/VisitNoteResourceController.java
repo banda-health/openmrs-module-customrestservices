@@ -46,8 +46,8 @@ public class VisitNoteResourceController {
 	private static final String TAG = VisitNoteResourceController.class.getSimpleName();
 
 	private static final String NO_NEWLINE_AT_END_OF_FILE = "\\ No newline at end of file";
-	private static final String ESCAPE_BACK_SLASH_CHAR = "\\\\";
-	private static final String ESCAPE_PLUS_CHAR = "\\+";
+	private static final String ESCAPE_BACK_SLASH_CHAR = "\\";
+	private static final String ESCAPE_PLUS_CHAR = "+";
 	private static final String MINUS_CHAR = "-";
 	private static final String EMPTY_STRING = "";
 	private static final String VISIT_NOTE_2 = "visit note 2";
@@ -164,7 +164,7 @@ public class VisitNoteResourceController {
 	 */
 	private SimpleObject mergePatientSummaryInfo(Obs updatedObs, Obs existingObs, HttpServletRequest request) {
 		String existingPatientSummary = existingObs.getValueText();
-		if (existingPatientSummary.equalsIgnoreCase("")) {
+		if (StringUtils.isEmpty(existingPatientSummary)) {
 			// no need for merging
 			existingObs.setVoided(true);
 		} else {
@@ -242,11 +242,11 @@ public class VisitNoteResourceController {
 
 	private String insertMetadata(String author, String changedOn) {
 		StringBuilder metadata = new StringBuilder();
-		metadata.append("\n[Author=");
+		metadata.append("\n[Author='");
 		metadata.append(author);
-		metadata.append(" Created=");
+		metadata.append("' Created='");
 		metadata.append(changedOn);
-		metadata.append("]\n");
+		metadata.append("']\n");
 		return metadata.toString();
 	}
 }
