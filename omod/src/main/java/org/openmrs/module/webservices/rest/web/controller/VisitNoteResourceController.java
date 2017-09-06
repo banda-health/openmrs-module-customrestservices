@@ -74,7 +74,7 @@ public class VisitNoteResourceController {
 	public SimpleObject save(
 	        @RequestParam("personId") Patient patient,
 	        @RequestParam("htmlFormId") Integer htmlFormId,
-	        @RequestParam("obs") String obsUuid,
+	        @RequestParam(value = "obs", required = false) String obsUuid,
 	        @RequestParam(value = "encounterId", required = false) Encounter encounter,
 	        @RequestParam(value = "visitId", required = false) Visit visit,
 	        @RequestParam(value = "createVisit", required = false) Boolean createVisit,
@@ -116,6 +116,7 @@ public class VisitNoteResourceController {
 		for (HtmlForm htmlForm : service.getAllHtmlForms()) {
 			if (htmlForm.getName().equalsIgnoreCase(VISIT_NOTE_2)) {
 				hf = htmlForm;
+				break;
 			}
 		}
 
