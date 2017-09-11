@@ -89,7 +89,7 @@ public class VisitEditResourceController {
 		}
 
 		existingVisit = Context.getVisitService().saveVisit(existingVisit);
-		results.put("results", "successful updated visit - " + existingVisit.getUuid());
+		results.put("uuid", existingVisit.getUuid());
 
 		return results;
 	}
