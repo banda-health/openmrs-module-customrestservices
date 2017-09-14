@@ -9,6 +9,8 @@ import org.openmrs.VisitAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +46,6 @@ public class VisitEditResourceController {
 	        @RequestParam(value = "startTime") String startTime,
 	        @RequestParam(value = "stopTime", required = false) String stopTime,
 	        @RequestBody List<LinkedHashMap<String, String>> attributes) {
-		SimpleObject results = new SimpleObject();
-
 		existingVisit.setVisitType(visitType);
 		try {
 			Date date = sdf.parse(startTime);
@@ -89,9 +89,7 @@ public class VisitEditResourceController {
 		}
 
 		existingVisit = Context.getVisitService().saveVisit(existingVisit);
-		results.put("uuid", existingVisit.getUuid());
-
-		return results;
+		return (SimpleObject)ConversionUtil.convertToRepresentation(existingVisit, Representation.FULL);
 	}
 
 	private VisitAttribute searchAttributeByType(Visit visit, String typeUuid) {
