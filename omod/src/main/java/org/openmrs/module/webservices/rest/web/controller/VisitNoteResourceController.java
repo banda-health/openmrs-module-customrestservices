@@ -22,6 +22,8 @@ import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentryui.fragment.controller.htmlform.EnterHtmlFormFragmentController;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.formatter.FormatterService;
 import org.openmrs.ui.framework.fragment.FragmentActionUiUtils;
@@ -36,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Save & Update Visit Note.
@@ -92,7 +95,8 @@ public class VisitNoteResourceController {
 				if (existingObs != null) {
 					// check if obs are identical
 					String existingObsUuid = existingObs.getUuid();
-					if (!obsUuid.equalsIgnoreCase(existingObsUuid)) {
+					if (!obsUuid.equalsIgnoreCase(existingObsUuid)
+					        && !request.getParameter("w12").equalsIgnoreCase(updatedObs.getValueText())) {
 						mergePatientSummaryInfo = true;
 					}
 				}
@@ -140,7 +144,7 @@ public class VisitNoteResourceController {
 		for (Encounter updatedEncounter : updatedVisit.getEncounters()) {
 			String encounterTypeName = updatedEncounter.getEncounterType().getName();
 			if (encounterTypeName.equalsIgnoreCase(VISIT_NOTE)) {
-				for (Obs obs : encounter.getAllObs()) {
+				for (Obs obs : updatedEncounter.getAllObs()) {
 					if (obs.getConcept().getName().getName().equalsIgnoreCase(TEXT_OF_ENCOUNTER_NOTE)) {
 						createdObs = obs;
 						break;
@@ -149,11 +153,7 @@ public class VisitNoteResourceController {
 			}
 		}
 
-		return SimpleObject.create(
-		    "success", true,
-		    "encounterId", createdObs.getEncounter().getUuid(),
-		    "w12", createdObs.getValueText(),
-		    "observationUuid", createdObs.getUuid());
+		return formatResults(createdObs);
 	}
 
 	/**
@@ -178,11 +178,15 @@ public class VisitNoteResourceController {
 		mergedObs.setVoided(false);
 		Obs createdObs = obsService.saveObs(mergedObs, CREATE_PATIENT_SUMMARY_MESSAGE);
 
+		return formatResults(createdObs);
+	}
+
+	private SimpleObject formatResults(Obs obs) {
 		return SimpleObject.create(
 		    "success", true,
-		    "encounterId", createdObs.getEncounter().getUuid(),
-		    "w12", createdObs.getValueText(),
-		    "observationUuid", createdObs.getUuid());
+		    "encounter", ConversionUtil.convertToRepresentation(obs.getEncounter(), Representation.FULL),
+		    "w12", obs.getValueText(),
+		    "observationUuid", obs.getUuid());
 	}
 
 	private Obs retrieveExistingObs(Obs updatedObs, Encounter encounter) {
