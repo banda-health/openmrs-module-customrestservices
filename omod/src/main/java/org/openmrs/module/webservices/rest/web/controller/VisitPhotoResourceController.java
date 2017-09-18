@@ -42,7 +42,7 @@ public class VisitPhotoResourceController {
 
 		Provider provider = Context.getProviderService().getProviderByUuid(providerUuid);
 
-		results.put("results", controller.uploadDocuments(
+		results.put("observation", controller.uploadDocuments(
 		    patient, visit, provider, fileCaption, instructions, request));
 
 		return results;
