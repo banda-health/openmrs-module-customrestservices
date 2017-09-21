@@ -7,6 +7,8 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +38,7 @@ public class ConceptAnswerResourceController {
 				SimpleObject result = new SimpleObject();
 				result.put("uuid", conceptAnswer.getUuid());
 				result.put("display", conceptAnswer.getAnswerConcept().getName().getName());
+				result.put("concept", ConversionUtil.convertToRepresentation(concept, Representation.REF));
 				values.add(result);
 			}
 
