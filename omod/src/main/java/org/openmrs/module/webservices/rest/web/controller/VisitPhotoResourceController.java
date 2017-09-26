@@ -1,12 +1,16 @@
 package org.openmrs.module.webservices.rest.web.controller;
 
+import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.Provider;
 import org.openmrs.Visit;
+import org.openmrs.Provider;
+import org.openmrs.Person;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.visitdocumentsui.web.controller.VisitDocumentsController;
 import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
+import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handle Patient List Imaging
@@ -41,9 +47,20 @@ public class VisitPhotoResourceController {
 		Visit visit = Context.getVisitService().getVisitByUuid(visitUuid);
 
 		Provider provider = Context.getProviderService().getProviderByUuid(providerUuid);
+		if (provider == null) {
+			Person person = Context.getPersonService().getPersonByUuid(providerUuid);
+			List<Provider> providers = new ArrayList<>(
+			        Context.getProviderService().getProvidersByPerson(person));
+			if (!providers.isEmpty()) {
+				provider = providers.get(0);
+			}
+		}
 
-		results.put("observation", controller.uploadDocuments(
-		    patient, visit, provider, fileCaption, instructions, request));
+		SimpleObject obsObject = (SimpleObject)controller.uploadDocuments(
+		    patient, visit, provider, fileCaption, instructions, request);
+		Obs obs = Context.getObsService().getObsByUuid((String)obsObject.get("uuid"));
+
+		results.put("observation", ConversionUtil.convertToRepresentation(obs, Representation.FULL));
 
 		return results;
 	}
