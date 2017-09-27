@@ -66,7 +66,7 @@ public class VisitEditResourceController {
 					VisitAttributeType type =
 					        Context.getVisitService().getVisitAttributeTypeByUuid(set.getValue());
 					visitAttribute.setAttributeType(type);
-				} else {
+				} else if (set.getKey().equalsIgnoreCase("value")) {
 					visitAttribute.setValue(set.getValue());
 				}
 			}

@@ -28,6 +28,7 @@ import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.formatter.FormatterService;
 import org.openmrs.ui.framework.fragment.FragmentActionUiUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,7 +74,9 @@ public class VisitNoteResourceController {
 	private ObsService obsService;
 
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST,
+	        produces = MediaType.APPLICATION_JSON_VALUE,
+	        consumes = MediaType.APPLICATION_JSON_VALUE)
 	public SimpleObject save(
 	        @RequestParam("personId") Patient patient,
 	        @RequestParam("htmlFormId") Integer htmlFormId,
