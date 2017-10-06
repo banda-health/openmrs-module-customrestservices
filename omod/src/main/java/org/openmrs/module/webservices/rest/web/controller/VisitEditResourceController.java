@@ -7,6 +7,7 @@ import org.openmrs.VisitType;
 import org.openmrs.VisitAttribute;
 import org.openmrs.VisitAttributeType;
 import org.openmrs.api.context.Context;
+import org.openmrs.customdatatype.CustomDatatypeUtil;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
@@ -88,8 +89,11 @@ public class VisitEditResourceController {
 			existingVisit.setAttribute(vatt);
 		}
 
-		existingVisit = Context.getVisitService().saveVisit(existingVisit);
-		return (SimpleObject)ConversionUtil.convertToRepresentation(existingVisit, Representation.FULL);
+		CustomDatatypeUtil.saveAttributesIfNecessary(existingVisit);
+		Context.getVisitService().saveVisit(existingVisit);
+		Visit updatedVisit = Context.getVisitService().getVisitByUuid(existingVisit.getUuid());
+
+		return (SimpleObject)ConversionUtil.convertToRepresentation(updatedVisit, Representation.FULL);
 	}
 
 	private VisitAttribute searchAttributeByType(Visit visit, String typeUuid) {

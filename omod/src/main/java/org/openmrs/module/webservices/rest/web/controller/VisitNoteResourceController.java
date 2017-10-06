@@ -4,15 +4,18 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jgit.diff.EditList;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.diff.HistogramDiff;
 import org.eclipse.jgit.diff.RawText;
+import org.eclipse.jgit.diff.DiffAlgorithm;
 import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.merge.MergeAlgorithm;
+import org.eclipse.jgit.merge.MergeFormatter;
+import org.eclipse.jgit.merge.MergeResult;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -49,11 +53,6 @@ import java.util.List;
 public class VisitNoteResourceController {
 	private static final String TAG = VisitNoteResourceController.class.getSimpleName();
 
-	private static final String NO_NEWLINE_AT_END_OF_FILE = "\\ No newline at end of file";
-	private static final String ESCAPE_BACK_SLASH_CHAR = "\\";
-	private static final String ESCAPE_PLUS_CHAR = "+";
-	private static final String MINUS_CHAR = "-";
-	private static final String EMPTY_STRING = "";
 	private static final String VISIT_NOTE_2 = "visit note 2";
 	private static final String VISIT_NOTE = "Visit Note";
 	private static final String TEXT_OF_ENCOUNTER_NOTE = "text of encounter note";
@@ -73,6 +72,9 @@ public class VisitNoteResourceController {
 	@Autowired
 	private ObsService obsService;
 
+	@Autowired
+	private EncounterService encounterService;
+
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST,
 	        produces = MediaType.APPLICATION_JSON_VALUE,
@@ -81,7 +83,7 @@ public class VisitNoteResourceController {
 	        @RequestParam("personId") Patient patient,
 	        @RequestParam("htmlFormId") Integer htmlFormId,
 	        @RequestParam(value = "obs", required = false) String obsUuid,
-	        @RequestParam(value = "encounterId", required = false) Encounter encounter,
+	        @RequestParam(value = "encounterId", required = false) String encounterUuid,
 	        @RequestParam(value = "visitId", required = false) Visit visit,
 	        @RequestParam(value = "createVisit", required = false) Boolean createVisit,
 	        @RequestParam(value = "returnUrl", required = false) String returnUrl,
@@ -89,6 +91,9 @@ public class VisitNoteResourceController {
 
 		boolean mergePatientSummaryInfo = false;
 		Obs updatedObs = null, existingObs = null;
+
+		Encounter encounter = checkEncounterExists(encounterUuid, visit);
+
 		if (encounter != null) {
 			// check if observation exists
 			updatedObs = obsService.getObsByUuid(obsUuid);
@@ -111,6 +116,27 @@ public class VisitNoteResourceController {
 		} else {
 			return saveVisitNote(patient, encounter, visit, createVisit, returnUrl, request);
 		}
+	}
+
+	private Encounter checkEncounterExists(String uuid, Visit visit) {
+		Encounter encounter = null;
+		// check if encounter exists
+		if (StringUtils.isNotEmpty(uuid)) {
+			encounter = encounterService.getEncounterByUuid(uuid);
+		}
+
+		// This check is important since a new encounter could have been created right before this request
+		if (encounter == null) {
+			List<Encounter> encounters = encounterService.getEncountersByVisit(visit, false);
+			for (Encounter enc : encounters) {
+				if (enc.getEncounterType().getName().equalsIgnoreCase(VISIT_NOTE)) {
+					encounter = enc;
+					break;
+				}
+			}
+		}
+
+		return encounter;
 	}
 
 	private SimpleObject saveVisitNote(Patient patient, Encounter encounter,
@@ -203,58 +229,47 @@ public class VisitNoteResourceController {
 	}
 
 	private String mergeTextAndShowConflicts(Obs existingObs, Obs updatedObs, HttpServletRequest request) {
-		StringBuilder mergedText = new StringBuilder();
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		String existingPatientSummary = existingObs.getValueText();
 		String updatedPatientSummary = request.getParameter("w12");
-		try {
-			RawText rawText1 = new RawText(existingPatientSummary.getBytes());
-			RawText rawText2 = new RawText(updatedPatientSummary.getBytes());
-			EditList diffList = new EditList();
-			diffList.addAll(new HistogramDiff().diff(RawTextComparator.DEFAULT, rawText1, rawText2));
-			new DiffFormatter(out).format(diffList, rawText1, rawText2);
-		} catch (IOException ex) {
-			LOG.error(TAG + ": error generating diffs between '" + existingPatientSummary + "' and '"
-			        + updatedPatientSummary + "'");
-			out = null;
-		}
+		MergeResult<RawText> mergeResult;
 
 		String createdBy = existingObs.getCreator().getGivenName();
 		String createdOn = patientSummaryDateFormat.format(existingObs.getDateCreated());
-		String updatedBy = updatedObs.getCreator().getGivenName();
-		String updatedOn = patientSummaryDateFormat.format(new Date());
 
-		String[] mergedTxts = StringUtils.split(out.toString(), "\n");
-		if (mergedTxts.length > 1) {
-			mergedTxts[0] = "";
-			mergedText.append(insertMetadata(createdBy, createdOn));
-			boolean firstOccurenceNewLine = false;
-			for (String text : mergedTxts) {
-				// replace first occurrence of NO_NEWLINE_AT_END_OF_FILE with updated Metadata.
-				if (!firstOccurenceNewLine && text.contains(NO_NEWLINE_AT_END_OF_FILE)) {
-					text = text.replaceFirst(
-					    NO_NEWLINE_AT_END_OF_FILE, insertMetadata(updatedBy, updatedOn));
-					firstOccurenceNewLine = true;
-				}
-
-				mergedText.append(
-				        StringUtils.replaceEachRepeatedly(text,
-				            new String[] { NO_NEWLINE_AT_END_OF_FILE, ESCAPE_BACK_SLASH_CHAR, ESCAPE_PLUS_CHAR,
-				                    MINUS_CHAR }, new String[] { EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING })
-				                .trim());
+		try {
+			RawText existingRawText = new RawText(existingPatientSummary.getBytes());
+			RawText updatedRawText = new RawText(updatedPatientSummary.getBytes());
+			MergeAlgorithm mergeAlgorithm = new MergeAlgorithm(
+			        DiffAlgorithm.getAlgorithm(DiffAlgorithm.SupportedAlgorithm.HISTOGRAM));
+			mergeResult = mergeAlgorithm.merge(RawTextComparator.DEFAULT, new RawText("".getBytes()),
+			    existingRawText, updatedRawText);
+			if (!mergeResult.containsConflicts()) {
+				return updatedPatientSummary;
 			}
+
+			MergeFormatter formatter = new MergeFormatter();
+			formatter.formatMerge(out, mergeResult, Arrays.asList(
+			        new String[] { "", insertMetadata(createdBy, createdOn), "" }),
+			    Constants.CHARACTER_ENCODING);
+			String mergedText = out.toString();
+			mergedText = mergedText.replaceAll("<", "").replaceAll(">", "").trim();
+			return mergedText;
+		} catch (IOException ex) {
+			LOG.error(TAG + ": error merging '" + existingPatientSummary + "' and '"
+			        + updatedPatientSummary + "'");
 		}
 
-		return mergedText.toString();
+		return "";
 	}
 
 	private String insertMetadata(String author, String changedOn) {
 		StringBuilder metadata = new StringBuilder();
-		metadata.append("\n[Author='");
+		metadata.append("[Author='");
 		metadata.append(author);
 		metadata.append("' Created='");
 		metadata.append(changedOn);
-		metadata.append("']\n");
+		metadata.append("']");
 		return metadata.toString();
 	}
 }
