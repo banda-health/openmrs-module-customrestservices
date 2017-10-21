@@ -62,7 +62,8 @@ public class MergePatientSummaryTest {
 
 		String mergedText = MergePatientSummary.merge(base, text1, newInstance(text2));
 		Assert.assertEquals(
-		    "The  [Author='null' Created='01/04/2017 02:47']New=======Old  Text", mergedText);
+		    "The  [Last updated='01/04/2017 02:47 by='null']New[With]Old[End]  Text",
+		    mergedText);
 	}
 
 	private Obs newInstance(String value) {

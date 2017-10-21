@@ -1,6 +1,7 @@
 package org.openmrs.module.customrestservices.api.util;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jgit.diff.RawText;
@@ -35,7 +36,7 @@ public class MergePatientSummary {
 	public static String merge(String basePatientSummary, String updatedPatientSummary, Obs existingObs) {
 		String existingPatientSummary = existingObs.getValueText();
 
-		if (updatedPatientSummary.equalsIgnoreCase("")) {
+		if (StringUtils.isEmpty(updatedPatientSummary)) {
 			return existingPatientSummary;
 		}
 
@@ -59,7 +60,12 @@ public class MergePatientSummary {
 			        new String[] { "", insertMetadata(createdBy, createdOn), "" }),
 			    Constants.CHARACTER_ENCODING);
 			String mergedText = out.toString();
-			mergedText = mergedText.replaceAll("<", "").replaceAll(">", "").replace("\n", "").trim();
+			mergedText = mergedText
+			        .replace("\n", "")
+			        .replaceAll("<<<<<<<", "")
+			        .replaceAll(">>>>>>>", "[End]")
+			        .replaceAll("=======", "[With]")
+			        .trim();
 			return mergedText;
 		} catch (IOException ex) {
 			LOG.error(TAG + ": error merging '" + existingPatientSummary + "' and '"
@@ -98,10 +104,10 @@ public class MergePatientSummary {
 	 */
 	private static String insertMetadata(String author, String changedOn) {
 		StringBuilder metadata = new StringBuilder();
-		metadata.append("\n[Author='");
-		metadata.append(author);
-		metadata.append("' Created='");
+		metadata.append("\n[Last updated='");
 		metadata.append(changedOn);
+		metadata.append(" by='");
+		metadata.append(author);
 		metadata.append("']\n");
 		return metadata.toString();
 	}
