@@ -147,13 +147,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
-		<dependency>
-			<groupId>org.eclipse.jgit</groupId>
-			<artifactId>org.eclipse.jgit</artifactId>
-			<version>4.0.0.201506020755-rc3</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
