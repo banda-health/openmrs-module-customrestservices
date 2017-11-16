@@ -148,20 +148,22 @@ public class VisitNoteResourceController {
 		}
 
 		Visit updatedVisit = Context.getVisitService().getVisitByUuid(visit.getUuid());
-		Obs createdObs = null;
+		Obs patientSummaryObs = null;
+		Encounter visitNoteEncounter = null;
 		for (Encounter updatedEncounter : updatedVisit.getEncounters()) {
 			String encounterTypeName = updatedEncounter.getEncounterType().getName();
 			if (encounterTypeName.equalsIgnoreCase(VISIT_NOTE)) {
-				for (Obs obs : updatedEncounter.getAllObs()) {
+				visitNoteEncounter = updatedEncounter;
+				for (Obs obs : visitNoteEncounter.getAllObs()) {
 					if (obs.getConcept().getName().getName().equalsIgnoreCase(TEXT_OF_ENCOUNTER_NOTE)) {
-						createdObs = obs;
+						patientSummaryObs = obs;
 						break;
 					}
 				}
 			}
 		}
 
-		return formatResults(createdObs);
+		return formatResults(visitNoteEncounter, patientSummaryObs);
 	}
 
 	/**
@@ -186,9 +188,9 @@ public class VisitNoteResourceController {
 		obsService.voidObs(existingObs, VOID_PATIENT_SUMMARY_MESSAGE);
 		Obs mergedObs = Obs.newInstance(updatedObs);
 		mergedObs.setVoided(false);
-		Obs createdObs = obsService.saveObs(mergedObs, CREATE_PATIENT_SUMMARY_MESSAGE);
+		Obs patientSummaryObs = obsService.saveObs(mergedObs, CREATE_PATIENT_SUMMARY_MESSAGE);
 
-		return formatResults(createdObs);
+		return formatResults(patientSummaryObs.getEncounter(), patientSummaryObs);
 	}
 
 	private Encounter checkEncounterExists(String uuid, Visit visit) {
@@ -223,11 +225,17 @@ public class VisitNoteResourceController {
 		return existingObs;
 	}
 
-	private SimpleObject formatResults(Obs obs) {
-		return SimpleObject.create(
-		    "success", true,
-		    "encounter", ConversionUtil.convertToRepresentation(obs.getEncounter(), Representation.FULL),
-		    "w12", obs.getValueText(),
-		    "observation", ConversionUtil.convertToRepresentation(obs, Representation.FULL));
+	private SimpleObject formatResults(Encounter encounter, Obs obs) {
+		SimpleObject result = SimpleObject.create("success", true);
+		if (encounter != null) {
+			result.put("encounter", ConversionUtil.convertToRepresentation(encounter, Representation.FULL));
+		}
+
+		if (obs != null) {
+			result.put("w12", obs.getValueText());
+			result.put("observation", ConversionUtil.convertToRepresentation(obs, Representation.FULL));
+		}
+
+		return result;
 	}
 }
