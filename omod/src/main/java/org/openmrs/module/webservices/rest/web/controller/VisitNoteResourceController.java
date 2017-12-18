@@ -12,6 +12,7 @@ import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
 import org.openmrs.module.appframework.feature.FeatureToggleProperties;
+import org.openmrs.module.customrestservices.CustomRestConstants;
 import org.openmrs.module.customrestservices.api.util.MergePatientSummary;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.emrapi.adt.AdtService;
@@ -19,6 +20,7 @@ import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentryui.fragment.controller.htmlform.EnterHtmlFormFragmentController;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
+import org.openmrs.module.webservices.rest.web.representation.CustomRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.formatter.FormatterService;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Save & Update Visit Note.
@@ -41,12 +44,6 @@ import java.util.List;
 @RequestMapping("/rest/" + ModuleRestConstants.VISIT_NOTE_RESOURCE)
 public class VisitNoteResourceController {
 	private static final String TAG = VisitNoteResourceController.class.getSimpleName();
-
-	private static final String VISIT_NOTE_2 = "visit note 2";
-	private static final String VISIT_NOTE = "Visit Note";
-	private static final String TEXT_OF_ENCOUNTER_NOTE = "text of encounter note";
-	private static final String VOID_PATIENT_SUMMARY_MESSAGE = "void patient summary obs";
-	private static final String CREATE_PATIENT_SUMMARY_MESSAGE = "create merged patient summary obs";
 
 	private final Log LOG = LogFactory.getLog(this.getClass());
 
@@ -77,23 +74,32 @@ public class VisitNoteResourceController {
 	        HttpServletRequest request) {
 
 		boolean mergePatientSummaryInfo = false;
-		Obs updatedObs = null;
+		Obs requestObs = null;
 		Obs existingObs = null;
 		String updatedPatientSummary = request.getParameter("w12");
 
 		Encounter encounter = checkEncounterExists(encounterUuid, visit);
 
+		/**
+		 * Here we try to establish if the clinical note/patient summary requires a merge.
+		 * We compare the request observation with the existing one contained in the database.
+		 * If the request observation is voided, then we compare request patient summary text to the one contained
+		 * in the database, and make sure they don't match.
+		 * Lastly, we make sure that the conflicting changes are coming from different users.
+		 *
+         */
 		if (encounter != null) {
 			// check if observation exists
-			updatedObs = obsService.getObsByUuid(obsUuid);
-			if (updatedObs != null) {
+			requestObs = obsService.getObsByUuid(obsUuid);
+			if (requestObs != null && requestObs.getVoided()) {
 				// retrieve base, existing obs if they exists
-				existingObs = retrieveExistingObs(updatedObs, encounter);
+				existingObs = retrieveExistingObs(requestObs, encounter);
 				if (existingObs != null) {
 					// check if obs are identical
 					String existingObsUuid = existingObs.getUuid();
 					if (!obsUuid.equalsIgnoreCase(existingObsUuid)
-					        && !updatedPatientSummary.equalsIgnoreCase(updatedObs.getValueText())) {
+							&& !updatedPatientSummary.equalsIgnoreCase(requestObs.getValueText())
+					        && !requestObs.getCreator().getUuid().equalsIgnoreCase(existingObs.getCreator().getUuid())) {
 						mergePatientSummaryInfo = true;
 					}
 				}
@@ -102,14 +108,15 @@ public class VisitNoteResourceController {
 
 		if (mergePatientSummaryInfo) {
 			return mergePatientSummaryInfo(
-			    updatedObs, basePatientSummary, existingObs, updatedPatientSummary);
+			    requestObs, basePatientSummary, existingObs, updatedPatientSummary);
 		} else {
 			return saveVisitNote(patient, encounter, visit, createVisit, returnUrl, request);
 		}
 	}
 
 	/**
-	 * Save a visit note encounter
+	 * Save a visit note encounter. This method calls {@link EnterHtmlFormFragmentController}
+	 * which is what the web htmlform uses.
 	 * @param patient
 	 * @param encounter
 	 * @param visit
@@ -126,7 +133,7 @@ public class VisitNoteResourceController {
 
 		HtmlFormEntryService service = Context.getService(HtmlFormEntryService.class);
 		for (HtmlForm htmlForm : service.getAllHtmlForms()) {
-			if (htmlForm.getName().equalsIgnoreCase(VISIT_NOTE_2)) {
+			if (htmlForm.getName().equalsIgnoreCase(CustomRestConstants.VISIT_NOTE_2)) {
 				hf = htmlForm;
 				break;
 			}
@@ -144,7 +151,7 @@ public class VisitNoteResourceController {
 			    null, patient, hf, encounter, visit, createVisit, returnUrl,
 			    adtService, featureToggles, uiUtils, request);
 		} catch (Exception ex) {
-			LOG.warn(ex.getMessage());
+			LOG.warn(TAG + ":" + ex.getMessage());
 		}
 
 		Visit updatedVisit = Context.getVisitService().getVisitByUuid(visit.getUuid());
@@ -152,10 +159,11 @@ public class VisitNoteResourceController {
 		Encounter visitNoteEncounter = null;
 		for (Encounter updatedEncounter : updatedVisit.getEncounters()) {
 			String encounterTypeName = updatedEncounter.getEncounterType().getName();
-			if (encounterTypeName.equalsIgnoreCase(VISIT_NOTE)) {
+			if (encounterTypeName.equalsIgnoreCase(CustomRestConstants.VISIT_NOTE)) {
 				visitNoteEncounter = updatedEncounter;
 				for (Obs obs : visitNoteEncounter.getAllObs()) {
-					if (obs.getConcept().getName().getName().equalsIgnoreCase(TEXT_OF_ENCOUNTER_NOTE)) {
+					if (obs.getConcept().getName().getName()
+					        .equalsIgnoreCase(CustomRestConstants.TEXT_OF_ENCOUNTER_NOTE)) {
 						patientSummaryObs = obs;
 						break;
 					}
@@ -185,14 +193,20 @@ public class VisitNoteResourceController {
 			        MergePatientSummary.merge(basePatientSummary, updatedPatientSummary, existingObs));
 		}
 
-		obsService.voidObs(existingObs, VOID_PATIENT_SUMMARY_MESSAGE);
+		obsService.voidObs(existingObs, CustomRestConstants.VOID_PATIENT_SUMMARY_MESSAGE);
 		Obs mergedObs = Obs.newInstance(updatedObs);
 		mergedObs.setVoided(false);
-		Obs patientSummaryObs = obsService.saveObs(mergedObs, CREATE_PATIENT_SUMMARY_MESSAGE);
+		Obs patientSummaryObs = obsService.saveObs(mergedObs, CustomRestConstants.CREATE_PATIENT_SUMMARY_MESSAGE);
 
 		return formatResults(patientSummaryObs.getEncounter(), patientSummaryObs);
 	}
 
+	/**
+	 * Retrieve the 'visit note' encounter
+	 * @param uuid
+	 * @param visit
+     * @return
+     */
 	private Encounter checkEncounterExists(String uuid, Visit visit) {
 		Encounter encounter = null;
 		// check if encounter exists
@@ -204,7 +218,7 @@ public class VisitNoteResourceController {
 		if (encounter == null) {
 			List<Encounter> encounters = encounterService.getEncountersByVisit(visit, false);
 			for (Encounter enc : encounters) {
-				if (enc.getEncounterType().getName().equalsIgnoreCase(VISIT_NOTE)) {
+				if (enc.getEncounterType().getName().equalsIgnoreCase(CustomRestConstants.VISIT_NOTE)) {
 					encounter = enc;
 					break;
 				}
@@ -214,10 +228,17 @@ public class VisitNoteResourceController {
 		return encounter;
 	}
 
+	/**
+	 * Retrieve a non-voided 'Text of encounter note' observation in the given encounter object
+	 * @param updatedObs
+	 * @param encounter
+     * @return
+     */
 	private Obs retrieveExistingObs(Obs updatedObs, Encounter encounter) {
 		Obs existingObs = null;
 		for (Obs obs : encounter.getAllObs()) {
-			if (obs.getConcept().getUuid().equalsIgnoreCase(updatedObs.getConcept().getUuid())) {
+			if (obs.getConcept().getUuid().equalsIgnoreCase(updatedObs.getConcept().getUuid())
+			        && !obs.getVoided()) {
 				existingObs = obs;
 			}
 		}
