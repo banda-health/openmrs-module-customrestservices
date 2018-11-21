@@ -179,8 +179,12 @@ public class VisitNoteResourceController {
 			// no need for merging
 			existingObs.setVoided(true);
 		} else {
-			updatedObs.setValueText(
-			        MergePatientSummary.merge(basePatientSummary, updatedPatientSummary, existingObs));
+			//updatedObs.setValueText(
+			//        MergePatientSummary.merge(basePatientSummary, updatedPatientSummary, existingObs));
+			StringBuilder updatedNote = new StringBuilder(basePatientSummary);
+			updatedNote.append("-------------------------------");
+			updatedNote.append(updatedPatientSummary);
+			updatedObs.setValueText(updatedNote.toString());
 		}
 
 		obsService.voidObs(existingObs, VOID_PATIENT_SUMMARY_MESSAGE);
