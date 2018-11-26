@@ -12,7 +12,6 @@ import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.impl.MutableResourceBundleMessageSource;
 import org.openmrs.module.appframework.feature.FeatureToggleProperties;
-import org.openmrs.module.customrestservices.api.util.MergePatientSummary;
 import org.openmrs.module.customrestservices.web.ModuleRestConstants;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.htmlformentry.HtmlForm;
@@ -32,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class VisitNoteResourceController {
 	private static final String TEXT_OF_ENCOUNTER_NOTE = "text of encounter note";
 	private static final String VOID_PATIENT_SUMMARY_MESSAGE = "void patient summary obs";
 	private static final String CREATE_PATIENT_SUMMARY_MESSAGE = "create merged patient summary obs";
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM hh:mm");
 
 	private final Log LOG = LogFactory.getLog(this.getClass());
 
@@ -181,9 +183,22 @@ public class VisitNoteResourceController {
 		} else {
 			//updatedObs.setValueText(
 			//        MergePatientSummary.merge(basePatientSummary, updatedPatientSummary, existingObs));
-			StringBuilder updatedNote = new StringBuilder(basePatientSummary);
-			updatedNote.append("-------------------------------");
+			StringBuilder updatedNote = new StringBuilder();
+
+			updatedNote.append(DATE_FORMAT.format(existingObs.getDateCreated()));
+			updatedNote.append(" - created by ");
+			updatedNote.append(existingObs.getCreator().getGivenName());
+			updatedNote.append("\n");
+			updatedNote.append(basePatientSummary);
+			updatedNote.append("\n");
+			updatedNote.append("------------------------------");
+			updatedNote.append("\n\n");
+			updatedNote.append(DATE_FORMAT.format(new Date()));
+			updatedNote.append(" - updated by ");
+			updatedNote.append(updatedObs.getCreator().getGivenName());
+			updatedNote.append("\n");
 			updatedNote.append(updatedPatientSummary);
+
 			updatedObs.setValueText(updatedNote.toString());
 		}
 
@@ -219,8 +234,10 @@ public class VisitNoteResourceController {
 	private Obs retrieveExistingObs(Obs updatedObs, Encounter encounter) {
 		Obs existingObs = null;
 		for (Obs obs : encounter.getAllObs()) {
-			if (obs.getConcept().getUuid().equalsIgnoreCase(updatedObs.getConcept().getUuid())) {
+			if (obs.getConcept().getUuid().equalsIgnoreCase(updatedObs.getConcept().getUuid())
+			        && !obs.getVoided()) {
 				existingObs = obs;
+				break;
 			}
 		}
 
